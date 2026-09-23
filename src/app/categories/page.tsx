@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 
-import { CategoriesCTASection } from "@/features/categories/components/categories-cta-section";
-import { CategoriesGridSection } from "@/features/categories/components/categories-grid-section";
-import { CategoriesHeroSection } from "@/features/categories/components/categories-hero-section";
-import { SpecializedLinesSection } from "@/features/categories/components/specialized-lines-section";
+import { CategoriesPage as CategoriesFeaturePage } from "@/features/categories/components/categories-page";
 
 export const metadata: Metadata = {
   title: "Product Categories | Acme Commercial Ways (Pvt) Ltd.",
@@ -30,12 +27,5 @@ export const metadata: Metadata = {
 };
 
 export default function CategoriesPage() {
-  return (
-    <>
-      <CategoriesHeroSection />
-      <CategoriesGridSection />
-      <SpecializedLinesSection />
-      <CategoriesCTASection />
-    </>
-  );
+  return <CategoriesFeaturePage />;
 }

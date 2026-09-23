@@ -1,6 +1,6 @@
 import { SectionHeader } from "@/components/common/section-header";
 import { ProductCard } from "@/features/home/components/product-card";
-import { featuredProducts } from "@/features/home/data/data";
+import { featuredProducts } from "@/features/products/data/featured-products";
 
 export function ProductSpotlightSection() {
   return (

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-import { ProductsHeroSection } from "@/features/products/components/products-hero-section";
-import { ProductsCatalog } from "@/features/products/components/products-catalog";
+import { ProductsPage as ProductsFeaturePage } from "@/features/products/components/products-page";
 
 export const metadata: Metadata = {
   title: "Product Catalog | Acme Commercial Ways (Pvt) Ltd.",
@@ -28,10 +27,5 @@ export const metadata: Metadata = {
 };
 
 export default function ProductsPage() {
-  return (
-    <>
-      <ProductsHeroSection />
-      <ProductsCatalog />
-    </>
-  );
+  return <ProductsFeaturePage />;
 }

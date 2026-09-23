@@ -3,7 +3,7 @@
 import { Heart } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { useWishlist } from "@/features/wishlist/context/wishlist-context";
+import { useWishlist } from "@/features/wishlist/hooks/use-wishlist";
 
 export function AddToWishlistButton({
   productId,

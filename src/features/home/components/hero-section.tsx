@@ -5,7 +5,8 @@ import { ArrowRight, BadgeCheck, Factory, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { certifications, company, companyStats } from "@/features/home/data/data";
+import { company, companyStats } from "@/features/home/data/data";
+import { certifications } from "@/features/quality/data/certifications";
 
 function FloatingInfoCard({
   className,

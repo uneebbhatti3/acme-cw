@@ -4,7 +4,7 @@ import { ArrowRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { AddToWishlistButton } from "@/features/wishlist/components/add-to-wishlist-button";
-import { featuredProducts } from "../data/data";
+import { featuredProducts } from "@/features/products/data/featured-products";
 import Image from "next/image";
 
 type Product = (typeof featuredProducts)[number];

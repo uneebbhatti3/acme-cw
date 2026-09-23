@@ -126,5 +126,3 @@ export const products = [
       "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=1000&q=90",
   },
 ];
-
-export type Product = (typeof products)[number];

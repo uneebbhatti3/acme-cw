@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "@/components/common/section-header";
-import { productCategories } from "@/features/home/data/data";
+import { productCategories } from "@/features/categories/data/categories";
 
 export function CategoriesGridSection() {
   const [first, second, ...rest] = productCategories;

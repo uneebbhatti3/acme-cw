@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 
-import { ContactExtrasSection } from "@/features/contact/components/contact-extras-section";
-import { ContactHeroSection } from "@/features/contact/components/contact-hero-section";
-import { ContactSection } from "@/features/contact/components/contact-section";
+import { ContactPage as ContactFeaturePage } from "@/features/contact/components/contact-page";
 
 export const metadata: Metadata = {
   title: "Contact Us | Acme Commercial Ways (Pvt) Ltd.",
@@ -25,11 +23,5 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return (
-    <>
-      <ContactHeroSection />
-      <ContactSection />
-      <ContactExtrasSection />
-    </>
-  );
+  return <ContactFeaturePage />;
 }

@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 
-import { AboutCTASection } from "@/features/about/components/about-cta-section";
-import { AboutHeroSection } from "@/features/about/components/about-hero-section";
-import { CompanyScaleSection } from "@/features/about/components/company-scale-section";
-import { CompanyStorySection } from "@/features/about/components/company-story-section";
-import { MissionVisionValuesSection } from "@/features/about/components/mission-vision-values-section";
+import { AboutPage as AboutFeaturePage } from "@/features/about/components/about-page";
 
 export const metadata: Metadata = {
   title: "About Us | Acme Commercial Ways (Pvt) Ltd.",
@@ -27,13 +23,5 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  return (
-    <>
-      <AboutHeroSection />
-      <CompanyStorySection />
-      <MissionVisionValuesSection />
-      <CompanyScaleSection />
-      <AboutCTASection />
-    </>
-  );
+  return <AboutFeaturePage />;
 }

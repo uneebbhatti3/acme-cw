@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { featuredProducts } from "@/features/home/data/data";
+import { featuredProducts } from "@/features/products/data/featured-products";
 import { ProductCard } from "./product-card";
 
 export function ProductShowcase() {

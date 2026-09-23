@@ -3,7 +3,7 @@ import { ShieldCheck } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/common/section-header";
-import { certifications } from "@/features/home/data/data";
+import { certifications } from "@/features/quality/data/certifications";
 
 export function QualitySection() {
   return (

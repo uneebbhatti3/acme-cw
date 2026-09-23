@@ -1,5 +1,5 @@
 import { SectionHeader } from "@/components/common/section-header";
-import { manufacturingSteps } from "@/features/home/data/data";
+import { manufacturingSteps } from "@/features/manufacturing/data/manufacturing-overview";
 
 export function ManufacturingSection() {
   return (

@@ -1,5 +1,5 @@
 import { SectionHeader } from "@/components/common/section-header";
-import { specializedProductLines } from "@/features/home/data/data";
+import { specializedProductLines } from "@/features/categories/data/categories";
 
 export function SpecializedLinesSection() {
   return (

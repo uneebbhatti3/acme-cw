@@ -3,7 +3,7 @@
 import { ShoppingBag } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { useCart } from "@/features/cart/context/cart-context";
+import { useCart } from "@/features/cart/hooks/use-cart";
 
 export function AddToCartButton({
   productId,

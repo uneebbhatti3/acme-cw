@@ -1,7 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { certifications } from "@/features/home/data/data";
+import { certifications } from "@/features/quality/data/certifications";
 
 export function CertificationsSection() {
   return (

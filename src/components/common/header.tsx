@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import { useState } from "react";
-import { useWishlist } from "@/features/wishlist/context/wishlist-context";
-import { useCart } from "@/features/cart/context/cart-context";
+import { useWishlist } from "@/features/wishlist/hooks/use-wishlist";
+import { useCart } from "@/features/cart/hooks/use-cart";
 
 const links = [
   ["Home", "/"],

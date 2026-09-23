@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CartContent } from "@/features/cart/components/cart-content";
+import { CartPage as CartFeaturePage } from "@/features/cart/components/cart-page";
 
 export const metadata: Metadata = {
   title: "Inquiry Cart",
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function CartPage() {
-  return <CartContent />;
+  return <CartFeaturePage />;
 }

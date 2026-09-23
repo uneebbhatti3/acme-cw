@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
 import {
   CheckCircle2,
   Filter,
@@ -20,33 +19,22 @@ import { ProductListCard } from "@/features/products/components/product-list-car
 import {
   availabilityOptions,
   categories,
-  products,
 } from "@/features/products/data/data";
-
-type ViewMode = "grid" | "list";
+import { useProductFilters } from "@/features/products/hooks/use-product-filters";
 
 export function ProductsCatalog() {
-  const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [availability, setAvailability] = useState("All");
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
-
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(query.toLowerCase()) ||
-        product.sku.toLowerCase().includes(query.toLowerCase()) ||
-        product.category.toLowerCase().includes(query.toLowerCase());
-
-      const matchesCategory =
-        selectedCategory === "All" || product.category === selectedCategory;
-
-      const matchesAvailability =
-        availability === "All" || product.availability === availability;
-
-      return matchesSearch && matchesCategory && matchesAvailability;
-    });
-  }, [query, selectedCategory, availability]);
+  const {
+    query,
+    setQuery,
+    selectedCategory,
+    setSelectedCategory,
+    availability,
+    setAvailability,
+    viewMode,
+    setViewMode,
+    filteredProducts,
+    clearFilters,
+  } = useProductFilters();
 
   return (
     <>
@@ -224,11 +212,7 @@ export function ProductsCatalog() {
                   type="button"
                   variant="outline"
                   className="mt-6 rounded-full"
-                  onClick={() => {
-                    setQuery("");
-                    setSelectedCategory("All");
-                    setAvailability("All");
-                  }}
+                  onClick={clearFilters}
                 >
                   Clear filters
                 </Button>

@@ -4,8 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/common/header";
 import { Footer } from "@/components/common/footer";
-import { WishlistProvider } from "@/features/wishlist/context/wishlist-context";
-import { CartProvider } from "@/features/cart/context/cart-context";
+import { WishlistProvider } from "@/features/wishlist/components/wishlist-provider";
+import { CartProvider } from "@/features/cart/components/cart-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 

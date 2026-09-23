@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { productCategories } from "../data/data";
+import { productCategories } from "@/features/categories/data/categories";
 
 export function CategoryShowcase() {
   return (

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 
-import { ManufacturingHeroSection } from "@/features/manufacturing/components/manufacturing-hero-section";
-import { ManufacturingProcessSection } from "@/features/manufacturing/components/manufacturing-process-section";
-import { OEMCapabilitySection } from "@/features/manufacturing/components/oem-capability-section";
+import { ManufacturingPage as ManufacturingFeaturePage } from "@/features/manufacturing/components/manufacturing-page";
 
 export const metadata: Metadata = {
   title: "Manufacturing Process | Acme Commercial Ways (Pvt) Ltd.",
@@ -25,11 +23,5 @@ export const metadata: Metadata = {
 };
 
 export default function ManufacturingPage() {
-  return (
-    <>
-      <ManufacturingHeroSection />
-      <ManufacturingProcessSection />
-      <OEMCapabilitySection />
-    </>
-  );
+  return <ManufacturingFeaturePage />;
 }

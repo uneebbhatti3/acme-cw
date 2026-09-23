@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 
-import { CertificationsSection } from "@/features/quality/components/certifications-section";
-import { InspectionProcessSection } from "@/features/quality/components/inspection-process-section";
-import { QualityCTASection } from "@/features/quality/components/quality-cta-section";
-import { QualityHeroSection } from "@/features/quality/components/quality-hero-section";
+import { QualityPage as QualityFeaturePage } from "@/features/quality/components/quality-page";
 
 export const metadata: Metadata = {
   title: "Quality Assurance | Acme Commercial Ways (Pvt) Ltd.",
@@ -27,12 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function QualityPage() {
-  return (
-    <>
-      <QualityHeroSection />
-      <InspectionProcessSection />
-      <CertificationsSection />
-      <QualityCTASection />
-    </>
-  );
+  return <QualityFeaturePage />;
 }

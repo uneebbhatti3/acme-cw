@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { AddToWishlistButton } from "@/features/wishlist/components/add-to-wishlist-button";
 import { AddToCartButton } from "@/features/cart/components/add-to-cart-button";
-import type { Product } from "@/features/products/data/data";
+import type { Product } from "@/features/products/types/product";
 
 export function ProductListCard({ product }: { product: Product }) {
   return (

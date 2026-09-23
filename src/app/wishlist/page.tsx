@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { WishlistContent } from "@/features/wishlist/components/wishlist-content";
+import { WishlistPage as WishlistFeaturePage } from "@/features/wishlist/components/wishlist-page";
 
 export const metadata: Metadata = {
   title: "Wishlist",
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function WishlistPage() {
-  return <WishlistContent />;
+  return <WishlistFeaturePage />;
 }

@@ -8,39 +8,13 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import { productCategories } from "@/features/home/data/data";
+import { productCategories } from "@/features/categories/data/categories";
 import { products } from "@/features/products/data/data";
-
-export type SearchProduct = {
-  type: "product";
-  id: string;
-  title: string;
-  sku: string;
-  category: string;
-  description: string;
-  availability: string;
-  image: string;
-  href: string;
-};
-
-export type SearchCategory = {
-  type: "category";
-  id: string;
-  title: string;
-  count: number;
-  description: string;
-  image: string;
-  href: string;
-};
-
-export type SearchPage = {
-  type: "page";
-  id: string;
-  title: string;
-  description: string;
-  href: string;
-  icon: React.ElementType;
-};
+import type {
+  SearchCategory,
+  SearchPage,
+  SearchProduct,
+} from "@/features/search/types/search";
 
 export const searchableProducts: SearchProduct[] = products.map((p) => ({
   type: "product",
@@ -142,29 +116,3 @@ export const popularSearches = [
   "Manicure",
   "Hollow ware",
 ];
-
-export function runSearch(query: string) {
-  const q = query.toLowerCase().trim();
-  if (!q) return { products: [], categories: [], pages: [] };
-
-  return {
-    products: searchableProducts.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.sku.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.availability.toLowerCase().includes(q),
-    ),
-    categories: searchableCategories.filter(
-      (c) =>
-        c.title.toLowerCase().includes(q) ||
-        c.description.toLowerCase().includes(q),
-    ),
-    pages: searchablePages.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q),
-    ),
-  };
-}
