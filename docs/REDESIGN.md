@@ -1,6 +1,6 @@
 # REDESIGN BRIEF: shadcn/ui + 21st.dev, modern showcase look
 
-Save this file as `docs/REDESIGN.md` in the project. Save the Version 2 design file as `docs/reference/page-v2.tsx`. Then paste the launcher line at the bottom into Claude Code.
+Saved as `docs/REDESIGN.md`; the Version 2 design file is `docs/reference/page-v2.tsx`. Commands use npm (the project has `package-lock.json`).
 
 ---
 
@@ -15,7 +15,7 @@ The redesign replaces the **visual and component layer only**. It must still be 
 1. Read, in order: `CLAUDE.md`, `docs/PROJECT_BRIEF.md`, `docs/SITEMAP_AND_PAGES.md`, `docs/DESIGN_SYSTEM.md`, `docs/COMPONENTS.md`, `docs/CONTENT_PLACEHOLDERS.md`, `docs/TECH_SPEC.md`, `docs/BUILD_PLAN.md`, then `docs/reference/page-v2.tsx`.
 2. Inspect the repo: package manager, Next.js version, Tailwind version (v3 or v4), existing `src/` structure, what is already built. Do not assume.
 3. List the MCP tools you actually have. Expect a shadcn MCP (registry search, view items, examples, add commands, audit checklist) and a 21st.dev Magic MCP (component inspiration, component builder, component refiner, logo search). Use the tool names you see, not the names in this brief. If either MCP is missing or failing, stop and tell me.
-4. Run `pnpm typecheck`, `pnpm lint`, `pnpm build` and record the baseline.
+4. Run `npm run typecheck`, `npm run lint`, `npm run build` and record the baseline.
 5. Write `docs/REDESIGN_PLAN.md` containing: a component map (page, section, shadcn part, 21st.dev candidate, custom part), the dependency list you intend to add and why, the token plan, and the risks. **Stop and wait for my approval.**
 
 ## 2. What stays and what changes
@@ -37,7 +37,7 @@ The redesign replaces the **visual and component layer only**. It must still be 
 
 ## 3. Tooling workflow
 
-**shadcn first for anything functional.** Use the shadcn MCP to search, view and read examples before adding a component, then install with the CLI (`pnpm dlx shadcn@latest add ...`). Initialise shadcn only if `components.json` does not exist, matching the detected Tailwind version. Likely components:
+**shadcn first for anything functional.** Use the shadcn MCP to search, view and read examples before adding a component, then install with the CLI (`npx shadcn@latest add ...`). Initialise shadcn only if `components.json` does not exist, matching the detected Tailwind version. Likely components:
 
 Button, Badge, Card, Separator, AspectRatio, Skeleton, Tabs, Accordion, Dialog, Sheet (mobile menu), Drawer (mobile filters), NavigationMenu (products mega-menu), Command (product search), Input, Textarea, Select, Checkbox, Toggle Group, Form with react-hook-form and Zod, Breadcrumb, Pagination, Table (spec table base), Carousel (embla), Tooltip, Sonner, ScrollArea, HoverCard.
 
@@ -114,7 +114,7 @@ Run the shadcn audit checklist (if the MCP provides one) after each phase.
 
 ## 7. Phases (commit after each; every gate must pass before moving on)
 
-Gate for every phase: `pnpm lint`, `pnpm typecheck`, `pnpm build` clean; no console errors; screenshots at 375 and 1280 px reviewed by you; shadcn audit run.
+Gate for every phase: `npm run lint`, `npm run typecheck`, `npm run build` clean; no console errors; screenshots at 375 and 1280 px reviewed by you; shadcn audit run.
 
 | Phase | Scope                                                                                                                                                           |
 | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -136,7 +136,7 @@ If a decision is ambiguous, choose the conservative option, record it in `docs/D
 - Timeline, stats, marquee and hero respect reduced motion
 - Lighthouse targets met on Home and on a product page
 - `COMPONENT_SOURCES.md` lists every 21st.dev component with its source
-- `pnpm build` passes; README explains how to run, rebrand and swap content
+- `npm run build` passes; README explains how to run, rebrand and swap content
 
 ## 9. Final report format
 

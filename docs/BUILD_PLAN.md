@@ -1,6 +1,6 @@
 # Build Plan
 
-Work through the phases in order. At the end of every phase run `pnpm lint`, `pnpm typecheck` and `pnpm build`, fix all issues, verify the acceptance checks, then commit. Do not start a phase until the previous one passes.
+Work through the phases in order. At the end of every phase run `npm run lint`, `npm run typecheck` and `npm run build`, fix all issues, verify the acceptance checks, then commit. Do not start a phase until the previous one passes.
 
 ## How to start (prompt for Claude Code)
 
@@ -10,7 +10,7 @@ Work through the phases in order. At the end of every phase run `pnpm lint`, `pn
 
 ## Phase 0: Project setup
 
-- Initialise Next.js (App Router, TypeScript strict, Tailwind, ESLint) with `pnpm`
+- Initialise Next.js (App Router, TypeScript strict, Tailwind, ESLint) with `npm`
 - Add dependencies: motion, lucide-react, react-hook-form, zod, @hookform/resolvers, yet-another-react-lightbox (if used), clsx / tailwind-merge
 - Create the folder structure from TECH_SPEC
 - Set up design tokens in `globals.css` and the Tailwind theme per DESIGN_SYSTEM

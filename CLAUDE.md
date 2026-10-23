@@ -20,12 +20,12 @@ Next.js (App Router) + TypeScript + Tailwind CSS + Motion (Framer Motion) for an
 
 ## Commands
 
-Use whichever package manager the project is initialised with (default `pnpm`):
+The project uses npm (`package-lock.json`):
 
-- `pnpm dev` — local dev server
-- `pnpm lint` — lint
-- `pnpm typecheck` — `tsc --noEmit`
-- `pnpm build` — production build (must pass before any phase is marked done)
+- `npm run dev` — local dev server
+- `npm run lint` — lint
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run build` — production build (must pass before any phase is marked done)
 
 ## Hard rules
 
@@ -52,4 +52,4 @@ Use whichever package manager the project is initialised with (default `pnpm`):
 - Video section plays placeholder clips through a lazy-loaded modal or inline player
 - Lighthouse mobile: Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95
 - Changing `src/config/site.ts` and `src/data/*` is enough to rebrand and swap content
-- `pnpm build` passes; README explains how to run and how to replace content
+- `npm run build` passes; README explains how to run and how to replace content

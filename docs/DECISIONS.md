@@ -43,3 +43,16 @@ Judgement calls made while building the demo, where the docs were silent or ambi
 - **The hero line drawing animates with CSS only** (`stroke-dashoffset`), so it is server-rendered and shows its final state for reduced-motion users.
 - **Package manager:** the project was initialised with npm (`package-lock.json`), so commands use `npm run`.
 - **Demo badge removed (2026-10-18).** The user deleted its text from `layoutCopy`, so the floating "Design preview" badge (`DemoRibbon`) was removed too. `NEXT_PUBLIC_DEMO_MODE` still controls the contact form's "nothing was sent" note.
+
+## Redesign (shadcn/ui + V2 showcase look), from 2026-10-23
+
+Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `docs/REDESIGN.md`.
+
+- **V2 reference moved out of the app.** The V2 design file had been pasted over `src/app/page.tsx`, which broke the build (`new Date()` in a client component during prerender). It now lives at `docs/reference/page-v2.tsx` (excluded from typecheck and lint), and `src/app/page.tsx` is the small route file again, composing `src/features/home`.
+- **21st.dev is optional, never blocking (user decision).** Its MCP search was failing, and the free tier has no AI generation and only 2 code retrievals a day. Showpiece sections are built from shadcn + Motion by adapting V2's own effects. Code the user sends from 21st.dev is adapted to our tokens and credited in `docs/COMPONENT_SOURCES.md`.
+- **`components.json` fixed for Tailwind v4:** `new-york` style (Radix primitives), empty `tailwind.config`, `src/app/globals.css`, CSS variables, lucide icons. The old file is backed up at `docs/reference/components.json.bak`.
+- **Colours.** `--primary` stays the client's #097E9E. V2's palette (night, deep, silver, steel) covers the dark surfaces, and #8EEBFF (`--glow`) covers small text, links and focus rings on dark. #097E9E is 4.23:1 on the dark background and 4.18:1 on V2's paper, so it is used for buttons, fills and large elements only. Small accent text on light uses #07657F (5.9:1). White text on #097E9E is 4.68:1.
+- **Fonts: Bricolage Grotesque (display) + Geist (body), replacing Archivo (user approved, 2026-10-23).** Both are sans, so the client's "no serif" request still holds. Geist Mono replaces JetBrains Mono for codes and specs, so body and mono come from one family.
+- **Real client details win.** Where V2 shows placeholders ("Brand Name", "[Street address]"), the values from `src/config/site.ts` are used.
+- **No dates computed in components.** The footer shows no year, which keeps Cache Components prerendering safe.
+- **Commands use npm** throughout the docs (CLAUDE.md, BUILD_PLAN, REDESIGN).
