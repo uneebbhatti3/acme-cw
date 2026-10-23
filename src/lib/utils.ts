@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 
@@ -22,4 +23,11 @@ export function hashString(value: string): number {
 
 export function whatsappHref(number: string, text: string) {
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+=======
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+>>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
 }

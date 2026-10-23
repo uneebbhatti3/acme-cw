@@ -12,8 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+<<<<<<< HEAD
     // Design reference files, not part of the app.
     "docs/reference/**",
+=======
+>>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
   ]),
 ]);
 

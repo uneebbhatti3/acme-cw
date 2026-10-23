@@ -39,6 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+<<<<<<< HEAD
 
 # keep the example env file
 !.env.example
+=======
+>>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
