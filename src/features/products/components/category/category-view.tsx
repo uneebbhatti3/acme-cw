@@ -1,0 +1,56 @@
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { PageHero } from "@/components/layout/page-hero";
+import { Section } from "@/components/layout/section";
+import { JsonLd } from "@/components/seo/json-ld";
+import { productsCopy } from "@/features/products/data/copy";
+import { filterFacets } from "@/features/products/data/filters";
+import { categoryHref, getCategory, getProductsByCategory, productHref, toSummary } from "@/features/products/lib/content";
+import { itemListJsonLd } from "@/lib/seo";
+import { ProductFilters, ProductFiltersStatic } from "../product-filters";
+import { OtherCategories } from "./other-categories";
+
+/** Category page body: hero, filterable product list and the other ranges. */
+export async function CategoryView({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
+  const cat = getCategory(category);
+  if (!cat) notFound();
+
+  const products = getProductsByCategory(cat.slug);
+  const summaries = products.map(toSummary);
+  const href = categoryHref(cat.slug);
+
+  return (
+    <>
+      <JsonLd data={itemListJsonLd(cat.name, products.map((p) => ({ name: p.name, href: productHref(p) })))} />
+      <PageHero
+        title={cat.name}
+        subtitle={cat.description}
+        kind={cat.placeholderKind}
+        before={
+          <Breadcrumbs
+            dark
+            items={[
+              { name: productsCopy.breadcrumb, href: "/products" },
+              { name: cat.name, href },
+            ]}
+          />
+        }
+      >
+        <p className="mt-6 text-sm text-steel-300">
+          {productsCopy.rangeLabel(cat.rangeSize)}. {productsCopy.listedNote(products.length)}
+        </p>
+      </PageHero>
+
+      <Section className="pt-8 md:pt-10 lg:pt-12">
+        {/* The prerendered fallback shows the full list with the same layout. */}
+        <Suspense fallback={<ProductFiltersStatic products={summaries} facets={filterFacets} />}>
+          <ProductFilters products={summaries} facets={filterFacets} />
+        </Suspense>
+      </Section>
+
+      <OtherCategories currentSlug={cat.slug} />
+    </>
+  );
+}

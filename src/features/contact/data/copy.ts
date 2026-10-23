@@ -1,0 +1,49 @@
+/** Page copy for this feature. Edit text here, not in components. */
+
+export const contactCopy = {
+  hero: {
+    title: "Start a product, OEM or distribution inquiry",
+    subtitle: "Send product requirements, quote requests, private-label needs or export questions to our sales team in Sialkot.",
+  },
+  form: {
+    title: "Send an inquiry",
+    name: "Full name",
+    company: "Company",
+    email: "Email",
+    phone: "Phone",
+    optional: "optional",
+    country: "Country",
+    countryPlaceholder: "Start typing a country",
+    product: "Product of interest",
+    productPlaceholder: "Product name or code",
+    message: "Message",
+    messagePlaceholder: "Quantities, sizes, finishes or any other details",
+    consent: "I agree that my details are used to answer this inquiry.",
+    submit: "Send inquiry",
+    submitting: "Sending",
+    successTitle: "Inquiry received",
+    successText: "Thank you. A member of our sales team will reply by email.",
+    successDemo: "Design preview: nothing was sent.",
+    again: "Send another inquiry",
+    errorSummary: "Please check the highlighted fields.",
+    quoteSubject: (product: string) => `Quote request: ${product}`,
+    errors: {
+      name: "Enter your full name.",
+      email: "Enter a valid email address, like name@company.com.",
+      country: "Enter your country.",
+      message: "Enter a message of at least 10 characters.",
+      consent: "Tick the box so we can reply to you.",
+    },
+  },
+  details: {
+    title: "Contact details",
+    address: "Address",
+    phone: "Phone",
+    email: "Email",
+    hours: "Working hours",
+    quoteTitle: "Request a quote",
+    quoteTip:
+      "For quotations, include product names or SKUs, estimated quantities, your delivery market, and whether you need OEM branding or private-label packaging.",
+    mapLabel: "Map placeholder. A live map can be added later.",
+  },
+};
