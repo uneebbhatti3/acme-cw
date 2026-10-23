@@ -1,5 +1,4 @@
 @AGENTS.md
-<<<<<<< HEAD
 
 # CLAUDE.md — Surgical Instruments Manufacturer Website (Demo)
 
@@ -54,5 +53,3 @@ The project uses npm (`package-lock.json`):
 - Lighthouse mobile: Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95
 - Changing `src/config/site.ts` and `src/data/*` is enough to rebrand and swap content
 - `npm run build` passes; README explains how to run and how to replace content
-=======
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc

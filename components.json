@@ -1,40 +1,21 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-<<<<<<< HEAD
   "style": "new-york",
-=======
-  "style": "base-vega",
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
   "rsc": true,
   "tsx": true,
   "tailwind": {
     "config": "",
     "css": "src/app/globals.css",
-<<<<<<< HEAD
     "baseColor": "slate",
-=======
-    "baseColor": "neutral",
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
     "cssVariables": true,
     "prefix": ""
   },
   "iconLibrary": "lucide",
-<<<<<<< HEAD
-=======
-  "rtl": false,
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
     "ui": "@/components/ui",
     "lib": "@/lib",
     "hooks": "@/hooks"
-<<<<<<< HEAD
   }
-=======
-  },
-  "menuColor": "default",
-  "menuAccent": "subtle",
-  "registries": {}
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
 }

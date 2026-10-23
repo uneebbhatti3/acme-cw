@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { SortValue } from "@/features/products/data/filters";
@@ -65,46 +64,4 @@ export function useProductFilters(products: ProductSummary[], facets: FilterFace
   const active = facets.flatMap((f) => (selected[f.key] ?? []).map((v) => ({ key: f.key, value: v })));
 
   return { selected, sort, filtered, active, toggle, setFacet, clearAll, setSort };
-=======
-import { useMemo, useState } from "react";
-
-import { products } from "@/features/products/data/data";
-import { filterProducts } from "@/features/products/healper/filter-products";
-import type { ProductViewMode } from "@/features/products/types/product";
-
-export function useProductFilters() {
-  const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [availability, setAvailability] = useState("All");
-  const [viewMode, setViewMode] = useState<ProductViewMode>("grid");
-
-  const filteredProducts = useMemo(
-    () =>
-      filterProducts(products, {
-        query,
-        category: selectedCategory,
-        availability,
-      }),
-    [query, selectedCategory, availability],
-  );
-
-  const clearFilters = () => {
-    setQuery("");
-    setSelectedCategory("All");
-    setAvailability("All");
-  };
-
-  return {
-    query,
-    setQuery,
-    selectedCategory,
-    setSelectedCategory,
-    availability,
-    setAvailability,
-    viewMode,
-    setViewMode,
-    filteredProducts,
-    clearFilters,
-  };
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
 }

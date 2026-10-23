@@ -30,9 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-<<<<<<< HEAD
   "exclude": ["node_modules", "docs/reference"]
-=======
-  "exclude": ["node_modules"]
->>>>>>> c95d78430d80c9a2c3e8e7e28542bfe327beeafc
 }
