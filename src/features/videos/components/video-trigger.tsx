@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import type { VideoItem } from "@/features/videos/types";
 
 const VideoModal = dynamic(() => import("./video-modal"), { ssr: false });
@@ -21,9 +21,11 @@ export function VideoTrigger({
 }) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   return (
     <>
       <button
+        ref={buttonRef}
         type="button"
         className={className}
         aria-label={label}
@@ -35,7 +37,7 @@ export function VideoTrigger({
       >
         {children}
       </button>
-      {loaded && <VideoModal video={video} open={open} onClose={() => setOpen(false)} />}
+      {loaded && <VideoModal video={video} open={open} onClose={() => setOpen(false)} returnFocus={() => buttonRef.current?.focus()} />}
     </>
   );
 }

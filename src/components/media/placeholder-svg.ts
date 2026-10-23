@@ -11,18 +11,20 @@ import { ART_H, ART_W, detailArt, frontArt, sideArt, type ArtTone } from "./inst
  */
 
 export type Ratio = "4/3" | "1/1" | "3/2" | "16/9" | "4/5";
-export type Tone = "steel" | "ink";
+/** steel: dotted light stage. ink: dark glow ground. clear: no ground, for art laid over a dark card. */
+export type Tone = "steel" | "ink" | "clear";
 
 export const RATIOS: Ratio[] = ["4/3", "1/1", "3/2", "16/9", "4/5"];
-export const TONES: Tone[] = ["steel", "ink"];
+export const TONES: Tone[] = ["steel", "ink", "clear"];
 export const KINDS: InstrumentKind[] = ["forceps", "scissors", "retractor", "needleHolder", "clamp", "generic"];
 export const VIEWS: ViewType[] = ["front", "side", "top", "back", "detail", "angle"];
 
 const RATIO_VALUE: Record<Ratio, number> = { "4/3": 4 / 3, "1/1": 1, "3/2": 3 / 2, "16/9": 16 / 9, "4/5": 4 / 5 };
 
-const ART_TONES: Record<Tone, ArtTone> = {
+export const ART_TONES: Record<Tone, ArtTone> = {
   steel: { ln: "#10272D", st: "#CBD6DC", sh: "#8DA0AB", hi: "#FFFFFF", accent: themeColors.brandDeep },
   ink: { ln: "#0A1519", st: "#C3D0D7", sh: "#7D909B", hi: "#FFFFFF", accent: themeColors.glow },
+  clear: { ln: "#0A1519", st: "#C3D0D7", sh: "#7D909B", hi: "#FFFFFF", accent: themeColors.glow },
 };
 
 /** URL of the generated artwork. Ratio "4/3" becomes "4x3" in the file name. */
@@ -63,7 +65,7 @@ function viewArt(t: ArtTone, kind: InstrumentKind, view: ViewType) {
 
 export function placeholderSvg(kind: InstrumentKind, view: ViewType, ratio: Ratio, tone: Tone): string {
   const t = ART_TONES[tone];
-  const ink = tone === "ink";
+  const ink = tone !== "steel";
   const w = ART_W;
   const h = Math.round(w / RATIO_VALUE[ratio]);
   const detail = view === "detail";
@@ -71,10 +73,13 @@ export function placeholderSvg(kind: InstrumentKind, view: ViewType, ratio: Rati
   const fit = detail ? Math.max(1, h / ART_H) : Math.min(0.86, (h * 0.82) / ART_H);
   const place = `translate(${w / 2} ${h / 2}) scale(${Math.round(fit * 1000) / 1000}) translate(${-CX} ${-CY})`;
 
-  const ground = ink
-    ? `<rect width="${w}" height="${h}" fill="${themeColors.night}"/>
+  const ground =
+    tone === "clear"
+      ? ""
+      : ink
+        ? `<rect width="${w}" height="${h}" fill="${themeColors.night}"/>
 <rect width="${w}" height="${h}" fill="url(#glowA)"/><rect width="${w}" height="${h}" fill="url(#glowB)"/>`
-    : `<rect width="${w}" height="${h}" fill="url(#bg)"/><rect width="${w}" height="${h}" fill="url(#dots)"/>`;
+        : `<rect width="${w}" height="${h}" fill="url(#bg)"/><rect width="${w}" height="${h}" fill="url(#dots)"/>`;
 
   const defs = `<defs>
 <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F5F7"/></linearGradient>

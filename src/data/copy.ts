@@ -4,10 +4,22 @@
  */
 
 export const ctaCopy = {
-  title: "Looking for a reliable instruments manufacturer?",
-  text: "Send product names or SKUs, quantities and your delivery market. We reply with a quote, OEM options and lead times.",
-  primary: "Contact us",
-  whatsapp: "Chat on WhatsApp",
+  title: "Tell us what you need.",
+  text: "Send product names or SKUs, quantities and your delivery market. We reply with a quote, OEM and private-label options and lead times.",
+  primary: "Request a quote",
+  catalogue: "Download the catalogue",
+  email: "Email",
+  phone: "Phone",
+  whatsapp: "WhatsApp",
+  whatsappLink: "Message us",
+};
+
+/** Certificate badges (home and about). */
+export const certificationsCopy = {
+  status: "Certificate available on request",
+  view: "View certificate",
+  open: "Open the document",
+  close: "Close",
 };
 
 export const layoutCopy = {

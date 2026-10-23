@@ -1,32 +1,91 @@
+import { Download, Mail, MessageCircle, Phone } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { Container } from "@/components/layout/container";
-import { LinkButton, buttonClasses } from "@/components/ui/legacy/button";
+import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { ctaCopy, layoutCopy } from "@/data/copy";
 import { whatsappHref } from "@/lib/utils";
 
-export function CtaBanner() {
-  const wa = siteConfig.contact.whatsapp;
+function ContactTile({ icon, label, children, href, external }: { icon: ReactNode; label: string; children: ReactNode; href?: string; external?: boolean }) {
+  const body = (
+    <>
+      <span className="text-glow">{icon}</span>
+      <span className="min-w-0">
+        <span className="block text-sm text-muted-foreground">{label}</span>
+        <span className="block break-words font-semibold text-silver">{children}</span>
+      </span>
+    </>
+  );
+  const cls = "glass flex items-center gap-4 rounded-2xl p-4";
+  if (!href) return <div className={cls}>{body}</div>;
   return (
-    <section className="bg-paper pb-12 md:pb-16 lg:pb-24">
+    <a href={href} className={`${cls} transition-colors hover:border-white/25`} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      {body}
+    </a>
+  );
+}
+
+/**
+ * Closing call to action on a dark glow card: quote and catalogue buttons,
+ * plus email, phone and WhatsApp (when set) from config.
+ */
+export function CtaBanner() {
+  const { contact } = siteConfig;
+  const icon = "size-[22px]";
+  return (
+    <section aria-labelledby="cta-title" className="surface-dark py-12 md:py-16">
       <Container>
-        <div className="on-dark relative isolate overflow-hidden rounded-[20px] bg-ink-soft px-6 py-12 md:px-12 md:py-16 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-16">
-          <div aria-hidden className="drafting-grid absolute inset-0 -z-10 opacity-70" />
-          <div className="max-w-xl">
-            <h2 className="text-h2 text-white">{ctaCopy.title}</h2>
-            <p className="mt-4 text-lg text-steel-300">{ctaCopy.text}</p>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-3 lg:mt-0 lg:shrink-0">
-            <LinkButton href="/contact">{ctaCopy.primary}</LinkButton>
-            {wa && (
-              <a
-                href={whatsappHref(wa, layoutCopy.whatsappText)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={buttonClasses({ variant: "onDark" })}
-              >
-                {ctaCopy.whatsapp}
-              </a>
-            )}
+        <div className="cta-card grain overflow-hidden rounded-[2rem] border border-white/12 px-6 py-14 md:rounded-[3rem] md:px-16 md:py-24">
+          <div className="relative z-[2] grid gap-12 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-8">
+              <h2 id="cta-title" className="text-display text-metal pb-1">
+                {ctaCopy.title}
+              </h2>
+              <p className="text-lede mt-6 max-w-[34rem] text-muted-foreground">{ctaCopy.text}</p>
+              <div className="mt-9 flex flex-wrap items-center gap-3">
+                <Button asChild variant="glow" size="lg">
+                  <Link href="/contact">{ctaCopy.primary}</Link>
+                </Button>
+                {siteConfig.features.showCatalogue && (
+                  <Button asChild variant="outline" size="lg" className="text-silver hover:text-white">
+                    <Link href="/catalogue">
+                      <Download aria-hidden />
+                      {ctaCopy.catalogue}
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </div>
+            <ul className="grid gap-3 lg:col-span-4">
+              <li>
+                <ContactTile icon={<Mail aria-hidden strokeWidth={1.6} className={icon} />} label={ctaCopy.email} href={`mailto:${contact.email}`}>
+                  {contact.email}
+                </ContactTile>
+              </li>
+              <li>
+                <ContactTile
+                  icon={<Phone aria-hidden strokeWidth={1.6} className={icon} />}
+                  label={ctaCopy.phone}
+                  href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
+                >
+                  {contact.phone}
+                </ContactTile>
+              </li>
+              {contact.whatsapp && (
+                <li>
+                  <ContactTile
+                    icon={<MessageCircle aria-hidden strokeWidth={1.6} className={icon} />}
+                    label={ctaCopy.whatsapp}
+                    href={whatsappHref(contact.whatsapp, layoutCopy.whatsappText)}
+                    external
+                  >
+                    {ctaCopy.whatsappLink}
+                  </ContactTile>
+                </li>
+              )}
+              <li className="px-1 text-sm text-steel-dim">{contact.hours}</li>
+            </ul>
           </div>
         </div>
       </Container>

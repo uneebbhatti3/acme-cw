@@ -1,39 +1,32 @@
-import type { InstrumentKind } from "@/types";
+/** Icons available to the home trust strip and capability cards (mapped in the components). */
+export type HomeIcon = "factory" | "globe" | "tag" | "file" | "wrench" | "ruler" | "shield";
 
-export type Point = [number, number];
-/** Cubic Bézier: start, two control points, end. */
-export type Bezier = [Point, Point, Point, Point];
-
-/** Instruments drawn with two handles meeting at a box lock. */
-export type HingedKind = Exclude<InstrumentKind, "retractor">;
-
-/** Views shown in the product spotlight. */
-export type SpotlightView = "front" | "back" | "side" | "detail";
-
-export interface JawSet {
-  a: string;
-  b: string;
-  w: number;
-  serrate: [number, number] | null;
-  ratchet: boolean;
+export interface HomeFeature {
+  icon: HomeIcon;
+  title: string;
+  text: string;
 }
 
-/** A numbered part on the hero drawing. `mx` is the marker x, `tx`/`ty` the leader target. */
-export interface DrawingPart {
-  id: number;
-  name: string;
-  note: string;
-  mx: number;
-  tx: number;
-  ty: number;
+/** A labelled point on the hero drawing, as a percentage of the drawing's width and height. */
+export interface HeroCallout {
+  label: string;
+  x: number;
+  y: number;
+  /** Show the label below the point instead of above. */
+  below?: boolean;
 }
 
 export interface Milestone {
+  when: string;
   title: string;
   text: string;
 }
 
 export interface HomeStat {
-  value: string;
+  /** Counts up to this number. */
+  value: number;
+  suffix?: string;
+  /** Shown as written instead of counting (for a year). */
+  display?: string;
   label: string;
 }

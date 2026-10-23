@@ -72,3 +72,13 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **WhatsApp green is a token** (`--whatsapp`), used by that button only. The button is still hidden while `contact.whatsapp` is empty.
   - **`instrument-shapes.ts` removed.** `PageHero` now uses the dark placeholder art.
   - **`--header-h` is 80px** (12 to 16px top offset plus the 56px pill).
+- **Redesign Phase 3 (home).**
+  - **Twelve sections, as planned.** Light and dark sheets alternate: hero with trust strip (dark), capabilities (light), range bento (dark), product viewer (light), story and stats (dark), featured products (light), video highlight (dark), certifications (light), then marquee and CTA (dark).
+  - **Marquee shows the range names, not client logos** (user approved). No logo strip ships until real client logos exist.
+  - **Hero headline shortened to two display lines** ("Precision instruments / for healthcare, worldwide."), from the client's longer title, which would run to five lines at display size. The full sentence and the client's facts remain in the lede.
+  - **The headline only lifts into place; it never fades.** It is the largest element on screen (the LCP element), and transparent text would delay LCP.
+  - **The hero light sweep starts after the page `load` event**, not during first paint. The SVG `drop-shadow`, the glow `blur()` and the grain's `mix-blend-mode` were removed because they were costly to paint on mid-range phones.
+  - **Phones scroll the range tiles and featured products sideways** with CSS scroll snap, not the embla Carousel. Same behaviour, no JavaScript.
+  - **The shared `CtaBanner` was rebuilt** in V2's gradient style. Every page that ends with it now ends on the dark band, joining the footer.
+  - **CSS is inlined in `<head>`** (`experimental.inlineCss`, which Next recommends for Tailwind). This removes the render-blocking stylesheet request. Tailwind no longer scans `docs/`.
+  - **Lighthouse baseline (local machine, mobile preset, CPU benchmark ~1,100).** Before the redesign: Home 58, About 51 performance, with blocking time 2.7 to 3.2s. After Phase 3: Home 56, About 55, blocking time 1.2s; Accessibility, Best Practices and SEO are 100. The remaining gap is site-wide hydration on a slow test machine, and it is the subject of the Phase 6 performance pass.

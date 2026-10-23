@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Only scan the app for class names (not the design references in docs/). */
+@source not "../../docs";
+
 /*
  * Design tokens: the single source for colour, type, radius and motion.
  * Rebranding means editing the three brand values below (and siteConfig).
@@ -48,6 +51,8 @@
 
   --radius: 0.875rem;
   --header-h: 80px;
+  --sec: clamp(4rem, 2.8rem + 5vw, 7rem); /* section padding */
+  --round: 2rem; /* sheet corner and overlap */
   --whatsapp: #1f8f5a; /* WhatsApp brand green, for its button only */
 
   /* Legacy names, kept until every page is migrated (removed in redesign Phase 6). */
@@ -259,6 +264,9 @@
   /* Polished-metal headline fill. Text stays selectable and readable without it. */
   .text-metal {
     background: linear-gradient(180deg, #ffffff 0%, var(--silver) 38%, var(--steel) 100%);
+    /* On inline text the gradient restarts on every wrapped line. */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -277,7 +285,7 @@
   }
   @supports (backdrop-filter: blur(1px)) {
     .glass {
-      background: rgb(5 11 14 / 0.58);
+      background: rgb(5 11 14 / 0.78);
       backdrop-filter: blur(16px) saturate(140%);
     }
   }
@@ -293,8 +301,7 @@
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    opacity: 0.07;
-    mix-blend-mode: overlay;
+    opacity: 0.045;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
 
@@ -310,14 +317,74 @@
   .sheet {
     position: relative;
     z-index: 2;
-    margin-top: -2rem;
-    border-radius: 2rem 2rem 0 0;
+    margin-top: calc(var(--round) * -1);
+    border-radius: var(--round) var(--round) 0 0;
   }
   @media (min-width: 768px) {
-    .sheet {
-      margin-top: -2.5rem;
-      border-radius: 2.5rem 2.5rem 0 0;
+    :root {
+      --round: 2.5rem;
     }
+  }
+
+  /* Section padding; .sec-pre leaves room for the next .sheet to overlap. */
+  .sec {
+    position: relative;
+    padding-block: var(--sec);
+  }
+  .sec-pre {
+    padding-bottom: calc(var(--sec) + var(--round));
+  }
+
+  /* Home hero ground: brand glows, plus a soft light at the pointer (--mx / --my). */
+  .hero-ground {
+    background:
+      radial-gradient(70% 55% at 12% 0%, color-mix(in oklab, var(--brand) 30%, transparent), transparent 70%),
+      radial-gradient(60% 50% at 100% 100%, color-mix(in oklab, var(--brand) 16%, transparent), transparent 70%),
+      var(--night);
+  }
+  .hero-ground::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      520px circle at var(--mx, 68%) var(--my, 46%),
+      color-mix(in oklab, var(--glow) 11%, transparent),
+      transparent 62%
+    );
+  }
+
+  /* Sticky stacking card on dark, and the outlined step number on it. */
+  .stack-card {
+    background: linear-gradient(160deg, var(--raise), var(--deep) 70%);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: var(--shadow-sheet);
+  }
+  .bignum {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(4rem, 9vw, 7.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.2px color-mix(in oklab, var(--glow) 55%, transparent);
+  }
+
+  /* Horizontal snap row that lines up with the container edge. */
+  .hscroll {
+    --gutter: max(1.25rem, calc((100% - 1320px) / 2 + 2.5rem));
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 var(--gutter) 1rem;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: thin;
+  }
+  .hscroll > * {
+    flex: none;
+    scroll-snap-align: start;
   }
 
   /* Soft glow that follows the pointer. Set --x / --y on the element. */
@@ -334,7 +401,7 @@
     transition: opacity 0.3s;
     background: radial-gradient(
       460px circle at var(--x, 50%) var(--y, 50%),
-      color-mix(in oklab, var(--glow) 16%, transparent),
+      color-mix(in oklab, var(--spot, var(--glow)) 16%, transparent),
       transparent 62%
     );
   }
@@ -357,6 +424,27 @@
     background-clip: text;
     color: transparent;
     user-select: none;
+  }
+
+  /* Closing call-to-action card: brand glow top left, light glow bottom right. */
+  .cta-card {
+    background:
+      radial-gradient(60% 80% at 15% 0%, color-mix(in oklab, var(--brand) 55%, transparent), transparent 70%),
+      radial-gradient(50% 70% at 100% 100%, color-mix(in oklab, var(--glow) 22%, transparent), transparent 70%),
+      var(--ink);
+  }
+
+  /* Large faded words in the marquee. */
+  .marquee-word {
+    font-weight: 600;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    background: linear-gradient(180deg, rgb(234 241 245 / 0.62), rgb(234 241 245 / 0.14));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   /* Dotted ground behind product art on light surfaces. */
@@ -434,68 +522,57 @@
   transform: none;
 }
 
-/* Hero drawing: lines draw in once, fills and labels follow. */
-.hero-drawing .draw {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: draw-line 1.5s var(--ease-out-soft) both;
-}
-.hero-drawing .draw-fill {
-  fill-opacity: 0.07;
-  animation:
-    draw-line 1.5s var(--ease-out-soft) both,
-    draw-fill 2.6s ease-out both;
-}
-.hero-drawing .fade {
-  animation: draw-fade 1.2s ease-out both;
-}
-.hero-drawing .draw-text {
-  animation: draw-fade 0.9s ease-out 1.9s both;
-}
-@keyframes draw-line {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes draw-fill {
-  0%,
-  55% {
-    fill-opacity: 0;
-  }
-  100% {
-    fill-opacity: 0.07;
-  }
-}
-@keyframes draw-fade {
-  from {
-    opacity: 0;
-  }
-}
-
-/* Slow sheen across the hero drawing. */
-@keyframes steel-sheen {
-  0% {
-    transform: translateX(-60%) skewX(-12deg);
-  }
-  100% {
-    transform: translateX(160%) skewX(-12deg);
-  }
-}
-.animate-sheen {
-  animation: steel-sheen 9s var(--ease-out-soft) infinite;
-}
-
 @keyframes marquee {
   to {
     transform: translateX(-50%);
   }
 }
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 42s linear infinite;
 }
-.animate-marquee:hover,
-.animate-marquee:focus-within {
+.marquee:hover .animate-marquee,
+.marquee:focus-within .animate-marquee {
   animation-play-state: paused;
+}
+
+/* Entrance used above the fold. "rise" fades; "lift" only moves, so text stays painted for LCP. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes lift {
+  from {
+    transform: translateY(18px);
+  }
+}
+.rise {
+  animation: rise 0.9s var(--ease-out-soft) var(--d, 0s) both;
+}
+.lift {
+  animation: lift 0.9s var(--ease-out-soft) var(--d, 0s) both;
+}
+
+/* View change in galleries: a short fade-up. */
+@keyframes art-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.art-in[data-state="active"],
+.art-in:not([data-state]) {
+  animation: art-in 0.4s ease-out;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin 24s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -509,114 +586,11 @@
     scroll-behavior: auto !important;
   }
   .animate-marquee,
-  .animate-sheen {
+  .spin-slow {
     animation: none !important;
   }
   .reveal {
     opacity: 1;
     transform: none;
   }
-}
-
-/* -------------------------------------------------------------------------- */
-/*  Home page. Its own palette and helpers, scoped to .home-root (HomeShell)  */
-/* -------------------------------------------------------------------------- */
-
-.home-root {
-  --paper: #f5f8f9;
-  --surface: #ffffff;
-  --mist: #e4ebee;
-  --line: #cbd6db;
-  --steel-text: #56666f;
-  --steel-fill: #c9d5db;
-  --ink: #0f2a30;
-  --scrub: #097e9e;
-  --scrub-deep: #07657f;
-  --tint: #e0f1f6;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-sans);
-}
-/* Headings take the home palette and body face unless marked .font-display. */
-@layer base {
-  .home-root :is(h1, h2, h3) { font-family: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; line-height: inherit; }
-}
-.home-root .font-display { font-family: var(--font-display); letter-spacing: -0.025em; font-weight: 600; }
-.home-root .c-ink { color: var(--ink); }
-.home-root .c-steel { color: var(--steel-text); }
-.home-root .c-scrub { color: var(--scrub); }
-.home-root .c-paper { color: var(--paper); }
-.home-root .c-soft { color: rgba(245, 248, 249, 0.74); }
-.home-root .bg-paper { background: var(--paper); }
-.home-root .bg-surface { background: var(--surface); }
-.home-root .bg-mist { background: var(--mist); }
-.home-root .bg-ink { background: var(--ink); }
-.home-root .bg-tint { background: var(--tint); }
-.home-root .bd-line { border-color: var(--line); }
-.home-root .bd-dark { border-color: rgba(245, 248, 249, 0.18); }
-.home-root :focus-visible { outline: 2px solid var(--scrub); outline-offset: 3px; border-radius: 4px; }
-.home-root .on-dark :focus-visible { outline-color: #fff; }
-
-.home-root .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
-  height: 3rem; padding: 0 1.5rem; border-radius: 6px;
-  font-weight: 600; font-size: 0.95rem; line-height: 1;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-.home-root .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.home-root .btn-primary { background: var(--scrub); color: #fff; }
-.home-root .btn-primary:hover { background: var(--scrub-deep); }
-.home-root .btn-outline { border: 1.5px solid var(--line); color: var(--ink); background: transparent; }
-.home-root .btn-outline:hover:not(:disabled) { border-color: var(--ink); }
-.home-root .tlink {
-  text-decoration: underline; text-decoration-color: var(--line); text-decoration-thickness: 1.5px;
-  text-underline-offset: 6px; transition: text-decoration-color 0.2s, color 0.2s;
-}
-.home-root .tlink:hover { text-decoration-color: var(--scrub); color: var(--scrub-deep); }
-.home-root .on-dark .tlink { text-decoration-color: rgba(245, 248, 249, 0.35); }
-.home-root .on-dark .tlink:hover { text-decoration-color: #fff; color: #fff; }
-
-.home-root .sheet-grid {
-  background-image:
-    linear-gradient(to right, rgba(15, 42, 48, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 42, 48, 0.07) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 75% 85% at 68% 42%, #000 15%, transparent 72%);
-}
-
-.home-root .row {
-  display: grid; grid-template-columns: 1fr auto; gap: 0.25rem 1.5rem; align-items: baseline;
-  padding: 1.5rem 0; border-bottom: 1px solid var(--line); transition: padding-left 0.25s, color 0.2s;
-}
-.home-root .row .row-name { transition: color 0.2s; }
-.home-root .row[data-active="true"] { padding-left: 0.75rem; }
-.home-root .row[data-active="true"] .row-name { color: var(--scrub); }
-
-.home-root .tab {
-  height: 2.5rem; padding: 0 1.1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 600;
-  border: 1.5px solid var(--line); transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-.home-root .tab[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
-.home-root .tab:hover { border-color: var(--ink); }
-
-.home-root .tl { position: relative; }
-.home-root .tl .dot {
-  display: block; height: 15px; width: 15px; border-radius: 999px; border: 2px solid var(--scrub);
-  background: var(--paper); position: relative; z-index: 1;
-}
-.home-root .tl li:last-child .dot { background: var(--scrub); }
-@media (max-width: 767px) {
-  .home-root .tl { border-left: 1px solid var(--line); margin-left: 7px; padding-left: 28px; }
-  .home-root .tl li .dot { position: absolute; left: -36px; top: 5px; }
-}
-@media (min-width: 768px) {
-  .home-root .tl::before { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 1px; background: var(--line); }
-}
-.home-root .art-in { animation: art-in 0.4s ease-out; }
-@keyframes art-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .home-root *, .home-root *::before, .home-root *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

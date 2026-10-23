@@ -1,24 +1,46 @@
 "use client";
 
 import { Clapperboard } from "lucide-react";
-import { Modal } from "@/components/ui/legacy/modal";
+import { PlaceholderImage } from "@/components/media/placeholder-image";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { videosCopy } from "@/features/videos/data/copy";
 import type { VideoItem } from "@/features/videos/types";
-import { PlaceholderImage } from "@/components/media/placeholder-image";
 
-/** Player loads only while open; closing unmounts it, which stops playback. */
-export default function VideoModal({ video, open, onClose }: { video: VideoItem; open: boolean; onClose: () => void }) {
+/**
+ * Video player in a dialog. The player mounts only while open, so closing it
+ * stops playback. YouTube loads from youtube-nocookie.com, only after a click.
+ */
+export default function VideoModal({
+  video,
+  open,
+  onClose,
+  returnFocus,
+}: {
+  video: VideoItem;
+  open: boolean;
+  onClose: () => void;
+  /** Focuses the trigger on close (the dialog opens without a DialogTrigger). */
+  returnFocus?: () => void;
+}) {
   return (
-    <Modal open={open} onClose={onClose} label={video.title} closeLabel={videosCopy.close} className="max-w-5xl">
-      <div className="overflow-hidden rounded-[var(--radius-card)] bg-ink shadow-2xl">
-        <div className="relative aspect-video w-full">
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent
+        closeLabel={videosCopy.close}
+        onCloseAutoFocus={(e) => {
+          if (!returnFocus) return;
+          e.preventDefault();
+          returnFocus();
+        }}
+        className="surface-dark max-w-5xl gap-0 overflow-hidden border-white/10 bg-deep p-0 sm:max-w-5xl"
+      >
+        <div className="relative aspect-video w-full bg-night">
           {!video.src ? (
             <div className="absolute inset-0">
               <PlaceholderImage kind={video.art ?? "generic"} tone="ink" ratio="16/9" fill />
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-ink/80 p-6 text-center">
-                <Clapperboard aria-hidden className="mb-4 size-9 text-legacy-accent" strokeWidth={1.25} />
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-night/80 p-6 text-center">
+                <Clapperboard aria-hidden className="mb-4 size-9 text-glow" strokeWidth={1.25} />
                 <p className="font-display text-2xl text-white md:text-3xl">{videosCopy.comingSoonTitle}</p>
-                <p className="mt-2 max-w-sm text-steel-300">{videosCopy.comingSoonText}</p>
+                <p className="mt-2 max-w-sm text-muted-foreground">{videosCopy.comingSoonText}</p>
               </div>
             </div>
           ) : video.provider === "youtube" ? (
@@ -44,11 +66,15 @@ export default function VideoModal({ video, open, onClose }: { video: VideoItem;
           )}
         </div>
         <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 py-4 md:px-6">
-          <p className="font-display text-xl text-white">{video.title}</p>
-          {video.duration && <p className="font-mono text-sm text-steel-300">{video.duration}</p>}
-          {video.description && <p className="w-full text-sm text-steel-300">{video.description}</p>}
+          <DialogTitle className="font-display text-xl font-semibold text-white">{video.title}</DialogTitle>
+          {video.duration && <p className="font-mono text-sm text-muted-foreground">{video.duration}</p>}
+          {video.description ? (
+            <DialogDescription className="w-full">{video.description}</DialogDescription>
+          ) : (
+            <DialogDescription className="sr-only">{video.title}</DialogDescription>
+          )}
         </div>
-      </div>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -8,23 +8,23 @@ import Image from "next/image";
 
 export function VideoPoster({ video, sizes, large = false }: { video: VideoItem; sizes: string; large?: boolean }) {
   return (
-    <span className="relative block aspect-video w-full overflow-hidden rounded-[var(--radius-card)] bg-ink">
+    <span className="relative block aspect-video w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-night">
       {video.poster ? (
         <Image src={video.poster} alt="" fill sizes={sizes} className="object-cover" />
       ) : (
         <PlaceholderImage as="span" kind={video.art ?? "generic"} tone="ink" ratio="16/9" fill seed={video.id} />
       )}
-      <span className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+      <span className="absolute inset-0 bg-gradient-to-t from-night/70 via-transparent to-transparent" />
       <span
         className={cn(
-          "absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-ink shadow-lg transition-transform duration-300 group-hover:scale-105",
+          "absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-night shadow-[0_0_0_10px_rgb(255_255_255/0.14)] transition-transform duration-300 group-hover:scale-105",
           large ? "size-20" : "size-14",
         )}
       >
         <Play aria-hidden className={cn("translate-x-0.5 fill-current", large ? "size-7" : "size-5")} strokeWidth={1.5} />
       </span>
       {video.duration && (
-        <span className="absolute bottom-3 right-3 rounded bg-ink/80 px-2 py-0.5 font-mono text-xs text-white">
+        <span className="absolute bottom-3 right-3 rounded-full bg-night/80 px-2.5 py-0.5 font-mono text-xs text-white">
           {video.duration}
         </span>
       )}

@@ -1,7 +1,7 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { buttonClasses } from "@/components/ui/legacy/button";
 import { siteConfig } from "@/config/site";
-import { ctaCopy, layoutCopy } from "@/data/copy";
+import { layoutCopy } from "@/data/copy";
 import { contactCopy } from "@/features/contact/data/copy";
 import { whatsappHref } from "@/lib/utils";
 import { MapPlaceholder } from "./map-placeholder";
@@ -53,7 +53,7 @@ export function ContactDetails() {
           rel="noopener noreferrer"
           className={buttonClasses({ variant: "secondary", className: "mt-6 w-full" })}
         >
-          {ctaCopy.whatsapp}
+          {layoutCopy.whatsapp}
         </a>
       )}
 

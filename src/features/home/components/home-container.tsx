@@ -1,7 +1,0 @@
-import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-
-/** The home page's wider measure (1280px with 24 to 40px gutters). */
-export function HomeContainer({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("mx-auto w-full max-w-[1280px] px-6 md:px-10", className)}>{children}</div>;
-}

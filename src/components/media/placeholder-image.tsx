@@ -50,12 +50,12 @@ export function PlaceholderImage({
   as: Wrapper = "div",
   priority = false,
 }: PlaceholderImageProps) {
-  const ink = tone === "ink";
+  const ink = tone !== "steel";
   return (
     <Wrapper
       className={cn(
         "relative block overflow-hidden",
-        ink ? "bg-night" : "bg-card",
+        tone === "clear" ? "bg-transparent" : ink ? "bg-night" : "bg-card",
         fill ? "absolute inset-0" : "w-full",
         className,
       )}

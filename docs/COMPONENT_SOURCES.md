@@ -23,6 +23,8 @@ Local changes to the generated files:
 
 Installed (Phase 1): accordion, aspect-ratio, badge, breadcrumb, button, card, carousel, checkbox, command, dialog, drawer, empty, field, hover-card, input, label, navigation-menu, pagination, popover, scroll-area, select, separator, sheet, skeleton, sonner, table, tabs, textarea, toggle, toggle-group, tooltip.
 
+Changed in Phase 3: `dialog.tsx` (night overlay with blur, rounder panel, larger close button with a `closeLabel` prop for its accessible name).
+
 Changed in Phase 2: `button.tsx` (pill shape, larger sizes, full-strength focus ring, `glow` variant for dark surfaces, token-based outline and link variants), `navigation-menu.tsx` (rounder, deeper dropdown panel with more offset), `breadcrumb.tsx` (`BreadcrumbPage` no longer claims `role="link"`, which misled screen readers).
 
 Not installed: `combobox` (it pulls in `@base-ui/react`; the country picker uses Popover + Command instead).
@@ -37,4 +39,12 @@ Showpieces built in-house from the V2 design. The list is filled in per phase.
 | `src/components/layout/header.tsx` | V2 `Header` (glass nav pill) | Rebuilt on shadcn NavigationMenu (Products mega-menu with range thumbnails) and Sheet (mobile menu). |
 | `src/components/layout/footer.tsx` | V2 `Footer` (large wordmark) | Wordmark sized from the brand-name length so any name fits on one line. |
 | `src/components/layout/page-hero.tsx` | V2 hero ground (glow, grain) | Reuses the dark placeholder art as a masked decorative image. |
+| `src/features/home/components/hero/hero-art.tsx` ★ | V2 `Hero` (light sweep, pointer light, callouts, rotating badge) | Art drawn from `instrument-art.ts`; sweep starts after load; static light under reduced motion. |
+| `src/components/sections/spotlight-card.tsx` ★ | V2 `.spot` tiles | One component for capability cards and range tiles; glow colour set per surface with `--spot`. |
+| `src/features/home/components/viewer/product-viewer.tsx` ★ | V2 `Viewer` / `Stage` (loupe, view tabs) | shadcn Tabs for the views; the loupe magnifies the same image file; Enlarge opens the product lightbox. |
+| `src/components/sections/count-up.tsx` ★ | V2 `Counter` | Server-renders the final value; screen readers get the final value only. |
+| `src/components/sections/marquee.tsx` ★ | V2 `Marquee` | Range names (no client logos); pauses on hover; off under reduced motion. |
+| `src/components/sections/cta-banner.tsx` | V2 `FinalCta` | Shared closing CTA on every page. |
+| `src/features/videos/components/video-modal.tsx` ★ | V2 `Videos` modal | Rebuilt on shadcn Dialog; focus returns to the play button. |
+| `src/components/sections/certifications.tsx` | V2 certificate list | HoverCard for the full description; Dialog when a document file exists. Shared with About. |
 | `src/components/media/placeholder-svg.ts` | V2 viewer stage (`.dots`) and hero ground | Light dotted stage and dark glow ground; colours from `src/config/theme.ts`. |

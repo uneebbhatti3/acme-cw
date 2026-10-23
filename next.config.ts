@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  // Tailwind output is small; inlining it removes the render-blocking stylesheet request.
+  experimental: { inlineCss: true },
   turbopack: {
     rules: {
       "*.css": {
