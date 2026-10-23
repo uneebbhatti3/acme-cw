@@ -64,3 +64,11 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **Error colour changed to #B3412A** (5.1:1 on paper), with #FF9E8A on dark (9.9:1). The old #C8553D was 3.9:1 on the new paper background.
   - **`src/config/theme.ts`** holds the hex values for places CSS cannot reach (placeholder SVGs, OG image, browser theme colour). It must be kept in step with `globals.css`.
   - **`instrument-shapes.ts` (old line art) is kept** only for the inner-page `PageHero` until that component is redesigned in Phase 2.
+- **Redesign Phase 2 (layout).**
+  - **One dark glass pill on every page**, instead of "transparent over the hero, solid after scroll". The pill floats above light and dark tops alike, and after scrolling it only gains a shadow. One style means one logo treatment and no colour flips while scrolling.
+  - **Logo in white on dark** (`siteConfig.logo.invertOnDark`): the client logo has near-black lettering that disappears on the dark pill and footer. The logo file, size and alt text now come from `siteConfig` (the alt was hard-coded before).
+  - **Products is a menu button, not a link.** Radix NavigationMenu triggers are buttons. `/products` is reached from "All products" in the panel, the mobile menu and the footer. Hover, Enter/Space and Esc all work, and focus returns to the trigger.
+  - **Breadcrumbs follow the surface tokens**, so the old `dark` prop was removed.
+  - **WhatsApp green is a token** (`--whatsapp`), used by that button only. The button is still hidden while `contact.whatsapp` is empty.
+  - **`instrument-shapes.ts` removed.** `PageHero` now uses the dark placeholder art.
+  - **`--header-h` is 80px** (12 to 16px top offset plus the 56px pill).

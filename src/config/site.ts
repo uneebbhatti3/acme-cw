@@ -14,6 +14,8 @@ export const siteConfig = {
   /** Short mark used in the logo badge. */
   brandMark: "ACW",
   legalName: "Acme Commercial Ways (Pvt) Ltd.",
+  /** Logo file under /public with its pixel size. `invertOnDark` shows it in white on dark surfaces (for logos with dark lettering). */
+  logo: { src: "/logo.png", width: 1176, height: 266, invertOnDark: true },
   tagline: "Surgical & Dental Instruments Manufacturer",
   description:
     "Sialkot-based manufacturer and exporter of surgical, dental, veterinary and manicure instruments and scissors, serving healthcare professionals in 50+ export markets since 1960.",

@@ -79,7 +79,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
         <a
           href="#main"
-          className="fixed left-4 top-3 z-[60] -translate-y-24 rounded-[var(--radius-control)] bg-white px-4 py-3 font-medium text-ink shadow-[var(--shadow-lift)] transition-transform focus:translate-y-0"
+          className="fixed left-4 top-3 z-[60] -translate-y-24 rounded-full bg-white px-5 py-3 font-medium text-night shadow-[var(--shadow-lift)] transition-transform focus:translate-y-0"
         >
           {layoutCopy.skip}
         </a>

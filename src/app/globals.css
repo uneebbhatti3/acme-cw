@@ -47,7 +47,8 @@
   --link: var(--brand-deep);
 
   --radius: 0.875rem;
-  --header-h: 72px;
+  --header-h: 80px;
+  --whatsapp: #1f8f5a; /* WhatsApp brand green, for its button only */
 
   /* Legacy names, kept until every page is migrated (removed in redesign Phase 6). */
   --ink-soft: #16242f;
@@ -63,28 +64,31 @@
   --warn: var(--destructive);
 }
 
-/* Dark surface: hero, feature sections, footer. Same token names, dark values. */
-.surface-dark {
-  --background: var(--night);
-  --foreground: var(--silver);
-  --card: var(--deep);
-  --card-foreground: var(--silver);
-  --popover: var(--deep);
-  --popover-foreground: var(--silver);
-  --secondary: var(--raise);
-  --secondary-foreground: var(--silver);
-  --muted: var(--raise);
-  --muted-foreground: var(--steel);
-  --accent: rgb(255 255 255 / 0.08);
-  --accent-foreground: #ffffff;
-  --destructive: #ff9e8a;
-  --border: rgb(255 255 255 / 0.1);
-  --input: rgb(255 255 255 / 0.16);
-  --ring: var(--glow);
-  --link: var(--glow);
-  background-color: var(--background);
-  color: var(--foreground);
-  color-scheme: dark;
+/* Dark surface: hero, feature sections, footer. Same token names, dark values.
+   In the base layer so utilities (bg-*, text-*) and .glass can still override it. */
+@layer base {
+  .surface-dark {
+    --background: var(--night);
+    --foreground: var(--silver);
+    --card: var(--deep);
+    --card-foreground: var(--silver);
+    --popover: var(--deep);
+    --popover-foreground: var(--silver);
+    --secondary: var(--raise);
+    --secondary-foreground: var(--silver);
+    --muted: var(--raise);
+    --muted-foreground: var(--steel);
+    --accent: rgb(255 255 255 / 0.08);
+    --accent-foreground: #ffffff;
+    --destructive: #ff9e8a;
+    --border: rgb(255 255 255 / 0.1);
+    --input: rgb(255 255 255 / 0.16);
+    --ring: var(--glow);
+    --link: var(--glow);
+    background-color: var(--background);
+    color: var(--foreground);
+    color-scheme: dark;
+  }
 }
 
 @theme inline {
@@ -118,6 +122,7 @@
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-rule: var(--rule);
+  --color-whatsapp: var(--whatsapp);
 
   /* Legacy colour names (see :root). */
   --color-ink-soft: var(--ink-soft);
@@ -293,6 +298,14 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
 
+  /* Inner-page hero ground: brand glow from the top left, soft light behind the art. */
+  .page-hero {
+    background:
+      radial-gradient(70% 60% at 8% 0%, color-mix(in oklab, var(--brand) 30%, transparent), transparent 70%),
+      radial-gradient(50% 60% at 85% 60%, color-mix(in oklab, var(--glow) 7%, transparent), transparent 70%),
+      var(--night);
+  }
+
   /* Rounded sheet that overlaps the section above it. */
   .sheet {
     position: relative;
@@ -328,6 +341,22 @@
   .spotlight:hover::before,
   .spotlight:focus-within::before {
     opacity: 1;
+  }
+
+  /* Footer wordmark: the brand name sized to fill the container on one line. Set --chars to its length. */
+  .wordmark {
+    margin: 0;
+    padding-bottom: 0.06em;
+    font-size: min(13rem, calc((min(100vw, 1320px) - 2.5rem) / (var(--chars, 10) * 0.56)));
+    font-weight: 700;
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+    background: linear-gradient(180deg, rgb(234 241 245 / 0.22), rgb(234 241 245 / 0.02) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    user-select: none;
   }
 
   /* Dotted ground behind product art on light surfaces. */

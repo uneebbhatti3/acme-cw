@@ -1,17 +1,25 @@
 "use client";
 
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
-import { buttonClasses } from "@/components/ui/legacy/button";
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
 import { productsCopy } from "@/features/products/data/copy";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/features/products/types";
-import { Container } from "./container";
 import { Logo } from "./logo";
 
 interface HeaderProps {
@@ -19,31 +27,24 @@ interface HeaderProps {
   categories: (Pick<Category, "slug" | "name" | "placeholderKind"> & { count: number })[];
 }
 
-/** Routes whose top section is light, so the header is solid from the start. */
-function startsLight(pathname: string) {
-  return pathname === "/" || /^\/products\/[^/]+\/[^/]+/.test(pathname);
-}
-
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
+
+const navItem =
+  "inline-flex h-10 flex-row items-center rounded-full bg-transparent px-4 py-0 text-[0.92rem] font-medium text-steel transition-colors hover:bg-white/8 hover:text-white focus:bg-white/8 focus:text-white focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
 
 export function Header(props: HeaderProps) {
   return <HeaderBar {...props} pathname={usePathname()} />;
 }
 
 /**
- * Header without the pathname hook. Used as the Suspense fallback for routes
- * whose path is only known at request time.
+ * Floating glass pill: logo, main navigation with a Products mega-menu,
+ * contact button, and a slide-in menu below `lg`. Without the pathname hook,
+ * so it can be the Suspense fallback for routes known only at request time.
  */
 export function HeaderBar({ categories, pathname }: HeaderProps & { pathname: string }) {
   const [scrolled, setScrolled] = useState(false);
-  const [megaOpen, setMegaOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  // Category thumbnails render after the menu first opens, keeping every page light.
-  const [megaUsed, setMegaUsed] = useState(false);
-  const megaRef = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -52,256 +53,184 @@ export function HeaderBar({ categories, pathname }: HeaderProps & { pathname: st
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close menus on route change.
-  const [lastPath, setLastPath] = useState(pathname);
-  if (pathname !== lastPath) {
-    setLastPath(pathname);
-    setMegaOpen(false);
-    setMobileOpen(false);
-  }
-
-  useEffect(() => {
-    if (!megaOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMegaOpen(false);
-    const onClick = (e: MouseEvent) => {
-      if (megaRef.current && !megaRef.current.contains(e.target as Node)) setMegaOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onClick);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onClick);
-    };
-  }, [megaOpen]);
-
-  const solid = scrolled || megaOpen || startsLight(pathname);
-  const openMega = () => {
-    window.clearTimeout(closeTimer.current);
-    setMegaUsed(true);
-    setMegaOpen(true);
-  };
-  const closeMegaSoon = () => {
-    closeTimer.current = window.setTimeout(() => setMegaOpen(false), 160);
-  };
-
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,color] duration-300",
-        solid
-          ? "bg-white/92 text-ink shadow-[0_1px_0_var(--steel-100),0_8px_24px_rgb(11_22_32/0.05)] backdrop-blur-md"
-          : "bg-transparent text-white",
-      )}
-    >
-      <Container className="flex h-[var(--header-h)] items-center justify-between gap-6">
-        <Logo onDark={!solid} />
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 md:pt-4">
+      <div
+        className={cn(
+          "surface-dark glass pointer-events-auto mx-auto flex h-14 max-w-[1180px] items-center justify-between gap-4 rounded-full pl-5 pr-2 transition-shadow duration-300 md:pl-6",
+          scrolled && "shadow-[0_14px_44px_-14px_rgb(0_0_0/0.65)]",
+        )}
+      >
+        <Logo onDark />
 
-        <nav aria-label="Main" className="hidden lg:block">
-          <ul className="flex items-center gap-1">
+        <NavigationMenu viewport={false} aria-label="Main" className="hidden lg:flex">
+          <NavigationMenuList className="gap-0.5">
             {siteConfig.nav.map((item) => {
               const active = isActive(pathname, item.href);
-              const linkClass = cn(
-                "relative inline-flex h-11 items-center px-3 text-[0.95rem] font-medium transition-colors",
-                solid ? "text-steel-900 hover:text-ink" : "text-steel-100 hover:text-white",
-              );
-              const indicator = (
-                <span
-                  aria-hidden
-                  className={cn(
-                    "absolute inset-x-3 bottom-1.5 h-px origin-left bg-legacy-accent transition-transform duration-300",
-                    active ? "scale-x-100" : "scale-x-0",
-                  )}
-                />
-              );
-              if (item.href !== "/products") {
+              if (item.href === "/products") {
                 return (
-                  <li key={item.href}>
-                    <Link href={item.href} className={linkClass} aria-current={active ? "page" : undefined}>
+                  <NavigationMenuItem key={item.href}>
+                    <NavigationMenuTrigger
+                      className={cn(
+                        navItem,
+                        "data-[state=open]:bg-white/10 data-[state=open]:text-white",
+                        active && "text-white",
+                      )}
+                    >
                       {item.label}
-                      {indicator}
-                    </Link>
-                  </li>
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="surface-dark left-1/2 -translate-x-1/2 p-0 md:w-[min(760px,calc(100vw-2rem))]">
+                      <MegaMenu categories={categories} />
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
                 );
               }
               return (
-                <li key={item.href} onMouseEnter={openMega} onMouseLeave={closeMegaSoon} className="flex items-center">
-                  <Link href={item.href} className={cn(linkClass, "pr-1")} aria-current={active ? "page" : undefined}>
-                    {item.label}
-                    {indicator}
-                  </Link>
-                  <button
-                    type="button"
-                    aria-expanded={megaOpen}
-                    aria-controls="mega-menu"
-                    aria-label={`${item.label}: ${layoutCopy.rangesMenu}`}
-                    onClick={() => (megaOpen ? setMegaOpen(false) : openMega())}
-                    className={cn(
-                      "inline-flex size-9 items-center justify-center rounded-full transition-colors",
-                      solid ? "hover:bg-steel-100" : "hover:bg-white/10",
-                    )}
+                <NavigationMenuItem key={item.href}>
+                  <NavigationMenuLink
+                    asChild
+                    active={active}
+                    className={cn(navItem, "data-[active=true]:bg-white/10 data-[active=true]:text-white")}
                   >
-                    <ChevronDown
-                      aria-hidden
-                      strokeWidth={1.5}
-                      className={cn("size-4 transition-transform", megaOpen && "rotate-180")}
-                    />
-                  </button>
-                </li>
+                    <Link href={item.href} aria-current={active ? "page" : undefined}>
+                      {item.label}
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
               );
             })}
-          </ul>
-        </nav>
+          </NavigationMenuList>
+        </NavigationMenu>
 
-        <div className="flex items-center gap-2">
-          <Link href="/contact" className={buttonClasses({ size: "sm", className: "hidden sm:inline-flex" })}>
-            {layoutCopy.contactButton}
-          </Link>
-          <button
-            type="button"
-            className={cn(
-              "inline-flex size-11 items-center justify-center rounded-[var(--radius-control)] lg:hidden",
-              solid ? "hover:bg-steel-100" : "hover:bg-white/10",
-            )}
-            aria-label={layoutCopy.menu}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
-            onClick={() => setMobileOpen(true)}
-          >
-            <Menu aria-hidden className="size-6" strokeWidth={1.5} />
-          </button>
+        <div className="flex items-center gap-1.5">
+          <Button asChild variant="glow" size="sm" className="hidden sm:inline-flex">
+            <Link href="/contact">{layoutCopy.contactButton}</Link>
+          </Button>
+          <MobileMenu categories={categories} pathname={pathname} />
         </div>
-      </Container>
-
-      {/* Desktop mega-menu */}
-      <div
-        id="mega-menu"
-        ref={megaRef}
-        hidden={!megaOpen}
-        onMouseEnter={openMega}
-        onMouseLeave={closeMegaSoon}
-        className="absolute inset-x-0 top-full hidden border-t border-steel-100 bg-white text-ink shadow-[var(--shadow-lift)] lg:block"
-      >
-        <Container className="grid grid-cols-12 gap-8 py-8">
-          <div className="col-span-3 flex flex-col justify-between border-r border-steel-100 pr-8">
-            <div>
-              <p className="font-display text-2xl">{productsCopy.categoriesTitle}</p>
-              <p className="mt-2 text-sm text-steel-600">{layoutCopy.megaIntro}</p>
-            </div>
-            <Link href="/products" className="link-draw mt-6 self-start text-sm font-medium text-accent-strong">
-              {layoutCopy.allProducts}
-            </Link>
-          </div>
-          <ul className="col-span-9 grid grid-cols-3 gap-3">
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link
-                  href={`/products/${c.slug}`}
-                  className="group flex items-center gap-4 rounded-[10px] p-2 transition-colors hover:bg-paper"
-                >
-                  <span className="block aspect-[3/2] w-24 shrink-0 overflow-hidden rounded-md border border-steel-100 bg-steel-100">
-                    {megaUsed && <PlaceholderImage as="span" kind={c.placeholderKind} ratio="3/2" seed={c.slug} />}
-                  </span>
-                  <span>
-                    <span className="block font-medium group-hover:text-accent-strong">{c.name}</span>
-                    <span className="block text-sm text-steel-600">{productsCopy.rangeLabel(c.count)}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
       </div>
-
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} categories={categories} pathname={pathname} />
     </header>
   );
 }
 
-function MobileMenu({
-  open,
-  onClose,
-  categories,
-  pathname,
-}: {
-  open: boolean;
-  onClose: () => void;
-  categories: HeaderProps["categories"];
-  pathname: string;
-}) {
-  const ref = useRef<HTMLDialogElement>(null);
-  const onCloseRef = useRef(onClose);
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
-    const d = ref.current;
-    if (!d) return;
-    if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
-  }, [open]);
-
-  useEffect(() => {
-    const d = ref.current;
-    if (!d) return;
-    const handle = () => onCloseRef.current();
-    d.addEventListener("close", handle);
-    return () => d.removeEventListener("close", handle);
-  }, []);
-
+function MegaMenu({ categories }: HeaderProps) {
   return (
-    <dialog
-      ref={ref}
-      id="mobile-menu"
-      aria-label={layoutCopy.menu}
-      className="m-0 ml-auto h-dvh max-h-none w-full max-w-md bg-ink p-0 text-white open:flex open:flex-col lg:hidden"
-      onClick={(e) => e.target === ref.current && ref.current?.close()}
-    >
-      <div className="flex h-[var(--header-h)] shrink-0 items-center justify-between px-6">
-        <Logo onDark />
-        <button
-          type="button"
-          onClick={() => ref.current?.close()}
-          aria-label={layoutCopy.closeMenu}
-          className="inline-flex size-11 items-center justify-center rounded-[var(--radius-control)] hover:bg-white/10"
+    <div className="grid grid-cols-[13rem_1fr] gap-2 p-3">
+      <div className="flex flex-col justify-between rounded-2xl bg-white/[0.04] p-5">
+        <div>
+          <p className="font-display text-xl text-white">{layoutCopy.megaTitle}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{layoutCopy.megaIntro}</p>
+        </div>
+        <NavigationMenuLink
+          asChild
+          className="mt-6 inline-flex flex-row items-center gap-2 p-0 text-sm font-semibold text-link hover:bg-transparent hover:text-white focus:bg-transparent"
         >
-          <X aria-hidden className="size-6" strokeWidth={1.5} />
-        </button>
+          <Link href="/products">
+            {layoutCopy.allProducts}
+            <ArrowRight aria-hidden className="size-4 text-current" />
+          </Link>
+        </NavigationMenuLink>
       </div>
-      <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-6 pb-6">
-        <ul className="border-t border-white/10">
-          {siteConfig.nav.map((item) => (
-            <li key={item.href} className="border-b border-white/10">
-              <Link
-                href={item.href}
-                aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                className="flex min-h-16 items-center font-display text-[1.75rem] leading-none aria-[current=page]:text-legacy-accent"
-              >
-                {item.label}
+      <ul className="grid grid-cols-2 gap-1">
+        {categories.map((c) => (
+          <li key={c.slug}>
+            <NavigationMenuLink
+              asChild
+              className="group/cat flex-row items-center gap-3 rounded-2xl p-2 hover:bg-white/[0.06] focus:bg-white/[0.06]"
+            >
+              <Link href={`/products/${c.slug}`}>
+                <span className="block w-20 shrink-0 overflow-hidden rounded-lg ring-1 ring-white/10">
+                  <PlaceholderImage as="span" kind={c.placeholderKind} ratio="3/2" tone="ink" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium leading-snug text-silver group-hover/cat:text-white">
+                    {c.name}
+                  </span>
+                  <span className="block text-xs text-steel-dim">{productsCopy.rangeLabel(c.count)}</span>
+                </span>
               </Link>
-              {item.href === "/products" && (
-                <ul className="-mt-1 grid grid-cols-2 gap-x-4 pb-4">
-                  {categories.map((c) => (
-                    <li key={c.slug}>
-                      <Link
-                        href={`/products/${c.slug}`}
-                        className="flex min-h-11 items-center text-[0.95rem] text-steel-300 hover:text-white"
-                      >
-                        {c.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="shrink-0 border-t border-white/10 p-6">
-        <Link href="/contact" className={buttonClasses({ className: "w-full" })}>
-          {layoutCopy.contactButton}
-        </Link>
-      </div>
-    </dialog>
+            </NavigationMenuLink>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function MobileMenu({ categories, pathname }: HeaderProps & { pathname: string }) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:bg-white/10 hover:text-white lg:hidden"
+          aria-label={layoutCopy.openMenu}
+        >
+          <Menu aria-hidden className="size-6" strokeWidth={1.5} />
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        aria-describedby={undefined}
+        className="surface-dark w-full gap-0 border-white/10 bg-night p-0 sm:max-w-md lg:hidden"
+      >
+        <SheetTitle className="sr-only">{layoutCopy.menuTitle}</SheetTitle>
+        <div className="flex h-20 shrink-0 items-center justify-between px-6">
+          <Logo onDark />
+          <SheetClose asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10 hover:text-white"
+              aria-label={layoutCopy.closeMenu}
+            >
+              <X aria-hidden className="size-6" strokeWidth={1.5} />
+            </Button>
+          </SheetClose>
+        </div>
+        <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-6 pb-6">
+          <ul className="border-t border-border">
+            {siteConfig.nav.map((item) => (
+              <li key={item.href} className="border-b border-border">
+                <SheetClose asChild>
+                  <Link
+                    href={item.href}
+                    aria-current={isActive(pathname, item.href) ? "page" : undefined}
+                    className="flex min-h-16 items-center font-display text-[1.75rem] leading-none text-silver aria-[current=page]:text-glow"
+                  >
+                    {item.label}
+                  </Link>
+                </SheetClose>
+                {item.href === "/products" && (
+                  <ul className="-mt-1 grid grid-cols-2 gap-x-4 pb-4">
+                    {categories.map((c) => (
+                      <li key={c.slug}>
+                        <SheetClose asChild>
+                          <Link
+                            href={`/products/${c.slug}`}
+                            className="flex min-h-11 items-center text-[0.95rem] text-steel hover:text-white"
+                          >
+                            {c.name}
+                          </Link>
+                        </SheetClose>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="shrink-0 border-t border-border p-6">
+          <SheetClose asChild>
+            <Button asChild variant="glow" size="lg" className="w-full">
+              <Link href="/contact">{layoutCopy.contactButton}</Link>
+            </Button>
+          </SheetClose>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

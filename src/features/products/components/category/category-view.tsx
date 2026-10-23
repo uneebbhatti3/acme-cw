@@ -30,7 +30,6 @@ export async function CategoryView({ params }: { params: Promise<{ category: str
         kind={cat.placeholderKind}
         before={
           <Breadcrumbs
-            dark
             items={[
               { name: productsCopy.breadcrumb, href: "/products" },
               { name: cat.name, href },

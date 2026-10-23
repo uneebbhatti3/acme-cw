@@ -14,8 +14,11 @@ export const layoutCopy = {
   skip: "Skip to content",
   contactButton: "Contact us",
   menu: "Menu",
+  openMenu: "Open menu",
   closeMenu: "Close menu",
+  menuTitle: "Site menu",
   allProducts: "All products",
+  megaTitle: "Product ranges",
   megaIntro: "Browse the catalog by product range.",
   rangesMenu: "product ranges",
   footer: {
