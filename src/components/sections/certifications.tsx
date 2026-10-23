@@ -30,7 +30,7 @@ function Badge({ cert }: { cert: Certification }) {
  */
 export function Certifications({ items, className }: { items: Certification[]; className?: string }) {
   return (
-    <ul className={cn("grid gap-3 sm:grid-cols-2 lg:grid-cols-4", className)}>
+    <ul className={cn("grid gap-3 sm:grid-cols-2 xl:grid-cols-4", className)}>
       {items.map((cert) => (
         <li key={cert.name}>
           {cert.file ? (

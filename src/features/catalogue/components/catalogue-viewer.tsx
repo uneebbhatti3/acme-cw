@@ -28,19 +28,19 @@ function Page({
 }) {
   const S = Tag;
   return (
-    <S className="relative block aspect-[1/1.414] overflow-hidden rounded-md bg-white text-left text-ink shadow-[var(--shadow-lift)]">
+    <S className="@container relative block aspect-[1/1.414] overflow-hidden rounded-md bg-white text-left text-ink shadow-[var(--shadow-lift)]">
       {page === 0 ? (
         <S className="flex h-full flex-col bg-night p-[8%] text-white">
-          <S className="block text-[clamp(8px,1.4vw,13px)] text-steel">{brand}</S>
+          <S className="block text-[6.5cqi] text-steel">{brand}</S>
           <S className="mt-auto block">
             <PlaceholderImage as="span" kind={section.kind} ratio="4/3" tone="ink" seed={section.slug} />
           </S>
-          <S className="mt-[6%] block font-display text-[clamp(16px,3vw,34px)] leading-tight">{section.name}</S>
+          <S className="mt-[6%] block font-display text-[11cqi] [overflow-wrap:anywhere] leading-tight">{section.name}</S>
           <S className="mt-[2%] block h-px w-1/4 bg-glow" />
         </S>
       ) : (
         <S className="flex h-full flex-col p-[8%]">
-          <S className="flex items-baseline justify-between border-b border-rule pb-[4%] text-[clamp(8px,1.2vw,12px)] text-ink/70">
+          <S className="flex items-baseline justify-between border-b border-rule pb-[4%] text-[5.5cqi] text-ink/70">
             <S className="block">{section.name}</S>
             <S className="block font-mono">{page + 1}</S>
           </S>
@@ -56,10 +56,10 @@ function Page({
                     seed={p.code}
                   />
                 </S>
-                <S className="mt-[6%] block text-[clamp(7px,1.1vw,12px)] font-medium leading-tight text-ink">
+                <S className="mt-[6%] block text-[5cqi] font-medium leading-tight text-ink">
                   {p.name}
                 </S>
-                <S className="block font-mono text-[clamp(6px,0.9vw,10px)] text-ink/70">{p.code}</S>
+                <S className="block font-mono text-[4cqi] text-ink/70">{p.code}</S>
               </S>
             ))}
           </S>

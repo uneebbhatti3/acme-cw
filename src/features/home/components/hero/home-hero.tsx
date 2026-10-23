@@ -45,7 +45,7 @@ export function HomeHero() {
           {homeCopy.trust.items.map((item, i) => (
             <li
               key={item.title}
-              className={`flex gap-3 py-6 pr-4 ${i % 2 === 1 ? "border-l border-border pl-4" : ""} lg:border-l lg:pl-6 ${i === 0 ? "lg:border-l-0 lg:pl-0" : ""} ${i > 1 ? "border-t border-border lg:border-t-0" : ""}`}
+              className={`flex flex-col gap-2 py-6 pr-4 sm:flex-row sm:gap-3 ${i % 2 === 1 ? "border-l border-border pl-4" : ""} lg:border-l lg:pl-6 ${i === 0 ? "lg:border-l-0 lg:pl-0" : ""} ${i > 1 ? "border-t border-border lg:border-t-0" : ""}`}
             >
               <HomeIcon name={item.icon} className="mt-0.5 size-5 shrink-0 text-glow" />
               <span>

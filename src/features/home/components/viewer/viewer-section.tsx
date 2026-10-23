@@ -19,17 +19,17 @@ export function ViewerSection() {
       <Container>
         <SectionIntro id="viewer-title" title={copy.title} text={copy.text} />
         <div className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-7">
+          <div className="min-w-0 lg:col-span-7">
             <ProductViewer images={product.images} kind={kind} slug={product.slug} name={product.name} />
           </div>
-          <div className="lg:col-span-5">
+          <div className="min-w-0 lg:col-span-5">
             <div className="rounded-[1.75rem] border bg-card p-6 md:p-8">
               <p className="font-mono text-sm text-muted-foreground">{product.code}</p>
               <h3 className="text-h3 mt-1">{product.name}</h3>
               <p className="mt-3 leading-relaxed text-muted-foreground">{product.shortDescription}</p>
               <dl className="mt-5 text-[0.95rem]">
                 {product.specs.slice(0, 5).map((s) => (
-                  <div key={s.label} className="grid grid-cols-[8.5rem_1fr] gap-4 border-t py-2.5">
+                  <div key={s.label} className="grid grid-cols-[minmax(0,7rem)_1fr] gap-4 border-t py-2.5 sm:grid-cols-[8.5rem_1fr]">
                     <dt className="text-muted-foreground">{s.label}</dt>
                     <dd className="font-medium">{s.value}</dd>
                   </div>

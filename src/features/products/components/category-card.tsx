@@ -37,7 +37,7 @@ export function CategoryCard({
       </span>
       <span className="flex flex-1 flex-col gap-2 p-5 md:p-6">
         <span className="flex items-start justify-between gap-4">
-          <span className="font-display text-2xl leading-tight">{category.name}</span>
+          <span className="min-w-0 break-words font-display text-2xl leading-tight lg:text-[1.375rem] xl:text-2xl">{category.name}</span>
           <span className="grid size-10 shrink-0 place-items-center rounded-full border transition-colors duration-300 group-hover:border-ink group-hover:bg-ink group-hover:text-white">
             <ArrowUpRight aria-hidden className="size-4" strokeWidth={1.75} />
           </span>

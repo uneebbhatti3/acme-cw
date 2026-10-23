@@ -15,7 +15,7 @@ export function Capabilities() {
         <ul className="mt-12 grid gap-4 md:grid-cols-3">
           {copy.items.map((item) => (
             <li key={item.title}>
-              <SpotlightCard className="h-full rounded-[1.75rem] border bg-card p-7 transition-[transform,box-shadow] duration-300 [--spot:var(--brand)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] md:p-8">
+              <SpotlightCard className="h-full rounded-[1.75rem] border bg-card p-7 transition-[transform,box-shadow] duration-300 [--spot:var(--brand)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] md:p-6 lg:p-8">
                 <span className="grid size-12 place-items-center rounded-full bg-accent text-primary-deep">
                   <HomeIcon name={item.icon} className="size-6" />
                 </span>

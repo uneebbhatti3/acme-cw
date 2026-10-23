@@ -367,6 +367,12 @@
     scroll-padding-inline: var(--gutter);
     scrollbar-width: thin;
   }
+  /* Match the Container's wider padding from md up. */
+  @media (width >= 48rem) {
+    .hscroll {
+      --gutter: max(2.5rem, calc((100% - 1320px) / 2 + 2.5rem));
+    }
+  }
   .hscroll > * {
     flex: none;
     scroll-snap-align: start;

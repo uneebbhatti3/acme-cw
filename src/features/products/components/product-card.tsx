@@ -31,11 +31,11 @@ export function ProductCard({ product, className, priority = false }: { product:
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
           <Badge variant="secondary" className="rounded-full font-medium">
             {product.categoryName}
           </Badge>
-          <span className="font-mono text-xs text-muted-foreground">{product.code}</span>
+          <span className="whitespace-nowrap font-mono text-xs text-muted-foreground">{product.code}</span>
         </div>
         <h3 className="font-display text-xl leading-snug">
           <Link href={href} className="after:absolute after:inset-0 focus-visible:outline-none">
