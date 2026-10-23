@@ -3,13 +3,13 @@ import { SectionIntro } from "@/components/layout/section-intro";
 import { SpotlightCard } from "@/components/sections/spotlight-card";
 import { homeCopy } from "@/features/home/data/copy";
 import { HomeIcon } from "./home-icon";
-import { HomeSection } from "./home-section";
+import { Band } from "@/components/layout/band";
 
 /** Three capability cards on a light sheet; the glow uses the brand colour here. */
 export function Capabilities() {
   const copy = homeCopy.capabilities;
   return (
-    <HomeSection tone="paper" labelledBy="capabilities-title">
+    <Band tone="paper" labelledBy="capabilities-title">
       <Container>
         <SectionIntro id="capabilities-title" title={copy.title} text={copy.text} />
         <ul className="mt-12 grid gap-4 md:grid-cols-3">
@@ -26,6 +26,6 @@ export function Capabilities() {
           ))}
         </ul>
       </Container>
-    </HomeSection>
+    </Band>
   );
 }

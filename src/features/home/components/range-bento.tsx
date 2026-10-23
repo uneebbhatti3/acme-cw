@@ -7,7 +7,7 @@ import { homeCopy } from "@/features/home/data/copy";
 import { productsCopy } from "@/features/products/data/copy";
 import { categoryHref, getCategories } from "@/features/products/lib/content";
 import { cn } from "@/lib/utils";
-import { HomeSection } from "./home-section";
+import { Band } from "@/components/layout/band";
 
 /** Bento placement on large screens, by position. Extra ranges fall back to a half-width tile. */
 const SPANS = [
@@ -29,10 +29,10 @@ export function RangeBento() {
   const copy = homeCopy.range;
   const categories = getCategories();
   return (
-    <HomeSection tone="night" labelledBy="range-title">
+    <Band tone="night" labelledBy="range-title">
       <Container>
         <SectionIntro id="range-title" title={copy.title} text={copy.text} metal />
-        <ul className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-3 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 lg:auto-rows-[300px] lg:grid-cols-12">
+        <ul className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-3 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 lg:auto-rows-[300px] lg:grid-cols-12">
           {categories.map((c, i) => (
             <li key={c.slug} className={cn("w-[82%] shrink-0 snap-start sm:w-[60%] md:w-auto", SPANS[i] ?? "lg:col-span-6")}>
               <SpotlightCard
@@ -61,6 +61,6 @@ export function RangeBento() {
           ))}
         </ul>
       </Container>
-    </HomeSection>
+    </Band>
   );
 }

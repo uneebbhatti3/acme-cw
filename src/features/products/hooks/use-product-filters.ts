@@ -47,6 +47,7 @@ export function useProductFilters(products: ProductSummary[], facets: FilterFace
     const cur = selected[key] ?? [];
     update({ ...selected, [key]: cur.includes(value) ? cur.filter((v) => v !== value) : [...cur, value] }, sort);
   };
+  const setFacet = (key: string, values: string[]) => update({ ...selected, [key]: values }, sort);
   const clearAll = () => update({}, sort);
   const setSort = (next: SortValue) => update(selected, next);
 
@@ -62,5 +63,5 @@ export function useProductFilters(products: ProductSummary[], facets: FilterFace
 
   const active = facets.flatMap((f) => (selected[f.key] ?? []).map((v) => ({ key: f.key, value: v })));
 
-  return { selected, sort, filtered, active, toggle, clearAll, setSort };
+  return { selected, sort, filtered, active, toggle, setFacet, clearAll, setSort };
 }

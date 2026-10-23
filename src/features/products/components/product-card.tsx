@@ -13,7 +13,7 @@ const SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 25vw, (min-width: 
  * Whole card is one link. On pointer devices the image swaps to the side view
  * on hover, so buyers see a second angle without opening the page.
  */
-export function ProductCard({ product, className }: { product: ProductSummary; className?: string }) {
+export function ProductCard({ product, className, priority = false }: { product: ProductSummary; className?: string; priority?: boolean }) {
   const href = `/products/${product.categorySlug}/${product.slug}`;
   return (
     <article
@@ -24,7 +24,7 @@ export function ProductCard({ product, className }: { product: ProductSummary; c
     >
       <div className="relative overflow-hidden border-b">
         <div className="transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.03]">
-          <ProductVisual image={{ src: product.firstImage, alt: "", view: "front" }} kind={product.kind} seed={product.slug} sizes={SIZES} />
+          <ProductVisual image={{ src: product.firstImage, alt: "", view: "front" }} kind={product.kind} seed={product.slug} sizes={SIZES} priority={priority} />
         </div>
         <div className="absolute inset-0 opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover:opacity-100">
           <ProductVisual image={{ src: product.secondImage, alt: "", view: "side" }} kind={product.kind} seed={product.slug} sizes={SIZES} />

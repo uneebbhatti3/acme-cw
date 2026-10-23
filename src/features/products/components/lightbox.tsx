@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type WheelEvent } from "react";
 import { ProductVisual } from "@/components/media/product-visual";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { InstrumentKind } from "@/types";
 import type { ProductImage } from "@/features/products/types";
@@ -25,13 +26,13 @@ interface LightboxProps {
 /**
  * Full-screen viewer: zoom (buttons, wheel, pinch, double-click/tap) up to 4x,
  * drag to pan, swipe between views, swipe down to close, keyboard support.
- * Native <dialog> traps focus; focus returns to the trigger on close.
+ * Built on the shadcn Dialog (focus trap, Esc, scroll lock); focus returns to
+ * the element that opened it.
  */
 export default function Lightbox({ open, images, index, onIndexChange, onClose, kind, seed, title }: LightboxProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const returnTo = useRef<HTMLElement | null>(null);
-  const onCloseRef = useRef(onClose);
   const [scale, setScale] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -43,10 +44,6 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
   const lastTap = useRef(0);
   const count = images.length;
   const current = images[index];
-
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
 
   const reset = useCallback(() => {
     setScale(1);
@@ -79,32 +76,10 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
     [count, index, onIndexChange, reset],
   );
 
-  // Open / close the native dialog.
-  useEffect(() => {
-    const d = dialogRef.current;
-    if (!d) return;
-    if (open && !d.open) {
-      returnTo.current = document.activeElement as HTMLElement | null;
-      d.showModal();
-      document.documentElement.style.overflow = "hidden";
-    } else if (!open && d.open) d.close();
-  }, [open]);
-
-  useEffect(() => {
-    const d = dialogRef.current;
-    if (!d) return;
-    const handle = () => {
-      document.documentElement.style.overflow = "";
-      reset();
-      returnTo.current?.focus?.();
-      onCloseRef.current();
-    };
-    d.addEventListener("close", handle);
-    return () => {
-      d.removeEventListener("close", handle);
-      document.documentElement.style.overflow = "";
-    };
-  }, [reset]);
+  const close = () => {
+    reset();
+    onClose();
+  };
 
   // Prefetch the next real image so navigation feels instant.
   useEffect(() => {
@@ -179,7 +154,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
 
     if (scale === 1 && g.moved) {
       if (e.pointerType !== "mouse" && dy > 90 && Math.abs(dy) > Math.abs(dx)) {
-        dialogRef.current?.close();
+        close();
         return;
       }
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
@@ -197,31 +172,43 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
   };
 
   const btn =
-    "inline-flex size-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent";
+    "inline-flex size-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-glow disabled:opacity-40 disabled:hover:bg-transparent";
 
   return (
-    <dialog
-      ref={dialogRef}
-      aria-label={`${title}: image viewer`}
-      aria-modal="true"
-      onKeyDown={onKeyDown}
-      className="m-0 h-dvh max-h-none w-screen max-w-none bg-ink/97 p-0 text-white backdrop:bg-ink/80"
-    >
-      {open && (
+    <Dialog open={open} onOpenChange={(o) => !o && close()}>
+      <DialogContent
+        showCloseButton={false}
+        onKeyDown={onKeyDown}
+        onOpenAutoFocus={(e) => {
+          // Runs before focus moves, so the opener is still the active element.
+          returnTo.current = document.activeElement as HTMLElement | null;
+          e.preventDefault();
+          closeRef.current?.focus();
+        }}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          returnTo.current?.focus?.();
+        }}
+        className="surface-dark top-0 left-0 h-dvh w-screen max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 bg-night/97 p-0 text-white shadow-none sm:max-w-none data-[state=closed]:zoom-out-100 data-[state=open]:zoom-in-100"
+      >
+        <DialogTitle className="sr-only">{`${title}: image viewer`}</DialogTitle>
+        <DialogDescription className="sr-only">
+          Use the arrow keys to change view, plus and minus to zoom, and 0 to reset.
+        </DialogDescription>
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between gap-4 px-3 py-2 md:px-6">
             <p className="min-w-0 text-sm">
-              <span className="font-mono tabular-nums text-steel-300">
+              <span className="font-mono tabular-nums text-steel">
                 {index + 1} / {count}
               </span>
               <span className="ml-3 font-medium">{viewLabel(current)}</span>
-              <span className="ml-3 hidden truncate text-steel-300 md:inline">{title}</span>
+              <span className="ml-3 hidden truncate text-steel md:inline">{title}</span>
             </p>
             <div className="flex items-center gap-1">
               <button type="button" className={btn} onClick={() => zoomTo(scale - 0.5)} disabled={scale <= MIN} aria-label="Zoom out">
                 <ZoomOut aria-hidden className="size-5" strokeWidth={1.5} />
               </button>
-              <span className="w-12 text-center font-mono text-xs tabular-nums text-steel-300" aria-live="polite">
+              <span className="w-12 text-center font-mono text-xs tabular-nums text-steel" aria-live="polite">
                 {Math.round(scale * 100)}%
               </span>
               <button type="button" className={btn} onClick={() => zoomTo(scale + 0.5)} disabled={scale >= MAX} aria-label="Zoom in">
@@ -233,9 +220,9 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
               <button
                 type="button"
                 className={cn(btn, "ml-2 bg-white/10")}
-                onClick={() => dialogRef.current?.close()}
+                onClick={close}
                 aria-label="Close viewer"
-                autoFocus
+                ref={closeRef}
               >
                 <X aria-hidden className="size-5" strokeWidth={1.5} />
               </button>
@@ -251,7 +238,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
               onPointerUp={onPointerUp}
               onPointerCancel={onPointerUp}
               className={cn(
-                "relative w-full max-w-[min(100%,calc((100dvh-220px)*4/3))] touch-none select-none overflow-hidden rounded-[var(--radius-card)]",
+                "relative w-full max-w-[min(100%,calc((100dvh-220px)*4/3))] touch-none select-none overflow-hidden rounded-2xl",
                 scale > 1 ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-zoom-in",
               )}
               style={{
@@ -305,12 +292,12 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
                   <span
                     className={cn(
                       "block overflow-hidden rounded-md border-2 transition-opacity",
-                      i === index ? "border-legacy-accent" : "border-transparent opacity-60 hover:opacity-100",
+                      i === index ? "border-glow" : "border-transparent opacity-60 hover:opacity-100",
                     )}
                   >
                     <ProductVisual image={img} kind={kind} seed={seed} ratio="1/1" sizes="80px" />
                   </span>
-                  <span className={cn("mt-1 block text-center text-[11px]", i === index ? "text-white" : "text-steel-300")}>
+                  <span className={cn("mt-1 block text-center text-[11px]", i === index ? "text-white" : "text-steel")}>
                     {viewLabel(img)}
                   </span>
                 </button>
@@ -318,7 +305,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
             </div>
           )}
         </div>
-      )}
-    </dialog>
+      </DialogContent>
+    </Dialog>
   );
 }

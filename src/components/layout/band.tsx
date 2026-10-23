@@ -9,10 +9,10 @@ const TONES = {
 } as const;
 
 /**
- * A home page band. Sections are rounded sheets that overlap the one above;
+ * A page band. Sections are rounded sheets that overlap the one above;
  * `pre` leaves room at the bottom for the next sheet to do the same.
  */
-export function HomeSection({
+export function Band({
   tone,
   sheet = true,
   pre = true,

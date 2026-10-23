@@ -5,13 +5,13 @@ import { CountUp } from "@/components/sections/count-up";
 import { Button } from "@/components/ui/button";
 import { homeCopy, homeStats, milestones } from "@/features/home/data/copy";
 import { cn } from "@/lib/utils";
-import { HomeSection } from "./home-section";
+import { Band } from "@/components/layout/band";
 
 /** Story teaser with a sideways history strip (dark sheet). */
 export function StoryTeaser() {
   const copy = homeCopy.story;
   return (
-    <HomeSection tone="deep" pre={false} labelledBy="story-title">
+    <Band tone="deep" pre={false} labelledBy="story-title">
       <Container>
         <SectionIntro id="story-title" title={copy.title} metal text={copy.text}>
           <Button asChild variant="link" className="mt-5 h-auto px-0 text-silver">
@@ -39,7 +39,7 @@ export function StoryTeaser() {
           })}
         </ol>
       </div>
-    </HomeSection>
+    </Band>
   );
 }
 

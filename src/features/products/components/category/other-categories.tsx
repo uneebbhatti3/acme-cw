@@ -1,23 +1,25 @@
-import { Section } from "@/components/layout/section";
+import { Band } from "@/components/layout/band";
+import { Container } from "@/components/layout/container";
+import { SectionIntro } from "@/components/layout/section-intro";
 import { productsCopy } from "@/features/products/data/copy";
 import { getCategories } from "@/features/products/lib/content";
 import { CategoryCard } from "../category-card";
 
-/** Horizontal strip of the other ranges, so visitors can move sideways. */
+/** Sideways rail of the other ranges, so visitors can move between them. */
 export function OtherCategories({ currentSlug }: { currentSlug: string }) {
   const others = getCategories().filter((c) => c.slug !== currentSlug);
   return (
-    <Section tone="white" aria-labelledby="other-categories">
-      <h2 id="other-categories" className="text-h2 mb-8">
-        {productsCopy.otherCategories}
-      </h2>
-      <ul className="scrollbar-none -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 lg:mx-0 lg:px-0">
+    <Band tone="white" pre={false} labelledBy="other-categories">
+      <Container>
+        <SectionIntro id="other-categories" title={productsCopy.otherCategories} />
+      </Container>
+      <ul className="hscroll mt-10" aria-labelledby="other-categories">
         {others.map((c) => (
-          <li key={c.slug} className="w-[70%] shrink-0 snap-start sm:w-[40%] lg:w-[23%]">
+          <li key={c.slug} className="w-[72%] sm:w-[40%] lg:w-[23%]">
             <CategoryCard category={c} />
           </li>
         ))}
       </ul>
-    </Section>
+    </Band>
   );
 }

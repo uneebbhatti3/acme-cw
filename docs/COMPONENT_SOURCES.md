@@ -23,6 +23,8 @@ Local changes to the generated files:
 
 Installed (Phase 1): accordion, aspect-ratio, badge, breadcrumb, button, card, carousel, checkbox, command, dialog, drawer, empty, field, hover-card, input, label, navigation-menu, pagination, popover, scroll-area, select, separator, sheet, skeleton, sonner, table, tabs, textarea, toggle, toggle-group, tooltip.
 
+Changed in Phase 4: `command.tsx` (`CommandInput` takes a `wrapperClassName`, and its search icon is hidden from screen readers), `carousel.tsx` is not used yet (phones use CSS scroll snap).
+
 Changed in Phase 3: `dialog.tsx` (night overlay with blur, rounder panel, larger close button with a `closeLabel` prop for its accessible name).
 
 Changed in Phase 2: `button.tsx` (pill shape, larger sizes, full-strength focus ring, `glow` variant for dark surfaces, token-based outline and link variants), `navigation-menu.tsx` (rounder, deeper dropdown panel with more offset), `breadcrumb.tsx` (`BreadcrumbPage` no longer claims `role="link"`, which misled screen readers).
@@ -47,4 +49,8 @@ Showpieces built in-house from the V2 design. The list is filled in per phase.
 | `src/components/sections/cta-banner.tsx` | V2 `FinalCta` | Shared closing CTA on every page. |
 | `src/features/videos/components/video-modal.tsx` ★ | V2 `Videos` modal | Rebuilt on shadcn Dialog; focus returns to the play button. |
 | `src/components/sections/certifications.tsx` | V2 certificate list | HoverCard for the full description; Dialog when a document file exists. Shared with About. |
+| `src/features/products/components/product-gallery.tsx` ★ | Existing gallery (COMPONENTS spec) | Restyled on tokens; inner 2.2x hover zoom, touch swipe, labelled thumbnails with arrow keys, view counter. |
+| `src/features/products/components/lightbox.tsx` | Existing custom lightbox | Same zoom/pan/pinch/swipe engine, now inside shadcn Dialog (focus trap, Esc, scroll lock, focus return). |
+| `src/features/products/components/product-search.tsx` | Existing search | Rebuilt on shadcn Command (cmdk); starts from `?q=`. |
+| `src/features/products/components/product-filters.tsx` | Existing filters | ToggleGroup (desktop), Drawer with Checkbox (mobile), Select (sort), Empty, Pagination; URL-synced. |
 | `src/components/media/placeholder-svg.ts` | V2 viewer stage (`.dots`) and hero ground | Light dotted stage and dark glow ground; colours from `src/config/theme.ts`. |

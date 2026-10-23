@@ -82,3 +82,13 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **The shared `CtaBanner` was rebuilt** in V2's gradient style. Every page that ends with it now ends on the dark band, joining the footer.
   - **CSS is inlined in `<head>`** (`experimental.inlineCss`, which Next recommends for Tailwind). This removes the render-blocking stylesheet request. Tailwind no longer scans `docs/`.
   - **Lighthouse baseline (local machine, mobile preset, CPU benchmark ~1,100).** Before the redesign: Home 58, About 51 performance, with blocking time 2.7 to 3.2s. After Phase 3: Home 56, About 55, blocking time 1.2s; Accessibility, Best Practices and SEO are 100. The remaining gap is site-wide hydration on a slow test machine, and it is the subject of the Phase 6 performance pass.
+- **Redesign Phase 4 (products).**
+  - **The lightbox keeps its own engine.** It already did everything in the COMPONENTS spec (zoom to 4x by buttons, wheel, pinch or double-tap; pan; swipe; swipe down to close; keyboard), so only its shell changed: shadcn Dialog replaces the native `<dialog>`. No lightbox library was added.
+  - **Product pages keep the inner 2.2x hover zoom** that the spec asks for; the magnifier loupe stays on the home viewer as the signature moment. The main image now also swipes between views on touch.
+  - **The gallery stays sticky on desktop, not the info panel.** The info column is the taller one, so keeping the images in view while it scrolls is more useful.
+  - **Product tabs use shadcn Tabs at every width**, with a sideways-scrolling tab list on phones, instead of Tabs plus a mobile Accordion. That avoids rendering the content twice.
+  - **The spec sheet is a shadcn Table** with row headers (`<th scope="row">`) and a hidden caption, replacing the definition list. It stays readable to screen readers as label and value pairs.
+  - **Filters:** toggle pills on desktop, because the facets have two or three options each and a pill row shows them at a glance; a bottom Drawer with checkboxes on phones. Pagination (12 per page) appears only when a range has more than 12 listed products, which none has today.
+  - **Search starts from `?q=`**, so the 404 page's search box can hand off to the products page.
+  - **The first four product images on a category page load eagerly**, because the first card image is the page's largest element.
+  - **Phones scroll snap rows with matching scroll padding**, so the first card lines up with the page margin.

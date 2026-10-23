@@ -4,7 +4,7 @@ import { homeCopy } from "@/features/home/data/copy";
 import { VideoPoster } from "@/features/videos/components/video-card";
 import { VideoTrigger } from "@/features/videos/components/video-trigger";
 import type { VideoItem } from "@/features/videos/types";
-import { HomeSection } from "./home-section";
+import { Band } from "@/components/layout/band";
 
 /** One large clip and two smaller ones; each opens the lazy-loaded player. */
 export function VideoHighlight({ videos }: { videos: VideoItem[] }) {
@@ -13,7 +13,7 @@ export function VideoHighlight({ videos }: { videos: VideoItem[] }) {
   if (!featured) return null;
 
   return (
-    <HomeSection tone="night" labelledBy="videos-title">
+    <Band tone="night" labelledBy="videos-title">
       <Container>
         <SectionIntro id="videos-title" title={copy.title} text={copy.text} metal />
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-12">
@@ -39,6 +39,6 @@ export function VideoHighlight({ videos }: { videos: VideoItem[] }) {
           </ul>
         </div>
       </Container>
-    </HomeSection>
+    </Band>
   );
 }

@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { PageHero } from "@/components/layout/page-hero";
-import { Section } from "@/components/layout/section";
+import { Band } from "@/components/layout/band";
+import { Container } from "@/components/layout/container";
 import { JsonLd } from "@/components/seo/json-ld";
 import { productsCopy } from "@/features/products/data/copy";
 import { filterFacets } from "@/features/products/data/filters";
@@ -37,17 +38,22 @@ export async function CategoryView({ params }: { params: Promise<{ category: str
           />
         }
       >
-        <p className="mt-6 text-sm text-steel-300">
+        <p className="mt-6 text-sm text-muted-foreground">
           {productsCopy.rangeLabel(cat.rangeSize)}. {productsCopy.listedNote(products.length)}
         </p>
       </PageHero>
 
-      <Section className="pt-8 md:pt-10 lg:pt-12">
-        {/* The prerendered fallback shows the full list with the same layout. */}
-        <Suspense fallback={<ProductFiltersStatic products={summaries} facets={filterFacets} />}>
-          <ProductFilters products={summaries} facets={filterFacets} />
-        </Suspense>
-      </Section>
+      <Band tone="paper" labelledBy="range-products" className="pt-12 md:pt-16">
+        <Container>
+          <h2 id="range-products" className="sr-only">
+            {productsCopy.listLabel(cat.name)}
+          </h2>
+          {/* The prerendered fallback shows the full list with the same layout. */}
+          <Suspense fallback={<ProductFiltersStatic products={summaries} facets={filterFacets} />}>
+            <ProductFilters products={summaries} facets={filterFacets} />
+          </Suspense>
+        </Container>
+      </Band>
 
       <OtherCategories currentSlug={cat.slug} />
     </>

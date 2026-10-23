@@ -4,7 +4,7 @@ import { SectionIntro } from "@/components/layout/section-intro";
 import { Button } from "@/components/ui/button";
 import { homeCopy } from "@/features/home/data/copy";
 import { getCategory, getProductBySlug, productHref } from "@/features/products/lib/content";
-import { HomeSection } from "../home-section";
+import { Band } from "@/components/layout/band";
 import { ProductViewer } from "./product-viewer";
 
 /** One product from every angle, with its key specifications. */
@@ -15,7 +15,7 @@ export function ViewerSection() {
   const kind = product.kind ?? getCategory(product.categorySlug)?.placeholderKind ?? "generic";
 
   return (
-    <HomeSection tone="paper" labelledBy="viewer-title">
+    <Band tone="paper" labelledBy="viewer-title">
       <Container>
         <SectionIntro id="viewer-title" title={copy.title} text={copy.text} />
         <div className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-12">
@@ -47,6 +47,6 @@ export function ViewerSection() {
           </div>
         </div>
       </Container>
-    </HomeSection>
+    </Band>
   );
 }

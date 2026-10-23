@@ -13,6 +13,8 @@ export const productsCopy = {
     noResults: "No products match",
     noResultsHint: "Try a shorter word, or browse the categories below.",
     resultsLabel: "results",
+    clear: "Clear search",
+    count: (n: number) => `${n} ${n === 1 ? "result" : "results"}`,
   },
   categoriesTitle: "Eight ranges, one manufacturer",
   categoriesIntro:
@@ -27,6 +29,7 @@ export const productsCopy = {
   productCount: (n: number) => `${n} ${n === 1 ? "product" : "products"}`,
   viewDetails: "View details",
   otherCategories: "Other instrument ranges",
+  listLabel: (range: string) => `${range}: products`,
   filters: {
     title: "Filter",
     sort: "Sort",
@@ -36,6 +39,14 @@ export const productsCopy = {
     emptyText: "Remove a filter to see more products, or ask us about a custom instrument.",
     emptyAction: "Clear filters",
     open: "Filters",
+    drawerTitle: "Filter products",
+    drawerText: "Choose one or more options. The list updates as you go.",
+    apply: (n: number) => `Show ${n} ${n === 1 ? "product" : "products"}`,
+    remove: (value: string) => `Remove filter: ${value}`,
+    pages: "Product pages",
+    previous: "Previous",
+    next: "Next",
+    page: (n: number) => `Page ${n}`,
   },
 };
 
@@ -49,7 +60,10 @@ export const productDetailCopy = {
   specs: "Specifications",
   variants: "Available sizes",
   related: "Related products",
+  detailsLabel: "Product details",
   enlarge: "Enlarge image",
+  enlargeShort: "Enlarge",
+  viewsLabel: "Product views",
   tabs: {
     description: "Description",
     specifications: "Specifications",
