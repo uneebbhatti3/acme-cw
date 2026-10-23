@@ -14,6 +14,7 @@ const TONES = {
  */
 export function Band({
   tone,
+  id,
   sheet = true,
   pre = true,
   label,
@@ -22,6 +23,7 @@ export function Band({
   children,
 }: {
   tone: keyof typeof TONES;
+  id?: string;
   sheet?: boolean;
   pre?: boolean;
   label?: string;
@@ -31,6 +33,7 @@ export function Band({
 }) {
   return (
     <section
+      id={id}
       aria-label={label}
       aria-labelledby={labelledBy}
       className={cn("sec", TONES[tone], sheet && "sheet", pre && "sec-pre", className)}

@@ -92,3 +92,13 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **Search starts from `?q=`**, so the 404 page's search box can hand off to the products page.
   - **The first four product images on a category page load eagerly**, because the first card image is the page's largest element.
   - **Phones scroll snap rows with matching scroll padding**, so the first card lines up with the page margin.
+- **Redesign Phase 5 (About, Catalogue, Videos, Contact, 404).**
+  - **About alternates dark and light:** intro (light), history timeline (dark, glowing fill, signature moment 3), manufacturing as sticky stacking cards (light), quality (light), world reach (dark, glowing map), leadership and certifications (light), CTA.
+  - **Seven stacking cards** for the seven manufacturing stages, rather than V2's three. The client's process has seven stages, and the cards stay compact. Under reduced motion they are a plain list.
+  - **Certifications on About use the shared component**, the same as on Home, as the sitemap asks. The old modal badge component was removed.
+  - **The contact form is on shadcn Field, Input, Textarea and Checkbox.** The country field is a searchable Popover + Command (the browser `datalist` it replaced was hard to use on phones). A Sonner toast confirms the demo submission. The Toaster is mounted on the contact page only, so other pages don't load it.
+  - **Form fields use `--steel-dim` borders (3.7:1 on white).** The `--rule` colour (1.4:1) is too faint for a field boundary.
+  - **Dialogs that open without a `DialogTrigger` return focus by hand** (catalogue preview, video player, lightbox). Radix only restores focus to its own trigger.
+  - **The 404 search links to `/products?q=…`** ("Search the full catalog") as well as showing results inline.
+  - **The video grid sits on a dark band** and filters with a single-choice ToggleGroup.
+  - **All legacy code is gone:** `ui/legacy`, the old `Section` and `SectionHeading`, `VisuallyHidden`, and the legacy colour, radius and utility aliases in `globals.css`. Every page now uses shadcn primitives and the new tokens.

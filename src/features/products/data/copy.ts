@@ -14,6 +14,7 @@ export const productsCopy = {
     noResultsHint: "Try a shorter word, or browse the categories below.",
     resultsLabel: "results",
     clear: "Clear search",
+    allResults: "Search the full catalog",
     count: (n: number) => `${n} ${n === 1 ? "result" : "results"}`,
   },
   categoriesTitle: "Eight ranges, one manufacturer",

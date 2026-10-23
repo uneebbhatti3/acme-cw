@@ -55,18 +55,6 @@
   --round: 2rem; /* sheet corner and overlap */
   --whatsapp: #1f8f5a; /* WhatsApp brand green, for its button only */
 
-  /* Legacy names, kept until every page is migrated (removed in redesign Phase 6). */
-  --ink-soft: #16242f;
-  --steel-900: #1f2d38;
-  --steel-600: #52626e;
-  --steel-300: #b8c2ca;
-  --steel-100: #e7ecef;
-  --white: #ffffff;
-  --legacy-accent: #2ea3c4;
-  --accent-strong: var(--brand);
-  --accent-deep: var(--brand-deep);
-  --accent-soft: #e0f1f6;
-  --warn: var(--destructive);
 }
 
 /* Dark surface: hero, feature sections, footer. Same token names, dark values.
@@ -129,19 +117,6 @@
   --color-rule: var(--rule);
   --color-whatsapp: var(--whatsapp);
 
-  /* Legacy colour names (see :root). */
-  --color-ink-soft: var(--ink-soft);
-  --color-steel-900: var(--steel-900);
-  --color-steel-600: var(--steel-600);
-  --color-steel-300: var(--steel-300);
-  --color-steel-100: var(--steel-100);
-  --color-white: var(--white);
-  --color-legacy-accent: var(--legacy-accent);
-  --color-accent-strong: var(--accent-strong);
-  --color-accent-deep: var(--accent-deep);
-  --color-accent-soft: var(--accent-soft);
-  --color-warn: var(--warn);
-
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
@@ -152,9 +127,6 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 10px);
   --radius-3xl: calc(var(--radius) + 18px);
-  /* Legacy radii. */
-  --radius-control: 6px;
-  --radius-card: 14px;
 
   --shadow-soft: 0 1px 2px rgb(8 23 28 / 0.04), 0 4px 12px rgb(8 23 28 / 0.05);
   --shadow-lift: 0 2px 4px rgb(8 23 28 / 0.04), 0 12px 32px rgb(8 23 28 / 0.09);
@@ -252,10 +224,6 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--link);
-  }
-  .on-dark .eyebrow,
-  .eyebrow-on-dark {
-    color: var(--glow);
   }
   .measure {
     max-width: 68ch;
@@ -368,7 +336,18 @@
     line-height: 0.9;
     letter-spacing: -0.06em;
     color: transparent;
-    -webkit-text-stroke: 1.2px color-mix(in oklab, var(--glow) 55%, transparent);
+    -webkit-text-stroke: var(--stroke-width, 1.2px) color-mix(in oklab, var(--stroke, var(--glow)) var(--stroke-mix, 55%), transparent);
+  }
+
+  /* Sticky stacking cards: each card stops a little lower than the one before. A plain list under reduced motion. */
+  .stack-item {
+    position: sticky;
+    top: calc(var(--header-h) + 1rem + var(--i, 0) * 14px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stack-item {
+      position: static;
+    }
   }
 
   /* Horizontal snap row that lines up with the container edge. */
@@ -454,46 +433,11 @@
     background-size: 18px 18px;
   }
 
-  /* Text link: underline draws in on hover. */
-  .link-draw {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 0% 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size 280ms var(--ease-out-soft);
-    padding-bottom: 2px;
-  }
-  .link-draw:hover,
-  .link-draw:focus-visible {
-    background-size: 100% 1px;
-  }
-
-  /* Fine drafting grid used behind technical drawings. */
-  .drafting-grid {
-    background-image:
-      linear-gradient(to right, rgb(184 194 202 / 0.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(184 194 202 / 0.07) 1px, transparent 1px),
-      linear-gradient(to right, rgb(184 194 202 / 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(184 194 202 / 0.035) 1px, transparent 1px);
-    background-size:
-      96px 96px,
-      96px 96px,
-      24px 24px,
-      24px 24px;
-  }
-
-  .select-chevron {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2352626E' stroke-width='1.5'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    background-size: 16px;
-  }
-
   /* Ruler ticks beside the history timeline. */
   .timeline-ticks {
     background-image:
-      linear-gradient(to bottom, var(--steel-300) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--steel-300) 1px, transparent 1px);
+      linear-gradient(to bottom, var(--steel-dim) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--steel-dim) 1px, transparent 1px);
     background-size:
       10px 80px,
       5px 16px;

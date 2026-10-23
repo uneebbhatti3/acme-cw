@@ -1,3 +1,4 @@
+import { CountUp } from "@/components/sections/count-up";
 import { reachRegions } from "@/features/about/data/reach";
 import type { Stat } from "@/features/about/types";
 
@@ -53,34 +54,33 @@ export function WorldReach({ stats, mapLabel }: { stats: Stat[]; mapLabel: strin
   return (
     <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
       <figure className="lg:col-span-8">
-        <svg viewBox={`0 0 ${72 * CELL} ${28 * CELL}`} className="h-auto w-full" role="img" aria-label={mapLabel}>
+        <svg viewBox={`0 0 ${72 * CELL} ${28 * CELL}`} className="h-auto w-full drop-shadow-[0_0_10px_color-mix(in_oklab,var(--glow)_25%,transparent)]" role="img" aria-label={mapLabel}>
           {dots.map(({ c, r, on }) => (
             <circle
               key={`${c}-${r}`}
               cx={c * CELL + CELL / 2}
               cy={r * CELL + CELL / 2}
-              r={on ? 3.2 : 2.4}
-              fill={on ? "var(--accent-strong)" : "var(--steel-300)"}
-              opacity={on ? 1 : 0.75}
+              r={on ? 3.4 : 2.4}
+              fill={on ? "var(--glow)" : "var(--foreground)"}
+              opacity={on ? 1 : 0.16}
             />
           ))}
         </svg>
-        <figcaption className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel-600">
+        <figcaption className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
           {reachRegions.map((r) => (
             <span key={r.name} className="inline-flex items-center gap-2">
-              <span aria-hidden className="size-2.5 rounded-full bg-accent-strong" />
+              <span aria-hidden className="size-2.5 rounded-full bg-glow shadow-[0_0_8px_var(--glow)]" />
               {r.name}
             </span>
           ))}
         </figcaption>
       </figure>
-      <dl className="grid grid-cols-2 gap-8 lg:col-span-4 lg:grid-cols-1 lg:border-l lg:border-steel-100 lg:pl-10">
+      <dl className="grid grid-cols-2 gap-8 lg:col-span-4 lg:grid-cols-1 lg:border-l lg:pl-10">
         {stats.map((s) => (
           <div key={s.label} className="flex flex-col-reverse">
-            <dt className="mt-2 text-steel-600">{s.label}</dt>
-            <dd className="font-display text-[clamp(2.75rem,2rem+2.5vw,4rem)] leading-none text-ink">
-              {s.value}
-              {s.suffix}
+            <dt className="mt-2 text-muted-foreground">{s.label}</dt>
+            <dd className="text-metal font-display text-[clamp(3rem,2rem+3vw,5rem)] font-semibold leading-none tracking-[-0.05em]">
+              <CountUp value={s.value} suffix={s.suffix} />
             </dd>
           </div>
         ))}

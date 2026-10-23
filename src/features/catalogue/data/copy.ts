@@ -10,4 +10,8 @@ export const catalogueCopy = {
   sectionsTitle: "Preview by section",
   sectionsIntro: "Select a range to see its cover pages and listed products.",
   pages: (n: number) => `${n} pages`,
+  close: "Close preview",
+  previous: "Previous page",
+  next: "Next page",
+  viewerHint: "Use the arrow keys or the buttons to turn the pages.",
 };

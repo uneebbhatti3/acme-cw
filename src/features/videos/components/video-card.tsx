@@ -36,24 +36,22 @@ export function VideoPoster({ video, sizes, large = false }: { video: VideoItem;
 export function VideoCard({
   video,
   large = false,
-  dark = false,
   sizes,
 }: {
   video: VideoItem;
   large?: boolean;
-  dark?: boolean;
   sizes: string;
 }) {
   return (
     <VideoTrigger
       video={video}
       label={`${videosCopy.play}: ${video.title}${video.duration ? `, ${video.duration}` : ""}`}
-      className="group block w-full text-left"
+      className="group block w-full rounded-[1.5rem] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
     >
       <VideoPoster video={video} sizes={sizes} large={large} />
       <span className="mt-4 block">
-        <span className={cn("block text-sm", dark ? "text-steel-300" : "text-steel-600")}>{video.category}</span>
-        <span className={cn("mt-1 block font-display", dark ? "text-white" : "text-ink", large ? "text-2xl" : "text-xl")}>{video.title}</span>
+        <span className="block text-sm text-muted-foreground">{video.category}</span>
+        <span className={cn("mt-1 block font-display text-foreground", large ? "text-2xl" : "text-xl")}>{video.title}</span>
       </span>
     </VideoTrigger>
   );

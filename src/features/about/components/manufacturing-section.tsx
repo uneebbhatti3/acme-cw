@@ -1,16 +1,20 @@
-import { Section } from "@/components/layout/section";
-import { SectionHeading } from "@/components/layout/section-heading";
+import { Band } from "@/components/layout/band";
+import { Container } from "@/components/layout/container";
+import { SectionIntro } from "@/components/layout/section-intro";
 import { aboutCopy } from "@/features/about/data/copy";
 import { ProcessSteps } from "./process-steps";
 
-/** The seven manufacturing stages on the dark drafting grid. */
+/** The seven manufacturing stages as sticky stacking cards on a light sheet. */
 export function ManufacturingSection() {
   const { process } = aboutCopy;
   return (
-    <Section id="manufacturing" tone="ink" className="relative isolate scroll-mt-[var(--header-h)] overflow-hidden">
-      <div aria-hidden className="drafting-grid absolute inset-0 -z-10" />
-      <SectionHeading eyebrow={process.eyebrow} title={process.title} intro={process.intro} dark />
-      <ProcessSteps steps={process.steps} />
-    </Section>
+    <Band id="manufacturing" tone="paper" labelledBy="process-title" className="scroll-mt-[var(--header-h)]">
+      <Container>
+        <SectionIntro id="process-title" title={process.title} text={process.intro} />
+        <div className="mt-12">
+          <ProcessSteps steps={process.steps} />
+        </div>
+      </Container>
+    </Band>
   );
 }

@@ -5,15 +5,17 @@ import Image from "next/image";
 import { useRef } from "react";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
 import { Reveal } from "@/components/ui/reveal";
+import type { TimelineEvent } from "@/features/about/types";
 import { cn } from "@/lib/utils";
 import type { InstrumentKind } from "@/types";
-import type { TimelineEvent } from "@/features/about/types";
 
 const ART: InstrumentKind[] = ["forceps", "scissors", "clamp", "needleHolder", "retractor", "generic"];
 
 /**
- * History timeline. A steel rule runs down the middle (left on mobile); its
- * accent fill follows the scroll. Under reduced motion the rule shows filled.
+ * History timeline on a dark band. A steel rule runs down the middle (left on
+ * mobile); its glowing fill follows the scroll (Motion `useScroll`). Cards
+ * alternate sides on desktop with the year opposite. An ordered list with the
+ * year in each heading for screen readers. Reduced motion: the rule shows filled.
  */
 export function Timeline({ events }: { events: TimelineEvent[] }) {
   const ref = useRef<HTMLOListElement>(null);
@@ -24,13 +26,10 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
   return (
     <div className="relative">
       {/* the rule */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 left-[7px] top-0 w-px bg-steel-300/70 md:left-1/2 md:-translate-x-1/2"
-      >
+      <div aria-hidden className="absolute bottom-0 left-[7px] top-0 w-px bg-white/12 md:left-1/2 md:-translate-x-1/2">
         <div className="timeline-ticks absolute inset-y-0 left-0 w-2.5" />
         <motion.div
-          className="absolute inset-0 origin-top bg-accent-strong"
+          className="absolute inset-0 origin-top bg-gradient-to-b from-primary via-glow to-glow shadow-[0_0_14px_var(--glow)]"
           style={{ scaleY: reduce ? 1 : fill }}
         />
       </div>
@@ -42,7 +41,7 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
             <li key={`${e.year}-${e.title}`} className="relative grid gap-4 pl-10 md:grid-cols-2 md:gap-16 md:pl-0">
               <span
                 aria-hidden
-                className="absolute left-0 top-2 size-[15px] rounded-full border-2 border-accent-strong bg-paper md:left-1/2 md:-translate-x-1/2"
+                className="absolute left-0 top-2 size-[15px] rounded-full border-2 border-glow bg-night shadow-[0_0_10px_color-mix(in_oklab,var(--glow)_60%,transparent)] md:left-1/2 md:-translate-x-1/2"
               />
               {/* year on the opposite side (desktop) */}
               <div className={cn("hidden md:flex md:items-start", right ? "md:order-1 md:justify-end" : "md:order-2")}>
@@ -50,8 +49,8 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
                   <p
                     aria-hidden
                     className={cn(
-                      "font-display text-[clamp(2.5rem,1.5rem+3vw,4.5rem)] leading-none text-steel-300",
-                      e.highlight && "text-steel-600",
+                      "font-display text-[clamp(2.5rem,1.5rem+3.4vw,5rem)] font-semibold leading-none tracking-[-0.05em]",
+                      e.highlight ? "text-metal" : "text-white/25",
                     )}
                   >
                     {e.year}
@@ -59,14 +58,9 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
                 </Reveal>
               </div>
               <Reveal className={cn(right ? "md:order-2" : "md:order-1 md:text-right")}>
-                <article
-                  className={cn(
-                    "rounded-[var(--radius-card)] border border-steel-100 bg-white p-6 md:p-7",
-                    e.highlight && "shadow-[var(--shadow-soft)]",
-                  )}
-                >
+                <article className={cn("overflow-hidden rounded-3xl border bg-card p-6 md:p-7", e.highlight && "border-glow/30")}>
                   {e.highlight && (
-                    <div className="-mx-6 -mt-6 mb-6 overflow-hidden rounded-t-[var(--radius-card)] md:-mx-7 md:-mt-7">
+                    <div className="-mx-6 -mt-6 mb-6 overflow-hidden border-b md:-mx-7 md:-mt-7">
                       {e.image ? (
                         <div className="relative aspect-[16/9]">
                           <Image src={e.image} alt="" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
@@ -77,13 +71,13 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
                     </div>
                   )}
                   <h3 className="flex flex-col gap-1">
-                    <span className="font-mono text-sm text-accent-strong md:hidden">{e.year}</span>
-                    <span className={cn("font-display text-ink", e.highlight ? "text-[1.75rem] leading-tight" : "text-h3")}>
+                    <span className="font-mono text-sm text-glow md:hidden">{e.year}</span>
+                    <span className={cn("font-display text-silver", e.highlight ? "text-[1.75rem] leading-tight" : "text-h3")}>
                       <span className="sr-only">{e.year}: </span>
                       {e.title}
                     </span>
                   </h3>
-                  <p className="mt-3 leading-relaxed text-steel-600">{e.description}</p>
+                  <p className="mt-3 leading-relaxed text-muted-foreground">{e.description}</p>
                 </article>
               </Reveal>
             </li>

@@ -10,4 +10,6 @@ export const videosCopy = {
   comingSoonText: "This clip will be added when the final footage is ready.",
   play: "Play video",
   close: "Close video",
+  filterLabel: "Filter videos by topic",
+  count: (n: number) => `${n} ${n === 1 ? "video" : "videos"}`,
 };

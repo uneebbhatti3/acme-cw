@@ -1,5 +1,6 @@
+import { Band } from "@/components/layout/band";
+import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/layout/page-hero";
-import { Section } from "@/components/layout/section";
 import { CtaBanner } from "@/components/sections/cta-banner";
 import { VideoGrid } from "@/features/videos/components/video-grid";
 import { videosCopy } from "@/features/videos/data/copy";
@@ -13,9 +14,11 @@ export default function VideosPage() {
   return (
     <>
       <PageHero title={videosCopy.hero.title} subtitle={videosCopy.hero.subtitle} kind="needleHolder" />
-      <Section>
-        <VideoGrid videos={videos} categories={videoCategories} allLabel={videosCopy.all} />
-      </Section>
+      <Band tone="deep" pre={false} label={videosCopy.hero.title}>
+        <Container>
+          <VideoGrid videos={videos} categories={videoCategories} allLabel={videosCopy.all} />
+        </Container>
+      </Band>
       <CtaBanner />
     </>
   );

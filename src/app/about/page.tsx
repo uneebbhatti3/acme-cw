@@ -24,7 +24,7 @@ export default function AboutPage() {
       <ReachSection />
       <LeadershipSection />
       <CertificationsSection />
-      <div className="bg-paper pt-12 md:pt-16 lg:pt-24">
+      <div className="sheet surface-dark bg-night pt-[var(--round)]">
         <CtaBanner />
       </div>
     </>

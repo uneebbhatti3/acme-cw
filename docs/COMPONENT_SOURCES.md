@@ -23,6 +23,8 @@ Local changes to the generated files:
 
 Installed (Phase 1): accordion, aspect-ratio, badge, breadcrumb, button, card, carousel, checkbox, command, dialog, drawer, empty, field, hover-card, input, label, navigation-menu, pagination, popover, scroll-area, select, separator, sheet, skeleton, sonner, table, tabs, textarea, toggle, toggle-group, tooltip.
 
+Changed in Phase 5: `input.tsx`, `textarea.tsx` and `checkbox.tsx` (48px fields, rounder corners, card background, borders in `--steel-dim` for 3:1 non-text contrast, stronger focus ring).
+
 Changed in Phase 4: `command.tsx` (`CommandInput` takes a `wrapperClassName`, and its search icon is hidden from screen readers), `carousel.tsx` is not used yet (phones use CSS scroll snap).
 
 Changed in Phase 3: `dialog.tsx` (night overlay with blur, rounder panel, larger close button with a `closeLabel` prop for its accessible name).
@@ -53,4 +55,8 @@ Showpieces built in-house from the V2 design. The list is filled in per phase.
 | `src/features/products/components/lightbox.tsx` | Existing custom lightbox | Same zoom/pan/pinch/swipe engine, now inside shadcn Dialog (focus trap, Esc, scroll lock, focus return). |
 | `src/features/products/components/product-search.tsx` | Existing search | Rebuilt on shadcn Command (cmdk); starts from `?q=`. |
 | `src/features/products/components/product-filters.tsx` | Existing filters | ToggleGroup (desktop), Drawer with Checkbox (mobile), Select (sort), Empty, Pagination; URL-synced. |
+| `src/features/about/components/timeline.tsx` ★ | Existing timeline (COMPONENTS spec) + V2 glow | Dark band, glowing scroll-linked fill (Motion `useScroll`), filled under reduced motion. |
+| `src/features/about/components/process-steps.tsx` ★ | V2 `Quality` stacking cards | Seven sticky stacking cards; a plain list under reduced motion. |
+| `src/features/about/components/world-reach.tsx` | Existing dotted map | Dark band with glowing markets and CountUp figures. |
+| `src/features/contact/components/country-picker.tsx` | shadcn combobox pattern | Popover + Command (no Base UI). |
 | `src/components/media/placeholder-svg.ts` | V2 viewer stage (`.dots`) and hero ground | Light dotted stage and dark glow ground; colours from `src/config/theme.ts`. |

@@ -1,5 +1,6 @@
-import { Section } from "@/components/layout/section";
-import { SectionHeading } from "@/components/layout/section-heading";
+import { Band } from "@/components/layout/band";
+import { Container } from "@/components/layout/container";
+import { SectionIntro } from "@/components/layout/section-intro";
 import { siteConfig } from "@/config/site";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 import { getCategories, getProductsByCategory } from "@/features/products/lib/content";
@@ -15,9 +16,13 @@ export function CatalogueSections() {
   }));
 
   return (
-    <Section>
-      <SectionHeading title={catalogueCopy.sectionsTitle} intro={catalogueCopy.sectionsIntro} />
-      <CatalogueViewer sections={sections} brand={siteConfig.brandName} />
-    </Section>
+    <Band tone="paper" labelledBy="catalogue-sections-title">
+      <Container>
+        <SectionIntro id="catalogue-sections-title" title={catalogueCopy.sectionsTitle} text={catalogueCopy.sectionsIntro} />
+        <div className="mt-12">
+          <CatalogueViewer sections={sections} brand={siteConfig.brandName} />
+        </div>
+      </Container>
+    </Band>
   );
 }

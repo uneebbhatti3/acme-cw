@@ -18,7 +18,9 @@ export default function CataloguePage() {
         <CatalogueDownload />
       </PageHero>
       <CatalogueSections />
-      <CtaBanner />
+      <div className="sheet surface-dark bg-night pt-[var(--round)]">
+        <CtaBanner />
+      </div>
     </>
   );
 }

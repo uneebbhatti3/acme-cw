@@ -1,5 +1,5 @@
 import { Download, FileText } from "lucide-react";
-import { buttonClasses } from "@/components/ui/legacy/button";
+import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 
@@ -7,11 +7,13 @@ import { catalogueCopy } from "@/features/catalogue/data/copy";
 export function CatalogueDownload() {
   return (
     <div className="mt-8 flex flex-wrap items-center gap-4">
-      <a href={siteConfig.catalogueFile} download className={buttonClasses()}>
-        <Download aria-hidden className="size-[18px]" strokeWidth={1.5} />
-        {catalogueCopy.download}
-      </a>
-      <span className="inline-flex items-center gap-2 text-sm text-steel-300">
+      <Button asChild variant="glow" size="lg">
+        <a href={siteConfig.catalogueFile} download>
+          <Download aria-hidden strokeWidth={1.75} />
+          {catalogueCopy.download}
+        </a>
+      </Button>
+      <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
         <FileText aria-hidden className="size-4" strokeWidth={1.5} />
         {catalogueCopy.fileNote}
       </span>

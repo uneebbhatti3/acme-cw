@@ -38,12 +38,10 @@ export const aboutCopy = {
     ],
   },
   history: {
-    eyebrow: "History",
     title: "From one workshop to 50+ export markets",
     intro: "Key moments since 1960. Years in brackets are placeholders for the client to confirm.",
   },
   process: {
-    eyebrow: "Manufacturing",
     title: "From raw steel to finished instrument",
     intro: "A controlled path through seven stages, with OEM branding and packaging available at the end of the line.",
     steps: [
@@ -85,7 +83,6 @@ export const aboutCopy = {
     ],
   },
   quality: {
-    eyebrow: "Quality assurance",
     title: "Quality designed into the process",
     intro: "Every instrument is checked and re-checked before it reaches the customer.",
     checkpoints: [
@@ -97,17 +94,14 @@ export const aboutCopy = {
     ],
   },
   reach: {
-    eyebrow: "Worldwide markets",
     title: "Serving buyers across six continents",
     text: "Exporting since 1960 to customers in Europe, USA, Canada, Morocco, Brazil, Mexico, Turkey, Australia, South Africa, Thailand and other countries.",
   },
   leadership: {
-    eyebrow: "Leadership",
     title: "The people behind the work",
   },
   certifications: {
-    eyebrow: "Certifications",
     title: "Certified and documented",
-    modalNote: "The full certificate is shared on request. Scope and certificate numbers will appear here once supplied.",
+    text: "Full certificates, with scope and numbers, are shared on request and will appear here once supplied.",
   },
 };

@@ -32,7 +32,7 @@ export function SocialIcons({ className }: { className?: string }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${names[key]} (opens in a new tab)`}
-            className="inline-flex size-11 items-center justify-center rounded-full border border-steel-300/25 text-steel-300 transition-colors hover:border-legacy-accent hover:text-white"
+            className="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-silver transition-colors hover:border-glow hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-glow"
           >
             <svg viewBox="0 0 24 24" className="size-[18px]" fill="currentColor" aria-hidden>
               <path d={paths[key]} />

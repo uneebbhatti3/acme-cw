@@ -1,6 +1,7 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
@@ -25,10 +26,13 @@ export function ProductSearch({
   products,
   className,
   initialQuery = "",
+  allResultsLink = false,
 }: {
   products: ProductSummary[];
   className?: string;
   initialQuery?: string;
+  /** Show a link to the products page with this search (used outside the catalog, e.g. on the 404 page). */
+  allResultsLink?: boolean;
 }) {
   const router = useRouter();
   const [value, setValue] = useState(initialQuery);
@@ -131,6 +135,15 @@ export function ProductSearch({
               <p className="border-t px-5 py-2.5 text-sm text-muted-foreground">
                 {results.length} / {matches.length} {c.resultsLabel}
               </p>
+            )}
+            {allResultsLink && (
+              <Link
+                href={`/products?q=${encodeURIComponent(query.trim())}`}
+                className="flex items-center justify-between gap-2 border-t px-5 py-3 text-sm font-semibold text-link hover:bg-muted"
+              >
+                {c.allResults}
+                <ArrowRight aria-hidden className="size-4" />
+              </Link>
             )}
           </div>
         )}
