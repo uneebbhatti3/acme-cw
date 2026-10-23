@@ -55,7 +55,7 @@ export function PlaceholderImage({
     <Wrapper
       className={cn(
         "relative block overflow-hidden",
-        ink ? "bg-ink" : "bg-steel-100",
+        ink ? "bg-night" : "bg-card",
         fill ? "absolute inset-0" : "w-full",
         className,
       )}
@@ -76,7 +76,7 @@ export function PlaceholderImage({
         <span
           className={cn(
             "absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium leading-none",
-            ink ? "bg-ink/70 text-steel-100" : "bg-white/85 text-steel-900 shadow-sm backdrop-blur-sm",
+            ink ? "bg-white/10 text-silver ring-1 ring-white/15" : "bg-card/90 text-foreground shadow-sm ring-1 ring-border",
           )}
         >
           {label ?? `${VIEW_LABELS[view]} view`}

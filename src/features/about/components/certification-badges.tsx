@@ -2,7 +2,7 @@
 
 import { FileText } from "lucide-react";
 import { useState } from "react";
-import { Modal } from "@/components/ui/modal";
+import { Modal } from "@/components/ui/legacy/modal";
 import type { Certification } from "@/types";
 
 function Seal({ className }: { className?: string }) {

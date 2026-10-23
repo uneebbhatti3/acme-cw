@@ -1,5 +1,5 @@
 import { Container } from "@/components/layout/container";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/legacy/skeleton";
 
 /** Shown while the product route resolves its params. */
 export function ProductDetailSkeleton() {

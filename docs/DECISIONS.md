@@ -56,3 +56,11 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
 - **Real client details win.** Where V2 shows placeholders ("Brand Name", "[Street address]"), the values from `src/config/site.ts` are used.
 - **No dates computed in components.** The footer shows no year, which keeps Cache Components prerendering safe.
 - **Commands use npm** throughout the docs (CLAUDE.md, BUILD_PLAN, REDESIGN).
+- **Redesign Phase 1 (foundation).**
+  - **Placeholder art: V2's art, served as static files.** V2 drew instruments as inline React SVG. The art was ported to SVG strings (`instrument-art.ts`) so `PlaceholderImage` keeps serving prerendered `/art/*.svg` files that lazy-load and cache like photos. Its props are unchanged, so every page picked up the new art with no call-site edits.
+  - **`Reveal` stays CSS + IntersectionObserver** instead of the Motion rebuild in the plan. It already does fade-up 16px once, honours reduced motion and stays visible without JavaScript. A Motion version would add JavaScript to every page for the same result.
+  - **Custom primitives moved to `src/components/ui/legacy/`** (accordion, button, chip, field, icon-button, modal, skeleton, tabs) so shadcn could install into `ui/`. Pages move off them phase by phase; the folder is deleted in Phase 6.
+  - **Legacy `accent` classes renamed to `legacy-accent`.** shadcn uses `--accent` for hover tints, while the old system used it for a bright blue on dark. Old components now point at `--legacy-accent`, which is removed with the other legacy aliases in Phase 6.
+  - **Error colour changed to #B3412A** (5.1:1 on paper), with #FF9E8A on dark (9.9:1). The old #C8553D was 3.9:1 on the new paper background.
+  - **`src/config/theme.ts`** holds the hex values for places CSS cannot reach (placeholder SVGs, OG image, browser theme colour). It must be kept in step with `globals.css`.
+  - **`instrument-shapes.ts` (old line art) is kept** only for the inner-page `PageHero` until that component is redesigned in Phase 2.

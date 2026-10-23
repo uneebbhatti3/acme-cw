@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/legacy/skeleton";
 
 /** Same footprint as the form, shown while it reads the URL. */
 export function ContactFormSkeleton() {

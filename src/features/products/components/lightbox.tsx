@@ -305,7 +305,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
                   <span
                     className={cn(
                       "block overflow-hidden rounded-md border-2 transition-opacity",
-                      i === index ? "border-accent" : "border-transparent opacity-60 hover:opacity-100",
+                      i === index ? "border-legacy-accent" : "border-transparent opacity-60 hover:opacity-100",
                     )}
                   >
                     <ProductVisual image={img} kind={kind} seed={seed} ratio="1/1" sizes="80px" />

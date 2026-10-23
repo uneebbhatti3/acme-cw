@@ -1,7 +1,7 @@
 "use client";
 
 import { Clapperboard } from "lucide-react";
-import { Modal } from "@/components/ui/modal";
+import { Modal } from "@/components/ui/legacy/modal";
 import { videosCopy } from "@/features/videos/data/copy";
 import type { VideoItem } from "@/features/videos/types";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
@@ -16,7 +16,7 @@ export default function VideoModal({ video, open, onClose }: { video: VideoItem;
             <div className="absolute inset-0">
               <PlaceholderImage kind={video.art ?? "generic"} tone="ink" ratio="16/9" fill />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-ink/80 p-6 text-center">
-                <Clapperboard aria-hidden className="mb-4 size-9 text-accent" strokeWidth={1.25} />
+                <Clapperboard aria-hidden className="mb-4 size-9 text-legacy-accent" strokeWidth={1.25} />
                 <p className="font-display text-2xl text-white md:text-3xl">{videosCopy.comingSoonTitle}</p>
                 <p className="mt-2 max-w-sm text-steel-300">{videosCopy.comingSoonText}</p>
               </div>

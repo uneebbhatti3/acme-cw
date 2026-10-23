@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
-import { buttonClasses } from "@/components/ui/button";
+import { buttonClasses } from "@/components/ui/legacy/button";
 import { siteConfig } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
 import { productsCopy } from "@/features/products/data/copy";
@@ -108,7 +108,7 @@ export function HeaderBar({ categories, pathname }: HeaderProps & { pathname: st
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute inset-x-3 bottom-1.5 h-px origin-left bg-accent transition-transform duration-300",
+                    "absolute inset-x-3 bottom-1.5 h-px origin-left bg-legacy-accent transition-transform duration-300",
                     active ? "scale-x-100" : "scale-x-0",
                   )}
                 />
@@ -275,7 +275,7 @@ function MobileMenu({
               <Link
                 href={item.href}
                 aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                className="flex min-h-16 items-center font-display text-[1.75rem] leading-none aria-[current=page]:text-accent"
+                className="flex min-h-16 items-center font-display text-[1.75rem] leading-none aria-[current=page]:text-legacy-accent"
               >
                 {item.label}
               </Link>

@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
-import { Modal } from "@/components/ui/modal";
+import { Modal } from "@/components/ui/legacy/modal";
 import { homeCopy } from "@/features/home/data/copy";
 import { cn } from "@/lib/utils";
 

@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, type KeyboardEvent } from "react";
-import { Modal } from "@/components/ui/modal";
+import { Modal } from "@/components/ui/legacy/modal";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 import { cn } from "@/lib/utils";
 import type { InstrumentKind } from "@/types";
@@ -37,7 +37,7 @@ function Page({
             <PlaceholderImage as="span" kind={section.kind} ratio="4/3" tone="ink" seed={section.slug} />
           </S>
           <S className="mt-[6%] block font-display text-[clamp(16px,3vw,34px)] leading-tight">{section.name}</S>
-          <S className="mt-[2%] block h-px w-1/4 bg-accent" />
+          <S className="mt-[2%] block h-px w-1/4 bg-legacy-accent" />
         </S>
       ) : (
         <S className="flex h-full flex-col p-[8%]">

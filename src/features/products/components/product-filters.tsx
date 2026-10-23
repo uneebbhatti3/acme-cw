@@ -3,7 +3,7 @@
 import { ChevronDown, SearchX, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/legacy/button";
 import { productsCopy } from "@/features/products/data/copy";
 import { sortOptions, type SortValue } from "@/features/products/data/filters";
 import type { ProductSummary } from "@/features/products/lib/search";

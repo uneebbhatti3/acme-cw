@@ -1,5 +1,5 @@
 import { Container } from "@/components/layout/container";
-import { LinkButton, buttonClasses } from "@/components/ui/button";
+import { LinkButton, buttonClasses } from "@/components/ui/legacy/button";
 import { siteConfig } from "@/config/site";
 import { ctaCopy, layoutCopy } from "@/data/copy";
 import { whatsappHref } from "@/lib/utils";

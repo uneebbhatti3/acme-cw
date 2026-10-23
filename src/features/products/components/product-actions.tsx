@@ -2,7 +2,7 @@
 
 import { Check, Copy, Share2 } from "lucide-react";
 import { useState } from "react";
-import { buttonClasses } from "@/components/ui/button";
+import { buttonClasses } from "@/components/ui/legacy/button";
 import { productDetailCopy } from "@/features/products/data/copy";
 import { cn } from "@/lib/utils";
 

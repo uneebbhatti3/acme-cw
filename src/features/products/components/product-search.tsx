@@ -96,7 +96,7 @@ export function ProductSearch({
               setOpen(false);
             }
           }}
-          className="h-14 w-full rounded-[var(--radius-control)] border border-steel-300 bg-white pl-12 pr-12 text-base text-steel-900 shadow-[var(--shadow-soft)] placeholder:text-steel-600/80 focus:border-accent-strong focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent [&::-webkit-search-cancel-button]:hidden"
+          className="h-14 w-full rounded-[var(--radius-control)] border border-steel-300 bg-white pl-12 pr-12 text-base text-steel-900 shadow-[var(--shadow-soft)] placeholder:text-steel-600/80 focus:border-accent-strong focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-legacy-accent [&::-webkit-search-cancel-button]:hidden"
         />
         {value && (
           <button

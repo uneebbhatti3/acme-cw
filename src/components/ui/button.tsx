@@ -1,46 +1,63 @@
-import Link from "next/link";
-import type { ComponentProps } from "react";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+import { Slot } from "radix-ui"
 
-type Variant = "primary" | "secondary" | "onDark" | "quiet";
-type Size = "md" | "sm";
+const buttonVariants = cva(
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
+        outline:
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
+        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-9",
+        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-8",
+        "icon-lg": "size-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
 
-export function buttonClasses({
-  variant = "primary",
-  size = "md",
+function Button({
   className,
-}: { variant?: Variant; size?: Size; className?: string } = {}) {
-  return cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-control)] font-medium",
-    "transition-[transform,background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-out-soft)]",
-    "disabled:pointer-events-none disabled:opacity-60",
-    size === "md" ? "h-12 px-6 text-[0.975rem]" : "h-11 px-4 text-sm",
-    variant === "primary" &&
-      "bg-accent-strong text-white shadow-[var(--shadow-soft)] hover:-translate-y-px hover:bg-accent-deep hover:shadow-[var(--shadow-lift)]",
-    variant === "secondary" &&
-      "border border-steel-300 bg-white text-steel-900 hover:-translate-y-px hover:border-steel-600",
-    variant === "onDark" &&
-      "border border-steel-300/40 text-white hover:-translate-y-px hover:border-steel-100 hover:bg-white/5",
-    variant === "quiet" && "text-steel-900 hover:bg-steel-100",
-    className,
-  );
-}
-
-export function Button({
-  variant,
-  size,
-  className,
-  type = "button",
+  variant = "default",
+  size = "default",
+  asChild = false,
   ...props
-}: ComponentProps<"button"> & { variant?: Variant; size?: Size }) {
-  return <button type={type} className={buttonClasses({ variant, size, className })} {...props} />;
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot.Root : "button"
+
+  return (
+    <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
 }
 
-export function LinkButton({
-  variant,
-  size,
-  className,
-  ...props
-}: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
-  return <Link className={buttonClasses({ variant, size, className })} {...props} />;
-}
+export { Button, buttonVariants }

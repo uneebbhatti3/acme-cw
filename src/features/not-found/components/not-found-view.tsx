@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
-import { LinkButton, buttonClasses } from "@/components/ui/button";
+import { LinkButton, buttonClasses } from "@/components/ui/legacy/button";
 import { notFoundCopy as nf } from "@/features/not-found/data/copy";
 import { ProductSearch } from "@/features/products/components/product-search";
 import { getProductSummaries } from "@/features/products/lib/content";
@@ -12,7 +12,7 @@ export function NotFoundView() {
       <div aria-hidden className="drafting-grid absolute inset-0 -z-10" />
       <Container>
         <div className="max-w-2xl">
-          <p className="font-mono text-sm text-accent">404</p>
+          <p className="font-mono text-sm text-legacy-accent">404</p>
           <h1 className="text-h1 mt-4 text-white">{nf.title}</h1>
           <p className="mt-5 max-w-xl text-lg">{nf.text}</p>
           <ProductSearch products={getProductSummaries()} className="mt-10 max-w-xl" />

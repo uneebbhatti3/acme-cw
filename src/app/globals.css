@@ -1,67 +1,176 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /*
- * Design tokens. All values are placeholders for the client's brand and are
- * swapped here only. Components reference the Tailwind names below.
+ * Design tokens: the single source for colour, type, radius and motion.
+ * Rebranding means editing the three brand values below (and siteConfig).
+ * Components use the semantic names (bg-background, text-primary, …), never hex.
+ * Placeholder art and the OG image read the same values from src/config/theme.ts.
  */
 :root {
-  --ink: #0b1620;
+  /* Brand: change these to rebrand. */
+  --brand: #097e9e; /* buttons, fills, large accents (client colour) */
+  --brand-deep: #07657f; /* links and small accent text on light, hover (5.9:1 on paper) */
+  --glow: #8eebff; /* links, small text, focus ring on dark (13.5:1 on deep) */
+
+  /* Steel palette. */
+  --night: #050b0e;
+  --deep: #0b161b;
+  --raise: #12232a;
+  --silver: #eaf1f5;
+  --steel: #9db0ba;
+  --steel-dim: #74888f;
+  --paper: #eef3f5;
+  --ink: #08171c;
+  --rule: #d3dde2;
+
+  /* Semantic tokens (shadcn), light surface. */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --primary-deep: var(--brand-deep);
+  --secondary: #e2eaee;
+  --secondary-foreground: var(--ink);
+  --muted: #e2eaee;
+  --muted-foreground: #44585f;
+  --accent: color-mix(in oklab, var(--brand) 12%, white);
+  --accent-foreground: var(--brand-deep);
+  --destructive: #b3412a;
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--brand-deep);
+  --link: var(--brand-deep);
+
+  --radius: 0.875rem;
+  --header-h: 72px;
+
+  /* Legacy names, kept until every page is migrated (removed in redesign Phase 6). */
   --ink-soft: #16242f;
   --steel-900: #1f2d38;
   --steel-600: #52626e;
   --steel-300: #b8c2ca;
   --steel-100: #e7ecef;
-  --paper: #f7f9fa;
   --white: #ffffff;
-  --accent: #2ea3c4;
-  --accent-strong: #097e9e;
-  --accent-deep: #07657f;
+  --legacy-accent: #2ea3c4;
+  --accent-strong: var(--brand);
+  --accent-deep: var(--brand-deep);
   --accent-soft: #e0f1f6;
-  --warn: #c8553d;
+  --warn: var(--destructive);
+}
 
-  --header-h: 72px;
+/* Dark surface: hero, feature sections, footer. Same token names, dark values. */
+.surface-dark {
+  --background: var(--night);
+  --foreground: var(--silver);
+  --card: var(--deep);
+  --card-foreground: var(--silver);
+  --popover: var(--deep);
+  --popover-foreground: var(--silver);
+  --secondary: var(--raise);
+  --secondary-foreground: var(--silver);
+  --muted: var(--raise);
+  --muted-foreground: var(--steel);
+  --accent: rgb(255 255 255 / 0.08);
+  --accent-foreground: #ffffff;
+  --destructive: #ff9e8a;
+  --border: rgb(255 255 255 / 0.1);
+  --input: rgb(255 255 255 / 0.16);
+  --ring: var(--glow);
+  --link: var(--glow);
+  background-color: var(--background);
+  color: var(--foreground);
+  color-scheme: dark;
 }
 
 @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-deep: var(--primary-deep);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-link: var(--link);
+  --color-glow: var(--glow);
+  --color-night: var(--night);
+  --color-deep: var(--deep);
+  --color-raise: var(--raise);
+  --color-silver: var(--silver);
+  --color-steel: var(--steel);
+  --color-steel-dim: var(--steel-dim);
+  --color-paper: var(--paper);
   --color-ink: var(--ink);
+  --color-rule: var(--rule);
+
+  /* Legacy colour names (see :root). */
   --color-ink-soft: var(--ink-soft);
   --color-steel-900: var(--steel-900);
   --color-steel-600: var(--steel-600);
   --color-steel-300: var(--steel-300);
   --color-steel-100: var(--steel-100);
-  --color-paper: var(--paper);
   --color-white: var(--white);
-  --color-accent: var(--accent);
+  --color-legacy-accent: var(--legacy-accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-deep: var(--accent-deep);
   --color-accent-soft: var(--accent-soft);
   --color-warn: var(--warn);
 
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 18px);
+  /* Legacy radii. */
   --radius-control: 6px;
   --radius-card: 14px;
 
-  --shadow-soft: 0 1px 2px rgb(11 22 32 / 0.04), 0 4px 12px rgb(11 22 32 / 0.05);
-  --shadow-lift: 0 2px 4px rgb(11 22 32 / 0.04), 0 12px 32px rgb(11 22 32 / 0.09);
+  --shadow-soft: 0 1px 2px rgb(8 23 28 / 0.04), 0 4px 12px rgb(8 23 28 / 0.05);
+  --shadow-lift: 0 2px 4px rgb(8 23 28 / 0.04), 0 12px 32px rgb(8 23 28 / 0.09);
+  --shadow-sheet: 0 -24px 60px -30px rgb(0 0 0 / 0.8);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-h) + 16px);
   }
 
   body {
-    background: var(--paper);
-    color: var(--steel-900);
+    background: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-    line-height: 1.65;
+    line-height: 1.6;
     text-rendering: optimizeLegibility;
   }
 
@@ -69,11 +178,10 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-stretch: 112%;
-    color: var(--ink);
-    line-height: 1.15;
+    color: var(--foreground);
+    line-height: 1.08;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     text-wrap: balance;
   }
 
@@ -82,40 +190,50 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 4px;
   }
 
   ::selection {
-    background: var(--accent-soft);
+    background: var(--accent);
     color: var(--ink);
   }
 
   dialog::backdrop {
-    background: rgb(11 22 32 / 0.82);
+    background: rgb(5 11 14 / 0.82);
   }
 }
 
 @layer components {
-  /* Display text: Archivo semi-expanded and semibold, wherever .font-display is used. */
   .font-display {
-    font-stretch: 112%;
+    font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
+  }
+  /* Large display headline (hero). */
+  .text-display {
+    font-size: clamp(2.75rem, 1.6rem + 5.4vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
   }
   .text-h1 {
-    font-size: clamp(2.75rem, 1.9rem + 3.6vw, 5rem);
-    line-height: 1.04;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.5rem, 1.7rem + 3.6vw, 4.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
   }
   .text-h2 {
-    font-size: clamp(2rem, 1.6rem + 1.6vw, 3rem);
-    line-height: 1.1;
+    font-size: clamp(2rem, 1.5rem + 2.2vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
   }
   .text-h3 {
     font-size: clamp(1.375rem, 1.25rem + 0.5vw, 1.75rem);
-    line-height: 1.2;
+    line-height: 1.15;
+  }
+  .text-lede {
+    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+    line-height: 1.55;
   }
   .eyebrow {
     font-family: var(--font-sans);
@@ -123,14 +241,100 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-strong);
+    color: var(--link);
   }
   .on-dark .eyebrow,
   .eyebrow-on-dark {
-    color: var(--accent);
+    color: var(--glow);
   }
   .measure {
     max-width: 68ch;
+  }
+
+  /* Polished-metal headline fill. Text stays selectable and readable without it. */
+  .text-metal {
+    background: linear-gradient(180deg, #ffffff 0%, var(--silver) 38%, var(--steel) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-metal-ink {
+    background: linear-gradient(180deg, var(--ink) 0%, var(--ink) 45%, #3d535b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Frosted glass (nav pill). Solid fallback where blur is unsupported. */
+  .glass {
+    background: rgb(5 11 14 / 0.88);
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+  @supports (backdrop-filter: blur(1px)) {
+    .glass {
+      background: rgb(5 11 14 / 0.58);
+      backdrop-filter: blur(16px) saturate(140%);
+    }
+  }
+
+  /* Subtle noise grain over a dark surface. Decorative, never intercepts input. */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Rounded sheet that overlaps the section above it. */
+  .sheet {
+    position: relative;
+    z-index: 2;
+    margin-top: -2rem;
+    border-radius: 2rem 2rem 0 0;
+  }
+  @media (min-width: 768px) {
+    .sheet {
+      margin-top: -2.5rem;
+      border-radius: 2.5rem 2.5rem 0 0;
+    }
+  }
+
+  /* Soft glow that follows the pointer. Set --x / --y on the element. */
+  .spotlight {
+    position: relative;
+    overflow: hidden;
+  }
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(
+      460px circle at var(--x, 50%) var(--y, 50%),
+      color-mix(in oklab, var(--glow) 16%, transparent),
+      transparent 62%
+    );
+  }
+  .spotlight:hover::before,
+  .spotlight:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Dotted ground behind product art on light surfaces. */
+  .dots {
+    background-color: var(--card);
+    background-image: radial-gradient(rgb(8 23 28 / 0.13) 1px, transparent 1px);
+    background-size: 18px 18px;
   }
 
   /* Text link: underline draws in on hover. */
@@ -308,7 +512,7 @@
 @layer base {
   .home-root :is(h1, h2, h3) { font-family: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; line-height: inherit; }
 }
-.home-root .font-display { font-family: var(--font-display); font-stretch: 112%; letter-spacing: -0.025em; font-weight: 600; }
+.home-root .font-display { font-family: var(--font-display); letter-spacing: -0.025em; font-weight: 600; }
 .home-root .c-ink { color: var(--ink); }
 .home-root .c-steel { color: var(--steel-text); }
 .home-root .c-scrub { color: var(--scrub); }

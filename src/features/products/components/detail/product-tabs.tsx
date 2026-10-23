@@ -1,5 +1,5 @@
 import { Section } from "@/components/layout/section";
-import { Tabs } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/legacy/tabs";
 import { productDetailCopy as pc } from "@/features/products/data/copy";
 import type { Product } from "@/features/products/types";
 import { SpecTable } from "../spec-table";

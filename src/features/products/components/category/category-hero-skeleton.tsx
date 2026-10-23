@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/legacy/skeleton";
 
 /** Shown while the category route resolves its params. */
 export function CategoryHeroSkeleton() {

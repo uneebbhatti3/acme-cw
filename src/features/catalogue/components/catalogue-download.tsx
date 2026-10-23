@@ -1,5 +1,5 @@
 import { Download, FileText } from "lucide-react";
-import { buttonClasses } from "@/components/ui/button";
+import { buttonClasses } from "@/components/ui/legacy/button";
 import { siteConfig } from "@/config/site";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 

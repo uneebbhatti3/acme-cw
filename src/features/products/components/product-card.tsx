@@ -62,7 +62,7 @@ export function ProductCard({ product, className }: { product: ProductSummary; c
       </div>
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[var(--radius-card)] ring-2 ring-transparent ring-offset-2 group-has-[:focus-visible]:ring-accent"
+        className="pointer-events-none absolute inset-0 rounded-[var(--radius-card)] ring-2 ring-transparent ring-offset-2 group-has-[:focus-visible]:ring-legacy-accent"
       />
     </article>
   );

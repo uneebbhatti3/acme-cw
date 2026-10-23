@@ -7,7 +7,7 @@ export function ProcessSteps({ steps }: { steps: { icon: string; title: string; 
     <ol className="relative grid gap-10 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
       {steps.map((s, i) => (
         <Reveal as="li" key={s.title} delay={(i % 4) * 0.08} className="relative">
-          <span className="relative inline-flex size-12 items-center justify-center rounded-full border border-steel-300/40 bg-ink text-accent">
+          <span className="relative inline-flex size-12 items-center justify-center rounded-full border border-steel-300/40 bg-ink text-legacy-accent">
             <Icon name={s.icon} className="size-5" />
           </span>
           <p className="mt-6 font-mono text-xs text-steel-300">

@@ -62,17 +62,17 @@ export function Footer() {
           <p className={heading}>{layoutCopy.footer.contact}</p>
           <ul className="space-y-3 text-[0.95rem]">
             <li className="flex gap-3">
-              <MapPin aria-hidden className="mt-1 size-4 shrink-0 text-accent" strokeWidth={1.5} />
+              <MapPin aria-hidden className="mt-1 size-4 shrink-0 text-legacy-accent" strokeWidth={1.5} />
               <span>{contact.address}</span>
             </li>
             <li className="flex gap-3">
-              <Phone aria-hidden className="mt-1 size-4 shrink-0 text-accent" strokeWidth={1.5} />
+              <Phone aria-hidden className="mt-1 size-4 shrink-0 text-legacy-accent" strokeWidth={1.5} />
               <a href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`} className="hover:text-white">
                 {contact.phone}
               </a>
             </li>
             <li className="flex gap-3">
-              <Mail aria-hidden className="mt-1 size-4 shrink-0 text-accent" strokeWidth={1.5} />
+              <Mail aria-hidden className="mt-1 size-4 shrink-0 text-legacy-accent" strokeWidth={1.5} />
               <a href={`mailto:${contact.email}`} className="hover:text-white">
                 {contact.email}
               </a>

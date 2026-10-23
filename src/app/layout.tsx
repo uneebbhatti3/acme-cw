@@ -1,24 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Header, HeaderBar } from "@/components/layout/header";
 import { WhatsAppButton, WhatsAppLink } from "@/components/layout/whatsapp-button";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
+import { themeColors } from "@/config/theme";
 import { layoutCopy } from "@/data/copy";
 import { getCategories, getProducts } from "@/features/products/lib/content";
 import { baseKeywords, jsonLdString, organizationJsonLd } from "@/lib/seo";
 import { Suspense } from "react";
 import "./globals.css";
 
-/** One variable family: normal width for text, the width axis widens headings. */
-const sans = Archivo({
-  variable: "--font-archivo",
+/** Display face for headings and big numbers; weight axis only, to keep the file small. */
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  axes: ["wdth"],
   display: "swap",
 });
-const mono = JetBrains_Mono({
-  variable: "--font-jetbrains",
+const sans = Geist({
+  variable: "--font-geist",
+  subsets: ["latin"],
+  display: "swap",
+});
+/** Product codes and spec values only, so it is not preloaded. */
+const mono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
   preload: false,
@@ -47,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b1620",
+  themeColor: themeColors.night,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -60,8 +67,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   const productNames = Object.fromEntries(getProducts().map((p) => [p.slug, p.name]));
 
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable} antialiased`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
+        <TooltipProvider delayDuration={200}>
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
@@ -85,6 +93,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={<WhatsAppLink productNames={productNames} pathname="" />}>
           <WhatsAppButton productNames={productNames} />
         </Suspense>
+        </TooltipProvider>
       </body>
     </html>
   );

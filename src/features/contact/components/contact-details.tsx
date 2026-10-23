@@ -1,5 +1,5 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
-import { buttonClasses } from "@/components/ui/button";
+import { buttonClasses } from "@/components/ui/legacy/button";
 import { siteConfig } from "@/config/site";
 import { ctaCopy, layoutCopy } from "@/data/copy";
 import { contactCopy } from "@/features/contact/data/copy";
