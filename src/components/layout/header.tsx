@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
 import { productsCopy } from "@/features/products/data/copy";
@@ -157,80 +157,36 @@ function MegaMenu({ categories }: HeaderProps) {
   );
 }
 
+const loadMobileMenu = () => import("./mobile-menu");
+const MobileMenuSheet = dynamic(loadMobileMenu, { ssr: false });
+
+/** Menu button below `lg`. The sheet code loads on first open (prefetched on hover or focus). */
 function MobileMenu({ categories, pathname }: HeaderProps & { pathname: string }) {
+  const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-white/10 hover:text-white lg:hidden"
-          aria-label={layoutCopy.openMenu}
-        >
-          <Menu aria-hidden className="size-6" strokeWidth={1.5} />
-        </Button>
-      </SheetTrigger>
-      <SheetContent
-        side="right"
-        showCloseButton={false}
-        aria-describedby={undefined}
-        className="surface-dark w-full gap-0 border-white/10 bg-night p-0 sm:max-w-md lg:hidden"
+    <>
+      <Button
+        ref={buttonRef}
+        variant="ghost"
+        size="icon"
+        className="text-white hover:bg-white/10 hover:text-white lg:hidden"
+        aria-label={layoutCopy.openMenu}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onPointerEnter={loadMobileMenu}
+        onFocus={loadMobileMenu}
+        onClick={() => {
+          setLoaded(true);
+          setOpen(true);
+        }}
       >
-        <SheetTitle className="sr-only">{layoutCopy.menuTitle}</SheetTitle>
-        <div className="flex h-20 shrink-0 items-center justify-between px-6">
-          <Logo onDark />
-          <SheetClose asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/10 hover:text-white"
-              aria-label={layoutCopy.closeMenu}
-            >
-              <X aria-hidden className="size-6" strokeWidth={1.5} />
-            </Button>
-          </SheetClose>
-        </div>
-        <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-6 pb-6">
-          <ul className="border-t border-border">
-            {siteConfig.nav.map((item) => (
-              <li key={item.href} className="border-b border-border">
-                <SheetClose asChild>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                    className="flex min-h-16 items-center font-display text-[1.75rem] leading-none text-silver aria-[current=page]:text-glow"
-                  >
-                    {item.label}
-                  </Link>
-                </SheetClose>
-                {item.href === "/products" && (
-                  <ul className="-mt-1 grid grid-cols-2 gap-x-4 pb-4">
-                    {categories.map((c) => (
-                      <li key={c.slug}>
-                        <SheetClose asChild>
-                          <Link
-                            href={`/products/${c.slug}`}
-                            className="flex min-h-11 items-center text-[0.95rem] text-steel hover:text-white"
-                          >
-                            {c.name}
-                          </Link>
-                        </SheetClose>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="shrink-0 border-t border-border p-6">
-          <SheetClose asChild>
-            <Button asChild variant="glow" size="lg" className="w-full">
-              <Link href="/contact">{layoutCopy.contactButton}</Link>
-            </Button>
-          </SheetClose>
-        </div>
-      </SheetContent>
-    </Sheet>
+        <Menu aria-hidden className="size-6" strokeWidth={1.5} />
+      </Button>
+      {loaded && (
+        <MobileMenuSheet open={open} onOpenChange={setOpen} categories={categories} pathname={pathname} returnFocus={() => buttonRef.current?.focus()} />
+      )}
+    </>
   );
 }

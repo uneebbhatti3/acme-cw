@@ -102,3 +102,22 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **The 404 search links to `/products?q=…`** ("Search the full catalog") as well as showing results inline.
   - **The video grid sits on a dark band** and filters with a single-choice ToggleGroup.
   - **All legacy code is gone:** `ui/legacy`, the old `Section` and `SectionHeading`, `VisuallyHidden`, and the legacy colour, radius and utility aliases in `globals.css`. Every page now uses shadcn primitives and the new tokens.
+- **Redesign Phase 6 (polish and performance).**
+  - **Lighthouse on this machine:** Lighthouse's own Chrome delays first paint by ~2s on this Windows host, including on the pre-redesign site. The browser's Performance API shows first paint at 300ms. The default simulated mode treats that delay as page time and inflates LCP. Scores are therefore reported with `--throttling-method=devtools` (real 4x CPU and network throttling). Re-check on the deployed site with PageSpeed Insights.
+  - **LCP fixes:**
+    - The hero headline and lede no longer animate in.
+    - `Reveal` hides only content that starts below the fold.
+    - Priority images are preloaded from `<head>`.
+    - The first row of video posters and of category product images loads eagerly.
+  - **Rendering fixes:**
+    - `content-visibility: auto` on bands, the footer and the CTA (off for the first band under a hero).
+    - `text-wrap: pretty` removed from paragraphs.
+  - **Blocking-time fixes:**
+    - Each Band hydrates in its own Suspense boundary.
+    - Spotlight cards are server components with one delegated pointer listener.
+    - The mobile menu, mobile filter drawer, contact toaster and country list load on demand (the country list is prefetched once the page is idle).
+  - **Motion removed.** The timeline fill is a native passive scroll listener. Motion was used for that effect only, and dropping it saves about 45KB of JavaScript.
+  - **Removed unused code:** shadcn accordion, aspect-ratio, card, carousel (plus `embla-carousel-react`) and scroll-area.
+  - **`dark:` is tied to a `.dark` class** the site never sets. By default, shadcn's dark styles would have followed the visitor's system dark mode.
+  - **BreadcrumbList JSON-LD** added to About, Products, Catalogue, Videos and Contact.
+  - **Focus rings** added to tab panels, which are focusable by default in Radix.

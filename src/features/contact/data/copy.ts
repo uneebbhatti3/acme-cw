@@ -1,6 +1,7 @@
 /** Page copy for this feature. Edit text here, not in components. */
 
 export const contactCopy = {
+  breadcrumb: "Contact",
   hero: {
     title: "Start a product, OEM or distribution inquiry",
     subtitle: "Send product requirements, quote requests, private-label needs or export questions to our sales team in Sialkot.",

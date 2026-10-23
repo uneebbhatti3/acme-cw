@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { cn } from "@/lib/utils";
 import type { InstrumentKind, ViewType } from "@/types";
 import { placeholderSrc, type Ratio, type Tone } from "./placeholder-svg";
@@ -51,6 +52,9 @@ export function PlaceholderImage({
   priority = false,
 }: PlaceholderImageProps) {
   const ink = tone !== "steel";
+  const src = placeholderSrc(kind, view, ratio, tone);
+  // Above-the-fold art: tell the browser about it from the document head, before it parses the body.
+  if (priority) preload(src, { as: "image", fetchPriority: "high" });
   return (
     <Wrapper
       className={cn(
@@ -64,7 +68,7 @@ export function PlaceholderImage({
       {/* SVG artwork: next/image adds nothing for vector files. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={placeholderSrc(kind, view, ratio, tone)}
+        src={src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : undefined}

@@ -8,15 +8,18 @@ import { FeaturedProducts } from "@/features/products/components/featured-produc
 import { SpecialtiesList } from "@/features/products/components/specialties-list";
 import { productsCopy } from "@/features/products/data/copy";
 import { productsSeo } from "@/features/products/data/seo";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { layoutCopy } from "@/data/copy";
+import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(productsSeo);
 
 export default function ProductsPage() {
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd([{ name: layoutCopy.breadcrumbHome, href: "/" }, { name: productsCopy.breadcrumb, href: "/products" }])} />
       <PageHero title={productsCopy.hero.title} subtitle={productsCopy.hero.subtitle} kind="clamp" />
-      <Band tone="paper" label={productsCopy.search.label} className="pt-10 md:pt-14">
+      <Band defer={false} tone="paper" label={productsCopy.search.label} className="pt-10 md:pt-14">
         <Container>
           <CatalogSearchBar />
           <div className="mt-16 md:mt-20">

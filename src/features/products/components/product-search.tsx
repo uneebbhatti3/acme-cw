@@ -66,6 +66,7 @@ export function ProductSearch({
         label={c.label}
         className="overflow-visible bg-transparent"
         onKeyDown={(e) => {
+          if (e.key === "ArrowDown" && value) setOpen(true);
           if (e.key === "Escape") {
             if (value) setValue("");
             setOpen(false);
@@ -103,50 +104,54 @@ export function ProductSearch({
           {showPanel ? (matches.length ? c.count(matches.length) : `${c.noResults} "${query}"`) : ""}
         </p>
 
-        {showPanel && (
-          <div className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-3xl border bg-popover text-popover-foreground shadow-[var(--shadow-lift)]">
-            <CommandList className="max-h-[60vh] p-2">
+        {/* Always mounted so the input's aria-controls points at a real list; hidden until there is a query. */}
+        <div
+          hidden={!showPanel}
+          className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-3xl border bg-popover text-popover-foreground shadow-[var(--shadow-lift)]"
+        >
+          <CommandList className="max-h-[60vh] p-2">
+            {showPanel && (
               <CommandEmpty className="px-4 py-6 text-left">
                 <span className="block font-medium">
                   {c.noResults} &ldquo;{query}&rdquo;
                 </span>
                 <span className="mt-1 block text-sm text-muted-foreground">{c.noResultsHint}</span>
               </CommandEmpty>
-              {results.map((p, i) => (
-                <CommandItem
-                  key={p.slug}
-                  value={p.slug}
-                  onSelect={() => router.push(href(p))}
-                  className="art-in gap-4 rounded-2xl px-3 py-2.5 data-[selected=true]:bg-muted data-[selected=true]:text-foreground"
-                  style={{ animationDelay: `${i * 30}ms` }}
-                >
-                  <span className="w-16 shrink-0 overflow-hidden rounded-lg border">
-                    <PlaceholderImage as="span" kind={p.kind} ratio="4/3" seed={p.slug} />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-medium">{p.name}</span>
-                    <span className="block text-sm text-muted-foreground">{p.categoryName}</span>
-                  </span>
-                  <span className="hidden font-mono text-xs text-muted-foreground sm:block">{p.code}</span>
-                </CommandItem>
-              ))}
-            </CommandList>
-            {matches.length > results.length && (
-              <p className="border-t px-5 py-2.5 text-sm text-muted-foreground">
-                {results.length} / {matches.length} {c.resultsLabel}
-              </p>
             )}
-            {allResultsLink && (
-              <Link
-                href={`/products?q=${encodeURIComponent(query.trim())}`}
-                className="flex items-center justify-between gap-2 border-t px-5 py-3 text-sm font-semibold text-link hover:bg-muted"
+            {results.map((p, i) => (
+              <CommandItem
+                key={p.slug}
+                value={p.slug}
+                onSelect={() => router.push(href(p))}
+                className="art-in gap-4 rounded-2xl px-3 py-2.5 data-[selected=true]:bg-muted data-[selected=true]:text-foreground"
+                style={{ animationDelay: `${i * 30}ms` }}
               >
-                {c.allResults}
-                <ArrowRight aria-hidden className="size-4" />
-              </Link>
-            )}
-          </div>
-        )}
+                <span className="w-16 shrink-0 overflow-hidden rounded-lg border">
+                  <PlaceholderImage as="span" kind={p.kind} ratio="4/3" seed={p.slug} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-medium">{p.name}</span>
+                  <span className="block text-sm text-muted-foreground">{p.categoryName}</span>
+                </span>
+                <span className="hidden font-mono text-xs text-muted-foreground sm:block">{p.code}</span>
+              </CommandItem>
+            ))}
+          </CommandList>
+          {matches.length > results.length && (
+            <p className="border-t px-5 py-2.5 text-sm text-muted-foreground">
+              {results.length} / {matches.length} {c.resultsLabel}
+            </p>
+          )}
+          {allResultsLink && showPanel && (
+            <Link
+              href={`/products?q=${encodeURIComponent(query.trim())}`}
+              className="flex items-center justify-between gap-2 border-t px-5 py-3 text-sm font-semibold text-link hover:bg-muted"
+            >
+              {c.allResults}
+              <ArrowRight aria-hidden className="size-4" />
+            </Link>
+          )}
+        </div>
       </Command>
     </div>
   );

@@ -1,16 +1,14 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { homeCopy } from "@/features/home/data/copy";
 import { HomeIcon } from "../home-icon";
 import { HeroArt } from "./hero-art";
 
-const delay = (d: number) => ({ "--d": `${d}s` }) as CSSProperties;
-
 /**
  * Home hero (server-rendered) with the trust strip along its foot. The
- * headline only lifts into place (never transparent), so it paints at once.
+ * headline and lede are static so they paint at once (they are the LCP
+ * element); the motion lives in the instrument art.
  */
 export function HomeHero() {
   const copy = homeCopy.hero;
@@ -18,15 +16,15 @@ export function HomeHero() {
     <section aria-labelledby="hero-title" className="surface-dark hero-ground grain sec-pre overflow-hidden pt-[calc(var(--header-h)+56px)] md:pt-[calc(var(--header-h)+88px)]">
       <Container className="relative z-[2]">
         <h1 id="hero-title" className="text-display pb-2">
-          {copy.lines.map((line, i) => (
-            <span key={line} className="lift block" style={delay(i * 0.1)}>
+          {copy.lines.map((line) => (
+            <span key={line} className="block">
               <span className="text-metal">{line}</span>
             </span>
           ))}
         </h1>
 
         <div className="mt-10 grid items-end gap-12 lg:grid-cols-12 lg:gap-6">
-          <div className="rise order-2 lg:order-1 lg:col-span-4 lg:pb-16" style={delay(0.5)}>
+          <div className="order-2 lg:order-1 lg:col-span-4 lg:pb-16">
             <p className="text-lede max-w-[30rem] text-muted-foreground">{copy.text}</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild variant="glow" size="lg">

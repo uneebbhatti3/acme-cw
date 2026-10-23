@@ -6,7 +6,9 @@ import { CatalogueDownload } from "@/features/catalogue/components/catalogue-dow
 import { CatalogueSections } from "@/features/catalogue/components/catalogue-sections";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 import { catalogueSeo } from "@/features/catalogue/data/seo";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { layoutCopy } from "@/data/copy";
+import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(catalogueSeo);
 
@@ -14,6 +16,7 @@ export default function CataloguePage() {
   if (!siteConfig.features.showCatalogue) notFound();
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd([{ name: layoutCopy.breadcrumbHome, href: "/" }, { name: catalogueCopy.hero.title, href: "/catalogue" }])} />
       <PageHero title={catalogueCopy.hero.title} subtitle={catalogueCopy.hero.subtitle} kind="retractor">
         <CatalogueDownload />
       </PageHero>

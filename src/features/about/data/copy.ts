@@ -4,6 +4,7 @@
  */
 
 export const aboutCopy = {
+  breadcrumb: "About",
   hero: {
     title: "Industrial discipline. Clinical purpose.",
     subtitle:

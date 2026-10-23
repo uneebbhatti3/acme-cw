@@ -22,7 +22,7 @@ export function Footer() {
   const tel = (n: string) => `tel:${n.replace(/[^\d+]/g, "")}`;
 
   return (
-    <footer className="surface-dark grain overflow-hidden">
+    <footer className="surface-dark grain defer-render overflow-hidden [contain-intrinsic-size:auto_700px]">
       <Container className="relative z-[2]">
         <div className="grid gap-12 pb-12 pt-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:pt-20">
           <div className="lg:col-span-4">

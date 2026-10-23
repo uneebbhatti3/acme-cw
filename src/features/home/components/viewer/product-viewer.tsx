@@ -94,7 +94,7 @@ export function ProductViewer({ images, kind, slug, name }: { images: ProductIma
     <>
       <Tabs value={String(index)} onValueChange={(v) => setIndex(Number(v))} className="gap-5">
         {images.map((img, i) => (
-          <TabsContent key={img.view} value={String(i)} className="art-in">
+          <TabsContent key={img.view} value={String(i)} className="art-in rounded-[2rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-solid focus-visible:outline-ring">
             <Stage image={img} kind={kind} slug={slug} onEnlarge={enlarge} />
           </TabsContent>
         ))}

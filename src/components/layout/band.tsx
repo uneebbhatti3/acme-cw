@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const TONES = {
@@ -11,12 +11,16 @@ const TONES = {
 /**
  * A page band. Sections are rounded sheets that overlap the one above;
  * `pre` leaves room at the bottom for the next sheet to do the same.
+ * Content sits in its own Suspense boundary so React hydrates each band as a
+ * separate, short task (selective hydration). Everything is prerendered, so no
+ * fallback ever shows.
  */
 export function Band({
   tone,
   id,
   sheet = true,
   pre = true,
+  defer = true,
   label,
   labelledBy,
   className,
@@ -26,6 +30,8 @@ export function Band({
   id?: string;
   sheet?: boolean;
   pre?: boolean;
+  /** Skip layout and paint while off screen. Turn off for the first band under a hero, which is on screen at load. */
+  defer?: boolean;
   label?: string;
   labelledBy?: string;
   className?: string;
@@ -36,9 +42,9 @@ export function Band({
       id={id}
       aria-label={label}
       aria-labelledby={labelledBy}
-      className={cn("sec", TONES[tone], sheet && "sheet", pre && "sec-pre", className)}
+      className={cn("sec", defer && "defer-render", TONES[tone], sheet && "sheet", pre && "sec-pre", className)}
     >
-      {children}
+      <Suspense>{children}</Suspense>
     </section>
   );
 }

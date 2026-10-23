@@ -43,7 +43,7 @@ export async function CategoryView({ params }: { params: Promise<{ category: str
         </p>
       </PageHero>
 
-      <Band tone="paper" labelledBy="range-products" className="pt-12 md:pt-16">
+      <Band defer={false} tone="paper" labelledBy="range-products" className="pt-12 md:pt-16">
         <Container>
           <h2 id="range-products" className="sr-only">
             {productsCopy.listLabel(cat.name)}

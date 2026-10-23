@@ -6,13 +6,13 @@ import { PlaceholderImage } from "@/components/media/placeholder-image";
 import { VideoTrigger } from "./video-trigger";
 import Image from "next/image";
 
-export function VideoPoster({ video, sizes, large = false }: { video: VideoItem; sizes: string; large?: boolean }) {
+export function VideoPoster({ video, sizes, large = false, priority = false }: { video: VideoItem; sizes: string; large?: boolean; priority?: boolean }) {
   return (
     <span className="relative block aspect-video w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-night">
       {video.poster ? (
-        <Image src={video.poster} alt="" fill sizes={sizes} className="object-cover" />
+        <Image src={video.poster} alt="" fill sizes={sizes} priority={priority} className="object-cover" />
       ) : (
-        <PlaceholderImage as="span" kind={video.art ?? "generic"} tone="ink" ratio="16/9" fill seed={video.id} />
+        <PlaceholderImage as="span" kind={video.art ?? "generic"} tone="ink" ratio="16/9" fill seed={video.id} priority={priority} />
       )}
       <span className="absolute inset-0 bg-gradient-to-t from-night/70 via-transparent to-transparent" />
       <span
@@ -37,10 +37,13 @@ export function VideoCard({
   video,
   large = false,
   sizes,
+  priority = false,
 }: {
   video: VideoItem;
   large?: boolean;
   sizes: string;
+  /** Load the poster eagerly (first row, above the fold). */
+  priority?: boolean;
 }) {
   return (
     <VideoTrigger
@@ -48,7 +51,7 @@ export function VideoCard({
       label={`${videosCopy.play}: ${video.title}${video.duration ? `, ${video.duration}` : ""}`}
       className="group block w-full rounded-[1.5rem] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
     >
-      <VideoPoster video={video} sizes={sizes} large={large} />
+      <VideoPoster video={video} sizes={sizes} large={large} priority={priority} />
       <span className="mt-4 block">
         <span className="block text-sm text-muted-foreground">{video.category}</span>
         <span className={cn("mt-1 block font-display text-foreground", large ? "text-2xl" : "text-xl")}>{video.title}</span>

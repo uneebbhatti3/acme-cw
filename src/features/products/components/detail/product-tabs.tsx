@@ -39,7 +39,7 @@ export function ProductTabs({ product }: { product: Product }) {
             ))}
           </TabsList>
           {tabs.map((t) => (
-            <TabsContent key={t.id} value={t.id} className="art-in">
+            <TabsContent key={t.id} value={t.id} className="art-in rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-solid focus-visible:outline-ring">
               {t.content}
             </TabsContent>
           ))}

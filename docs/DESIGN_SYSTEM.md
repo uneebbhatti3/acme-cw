@@ -50,7 +50,9 @@ Everything lives in `src/app/globals.css` as CSS variables, mapped to Tailwind w
 
 Dark mode is **not** required. Dark sections are dark by design; popovers and dialogs portal to `body` and use the light tokens unless given `surface-dark`.
 
-**Legacy names** (`ink-soft`, `steel-900/600/300/100`, `legacy-accent`, `accent-strong/deep/soft`, `warn`, radii `control`/`card`) remain as aliases until every page is migrated. They are removed in redesign Phase 6; do not use them in new code.
+**No dark theme.** shadcn `dark:` utilities are tied to a `.dark` class the site never sets (`@custom-variant dark` in `globals.css`), so a visitor's system dark mode changes nothing. Strip `dark:` classes from newly added shadcn files.
+
+**Form fields** use `--steel-dim` borders (3.7:1 on white) so their edges meet the 3:1 non-text contrast rule; `--rule` is for dividers only.
 
 ## Typography
 
@@ -110,13 +112,22 @@ Primitives are shadcn/ui (`new-york` style, Radix) in `src/components/ui/`, rest
 
 Library: Motion (`motion/react`) for scroll-linked and gesture work; CSS for everything else.
 
-- **Reveal:** fade up 16px, 500ms, ease-out, staggered 60ms, once on scroll into view (`Reveal`: CSS + IntersectionObserver, visible without JavaScript).
+- **Reveal:** fade up 16px, 500ms, ease-out, staggered 60ms, once on scroll into view. `Reveal` is server-rendered visible and only hides elements that start below the fold, so first-screen content is never held back (and works without JavaScript).
+- **Above-the-fold text never animates in.** The hero headline and lede are static (they are the LCP element); motion lives in the art.
 - **Hero:** one light sweep across the instrument on load (about 2.4s), then the light follows the pointer.
 - **Count-up:** 1.4s, ease-out, once.
 - **Marquee:** about 40s per loop, pauses on hover and focus.
 - **Timeline:** line fills with scroll (`useScroll`). **Stacking cards:** CSS `position: sticky`.
 - No page transitions; no smooth-scroll libraries.
 - **Always respect `prefers-reduced-motion`:** no sweep, parallax, count-up, marquee or scroll-linked fill. Show final states at once.
+
+## Performance rules
+
+- `Band` sections use `content-visibility: auto` (`.defer-render`) so off-screen sheets skip layout and paint; pass `defer={false}` for the first band under a hero.
+- Each `Band` wraps its content in `<Suspense>`, so React hydrates bands as separate short tasks.
+- Pointer effects use one delegated listener (`SpotlightTracker`) and CSS variables, not per-card client components or React state.
+- Images marked `priority` are preloaded from the document head; everything else lazy-loads.
+- No paint-heavy filters (`drop-shadow`, `blur()`, `mix-blend-mode`) on large or animated layers.
 
 ## Imagery
 

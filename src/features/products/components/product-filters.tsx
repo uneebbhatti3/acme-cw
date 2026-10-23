@@ -1,20 +1,10 @@
 "use client";
 
 import { SearchX, SlidersHorizontal, X } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import {
   Pagination,
@@ -34,6 +24,8 @@ import type { FilterFacet } from "@/features/products/types";
 import { ProductGrid } from "./product-grid";
 
 const fc = productsCopy.filters;
+const loadMobileFilters = () => import("./mobile-filters");
+const MobileFilters = dynamic(loadMobileFilters, { ssr: false });
 const PAGE_SIZE = 12;
 
 interface FiltersProps {
@@ -60,6 +52,9 @@ export function ProductFiltersStatic(props: FiltersProps) {
 function FiltersView({ products, facets, search }: FiltersProps & { search: string }) {
   const { selected, sort, filtered, active, toggle, setFacet, clearAll, setSort } = useProductFilters(products, facets, search);
   const [page, setPage] = useState(1);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerLoaded, setDrawerLoaded] = useState(false);
+  const filtersButton = useRef<HTMLButtonElement>(null);
   const [lastFilter, setLastFilter] = useState(search);
   if (search !== lastFilter) {
     // A new filter or sort starts again from the first page.
@@ -105,50 +100,42 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
           ))}
         </div>
 
-        {/* Mobile: filters open in a drawer. */}
+        {/* Mobile: filters open in a drawer, loaded on first use. */}
         {usable.length > 0 && (
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button variant="outline" className="bg-card md:hidden">
-                <SlidersHorizontal aria-hidden />
-                {fc.open}
-                {active.length > 0 && (
-                  <span className="grid size-5 place-items-center rounded-full bg-primary text-xs text-primary-foreground">{active.length}</span>
-                )}
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent className="rounded-t-[2rem]">
-              <DrawerHeader className="text-left">
-                <DrawerTitle className="font-display text-2xl">{fc.drawerTitle}</DrawerTitle>
-                <DrawerDescription>{fc.drawerText}</DrawerDescription>
-              </DrawerHeader>
-              <div className="max-h-[50vh] space-y-6 overflow-y-auto px-4">
-                {usable.map(({ facet, options }) => (
-                  <fieldset key={facet.key}>
-                    <legend className="mb-2 text-sm font-semibold">{facet.label}</legend>
-                    {options.map((o) => {
-                      const id = `m-${facet.key}-${o.value}`;
-                      return (
-                        <label key={o.value} htmlFor={id} className="flex min-h-12 cursor-pointer items-center gap-3 border-b last:border-b-0">
-                          <Checkbox id={id} checked={(selected[facet.key] ?? []).includes(o.value)} onCheckedChange={() => toggle(facet.key, o.value)} className="size-5" />
-                          <span className="flex-1">{o.value}</span>
-                          <span className="text-sm tabular-nums text-muted-foreground">{o.count}</span>
-                        </label>
-                      );
-                    })}
-                  </fieldset>
-                ))}
-              </div>
-              <DrawerFooter className="flex-row gap-3">
-                <Button variant="outline" className="flex-1" onClick={clearAll} disabled={!active.length}>
-                  {fc.clear}
-                </Button>
-                <DrawerClose asChild>
-                  <Button className="flex-1">{fc.apply(filtered.length)}</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+          <>
+            <Button
+              ref={filtersButton}
+              variant="outline"
+              className="bg-card md:hidden"
+              aria-haspopup="dialog"
+              aria-expanded={drawerOpen}
+              onPointerEnter={loadMobileFilters}
+              onFocus={loadMobileFilters}
+              onClick={() => {
+                setDrawerLoaded(true);
+                setDrawerOpen(true);
+              }}
+            >
+              <SlidersHorizontal aria-hidden />
+              {fc.open}
+              {active.length > 0 && (
+                <span className="grid size-5 place-items-center rounded-full bg-primary text-xs text-primary-foreground">{active.length}</span>
+              )}
+            </Button>
+            {drawerLoaded && (
+              <MobileFilters
+                open={drawerOpen}
+                onOpenChange={setDrawerOpen}
+                facets={usable}
+                selected={selected}
+                onToggle={toggle}
+                onClear={clearAll}
+                activeCount={active.length}
+                resultCount={filtered.length}
+                returnFocus={() => filtersButton.current?.focus()}
+              />
+            )}
+          </>
         )}
 
         <div className="flex items-center gap-3">

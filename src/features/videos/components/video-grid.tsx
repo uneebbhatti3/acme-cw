@@ -41,7 +41,7 @@ export function VideoGrid({ videos, categories, allLabel }: { videos: VideoItem[
       <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((v, i) => (
           <Reveal as="li" key={v.id} delay={(i % 3) * 0.05}>
-            <VideoCard video={v} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+            <VideoCard video={v} priority={i < 3} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
             {v.description && <p className="mt-2 text-[0.95rem] text-muted-foreground">{v.description}</p>}
           </Reveal>
         ))}

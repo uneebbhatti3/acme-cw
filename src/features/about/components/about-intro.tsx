@@ -10,7 +10,7 @@ const { who } = aboutCopy;
 /** Company profile: who we are, what sets us apart, mission, vision and values. */
 export function AboutIntro() {
   return (
-    <Band tone="paper" labelledBy="who-title">
+    <Band defer={false} tone="paper" labelledBy="who-title">
       <Container>
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-6">

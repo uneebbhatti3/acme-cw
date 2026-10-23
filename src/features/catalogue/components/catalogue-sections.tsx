@@ -16,7 +16,7 @@ export function CatalogueSections() {
   }));
 
   return (
-    <Band tone="paper" labelledBy="catalogue-sections-title">
+    <Band defer={false} tone="paper" labelledBy="catalogue-sections-title">
       <Container>
         <SectionIntro id="catalogue-sections-title" title={catalogueCopy.sectionsTitle} text={catalogueCopy.sectionsIntro} />
         <div className="mt-12">

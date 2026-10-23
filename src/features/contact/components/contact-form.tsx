@@ -2,10 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, LoaderCircle } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils";
 import { CountryPicker } from "./country-picker";
 
 const f = contactCopy.form;
+const loadToaster = () => import("@/components/ui/sonner");
+const Toaster = dynamic(() => loadToaster().then((m) => m.Toaster), { ssr: false });
 
 /** Label, control and error text, linked by id. */
 function FormField({
@@ -62,6 +64,8 @@ export function ContactForm({ productNames }: { productNames: Record<string, str
   const slug = params.get("product") ?? "";
   const prefilled = productNames[slug];
   const [sent, setSent] = useState(false);
+  // The toast code loads on first submit, not with the page.
+  const [toaster, setToaster] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -90,124 +94,176 @@ export function ContactForm({ productNames }: { productNames: Record<string, str
 
   const onSubmit = async (values: ContactValues) => {
     if (values.website) return; // bot
+    setToaster(true);
     // Demo mode: simulate a short request; nothing leaves the browser.
-    await new Promise((r) => setTimeout(r, 700));
+    const [{ toast }] = await Promise.all([import("sonner"), loadToaster(), new Promise((r) => setTimeout(r, 700))]);
     setSent(true);
     toast.success(f.successTitle, { description: siteConfig.demoMode ? f.successDemo : f.successText });
   };
 
+  const toasterEl = toaster && <Toaster position="bottom-center" />;
+
   if (sent) {
     return (
-      <div ref={successRef} tabIndex={-1} role="status" className="rounded-[2rem] border bg-card p-8 text-center focus:outline-none md:p-12">
-        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-accent text-primary-deep">
-          <CircleCheck aria-hidden className="size-7" strokeWidth={1.5} />
-        </span>
-        <h2 className="text-h3 mt-6">{f.successTitle}</h2>
-        <p className="mx-auto mt-3 max-w-md text-muted-foreground">{f.successText}</p>
-        {siteConfig.demoMode && <p className="mt-3 text-sm text-muted-foreground">{f.successDemo}</p>}
-        <Button
-          variant="outline"
-          className="mt-8"
-          onClick={() => {
-            reset({ country: "", product: "", message: "", consent: false });
-            setSent(false);
-          }}
+      <>
+        {toasterEl}
+        <div
+          ref={successRef}
+          tabIndex={-1}
+          role="status"
+          className="rounded-[2rem] border bg-card p-8 text-center focus:outline-none md:p-12"
         >
-          {f.again}
-        </Button>
-      </div>
+          <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-accent text-primary-deep">
+            <CircleCheck aria-hidden className="size-7" strokeWidth={1.5} />
+          </span>
+          <h2 className="text-h3 mt-6">{f.successTitle}</h2>
+          <p className="mx-auto mt-3 max-w-md text-muted-foreground">{f.successText}</p>
+          {siteConfig.demoMode && <p className="mt-3 text-sm text-muted-foreground">{f.successDemo}</p>}
+          <Button
+            variant="outline"
+            className="mt-8"
+            onClick={() => {
+              reset({ country: "", product: "", message: "", consent: false });
+              setSent(false);
+            }}
+          >
+            {f.again}
+          </Button>
+        </div>
+      </>
     );
   }
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)} aria-labelledby="form-title" className="rounded-[2rem] border bg-card p-6 md:p-10">
-      <h2 id="form-title" className="text-h3">
-        {f.title}
-      </h2>
-
-      <p
-        role="alert"
-        className={
-          errorCount && submitCount
-            ? "mt-4 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm font-medium text-destructive"
-            : "sr-only"
-        }
+    <>
+      {toasterEl}
+      <form
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+        aria-labelledby="form-title"
+        className="rounded-[2rem] border bg-card p-6 md:p-10"
       >
-        {errorCount && submitCount ? f.errorSummary : ""}
-      </p>
+        <h2 id="form-title" className="text-h3">
+          {f.title}
+        </h2>
 
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
-        <FormField id="name" label={f.name} error={errors.name?.message}>
-          {(d) => <Input id="name" autoComplete="name" aria-invalid={!!errors.name} aria-describedby={d} {...register("name")} />}
-        </FormField>
-        <FormField id="company" label={f.company} optional>
-          {() => <Input id="company" autoComplete="organization" {...register("company")} />}
-        </FormField>
-        <FormField id="email" label={f.email} error={errors.email?.message}>
-          {(d) => (
-            <Input id="email" type="email" autoComplete="email" inputMode="email" aria-invalid={!!errors.email} aria-describedby={d} {...register("email")} />
-          )}
-        </FormField>
-        <FormField id="phone" label={f.phone} optional>
-          {() => <Input id="phone" type="tel" autoComplete="tel" {...register("phone")} />}
-        </FormField>
-        <FormField id="country" label={f.country} error={errors.country?.message}>
-          {(d) => (
+        <p
+          role="alert"
+          className={
+            errorCount && submitCount
+              ? "mt-4 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm font-medium text-destructive"
+              : "sr-only"
+          }
+        >
+          {errorCount && submitCount ? f.errorSummary : ""}
+        </p>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <FormField id="name" label={f.name} error={errors.name?.message}>
+            {(d) => (
+              <Input
+                id="name"
+                autoComplete="name"
+                aria-invalid={!!errors.name}
+                aria-describedby={d}
+                {...register("name")}
+              />
+            )}
+          </FormField>
+          <FormField id="company" label={f.company} optional>
+            {() => <Input id="company" autoComplete="organization" {...register("company")} />}
+          </FormField>
+          <FormField id="email" label={f.email} error={errors.email?.message}>
+            {(d) => (
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                inputMode="email"
+                aria-invalid={!!errors.email}
+                aria-describedby={d}
+                {...register("email")}
+              />
+            )}
+          </FormField>
+          <FormField id="phone" label={f.phone} optional>
+            {() => <Input id="phone" type="tel" autoComplete="tel" {...register("phone")} />}
+          </FormField>
+          <FormField id="country" label={f.country} error={errors.country?.message}>
+            {(d) => (
+              <Controller
+                control={control}
+                name="country"
+                render={({ field }) => (
+                  <CountryPicker
+                    id="country"
+                    buttonRef={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    invalid={!!errors.country}
+                    describedBy={d}
+                  />
+                )}
+              />
+            )}
+          </FormField>
+          <FormField id="product" label={f.product} optional>
+            {() => <Input id="product" placeholder={f.productPlaceholder} {...register("product")} />}
+          </FormField>
+          <FormField id="message" label={f.message} error={errors.message?.message} className="md:col-span-2">
+            {(d) => (
+              <Textarea
+                id="message"
+                rows={6}
+                placeholder={f.messagePlaceholder}
+                aria-invalid={!!errors.message}
+                aria-describedby={d}
+                {...register("message")}
+              />
+            )}
+          </FormField>
+
+          <div aria-hidden className="absolute -left-[9999px] size-px overflow-hidden">
+            <label htmlFor="website">Website</label>
+            <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+          </div>
+
+          <div className="md:col-span-2">
             <Controller
               control={control}
-              name="country"
+              name="consent"
               render={({ field }) => (
-                <CountryPicker id="country" buttonRef={field.ref} value={field.value} onChange={field.onChange} onBlur={field.onBlur} invalid={!!errors.country} describedBy={d} />
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    ref={field.ref}
+                    id="consent"
+                    checked={field.value}
+                    onCheckedChange={(v) => field.onChange(v === true)}
+                    onBlur={field.onBlur}
+                    aria-invalid={!!errors.consent || undefined}
+                    aria-describedby={errors.consent ? "consent-error" : undefined}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed">
+                    {f.consent}
+                  </label>
+                </div>
               )}
             />
-          )}
-        </FormField>
-        <FormField id="product" label={f.product} optional>
-          {() => <Input id="product" placeholder={f.productPlaceholder} {...register("product")} />}
-        </FormField>
-        <FormField id="message" label={f.message} error={errors.message?.message} className="md:col-span-2">
-          {(d) => <Textarea id="message" rows={6} placeholder={f.messagePlaceholder} aria-invalid={!!errors.message} aria-describedby={d} {...register("message")} />}
-        </FormField>
-
-        <div aria-hidden className="absolute -left-[9999px] size-px overflow-hidden">
-          <label htmlFor="website">Website</label>
-          <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
-        </div>
-
-        <div className="md:col-span-2">
-          <Controller
-            control={control}
-            name="consent"
-            render={({ field }) => (
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  ref={field.ref}
-                  id="consent"
-                  checked={field.value}
-                  onCheckedChange={(v) => field.onChange(v === true)}
-                  onBlur={field.onBlur}
-                  aria-invalid={!!errors.consent || undefined}
-                  aria-describedby={errors.consent ? "consent-error" : undefined}
-                  className="mt-0.5"
-                />
-                <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed">
-                  {f.consent}
-                </label>
-              </div>
+            {errors.consent && (
+              <FieldError id="consent-error" className="mt-1.5 pl-8 font-medium">
+                {errors.consent.message}
+              </FieldError>
             )}
-          />
-          {errors.consent && (
-            <FieldError id="consent-error" className="mt-1.5 pl-8 font-medium">
-              {errors.consent.message}
-            </FieldError>
-          )}
+          </div>
         </div>
-      </div>
 
-      <Button type="submit" size="lg" className="mt-8 w-full sm:w-auto" disabled={isSubmitting}>
-        {isSubmitting && <LoaderCircle aria-hidden className="animate-spin" strokeWidth={1.75} />}
-        {isSubmitting ? f.submitting : f.submit}
-      </Button>
-    </form>
+        <Button type="submit" size="lg" className="mt-8 w-full sm:w-auto" disabled={isSubmitting}>
+          {isSubmitting && <LoaderCircle aria-hidden className="animate-spin" strokeWidth={1.75} />}
+          {isSubmitting ? f.submitting : f.submit}
+        </Button>
+      </form>
+    </>
   );
 }

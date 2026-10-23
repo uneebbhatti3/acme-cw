@@ -9,7 +9,7 @@ import { Band } from "@/components/layout/band";
 export function Capabilities() {
   const copy = homeCopy.capabilities;
   return (
-    <Band tone="paper" labelledBy="capabilities-title">
+    <Band defer={false} tone="paper" labelledBy="capabilities-title">
       <Container>
         <SectionIntro id="capabilities-title" title={copy.title} text={copy.text} />
         <ul className="mt-12 grid gap-4 md:grid-cols-3">

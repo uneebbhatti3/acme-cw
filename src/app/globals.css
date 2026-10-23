@@ -4,6 +4,10 @@
 /* Only scan the app for class names (not the design references in docs/). */
 @source not "../../docs";
 
+/* No dark theme: dark: utilities only apply inside a .dark class, which the site never sets
+   (by default they would follow the visitor's system setting). */
+@custom-variant dark (&:is(.dark *));
+
 /*
  * Design tokens: the single source for colour, type, radius and motion.
  * Rebranding means editing the three brand values below (and siteConfig).
@@ -167,10 +171,6 @@
     text-wrap: balance;
   }
 
-  p {
-    text-wrap: pretty;
-  }
-
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
@@ -301,6 +301,12 @@
   }
   .sec-pre {
     padding-bottom: calc(var(--sec) + var(--round));
+  }
+
+  /* Off-screen bands skip layout and paint until they near the viewport (big win on long pages). */
+  .defer-render {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
   }
 
   /* Home hero ground: brand glows, plus a soft light at the pointer (--mx / --my). */

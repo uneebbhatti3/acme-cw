@@ -34,7 +34,7 @@ export function CtaBanner() {
   const { contact } = siteConfig;
   const icon = "size-[22px]";
   return (
-    <section aria-labelledby="cta-title" className="surface-dark py-12 md:py-16">
+    <section aria-labelledby="cta-title" className="surface-dark defer-render py-12 [contain-intrinsic-size:auto_640px] md:py-16">
       <Container>
         <div className="cta-card grain overflow-hidden rounded-[2rem] border border-white/12 px-6 py-14 md:rounded-[3rem] md:px-16 md:py-24">
           <div className="relative z-[2] grid gap-12 lg:grid-cols-12 lg:items-end">

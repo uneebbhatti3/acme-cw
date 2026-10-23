@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Header, HeaderBar } from "@/components/layout/header";
 import { WhatsAppButton, WhatsAppLink } from "@/components/layout/whatsapp-button";
+import { SpotlightTracker } from "@/components/sections/spotlight-tracker";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { themeColors } from "@/config/theme";
@@ -70,9 +71,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
         <TooltipProvider delayDuration={200}>
-        <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd()) }}
@@ -94,6 +92,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <WhatsAppButton productNames={productNames} />
         </Suspense>
         </TooltipProvider>
+        <SpotlightTracker />
       </body>
     </html>
   );

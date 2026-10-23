@@ -2,6 +2,12 @@
 
 Where every UI component in the redesign comes from, so licences and credits can be checked.
 
+## Summary
+
+- **shadcn/ui:** 26 primitives (MIT), restyled with the project tokens.
+- **21st.dev:** none used (MCP search unavailable; user decision to proceed without it).
+- **Custom showpieces adapted from V2:** 10 (marked ★ below): light-sweep hero, spotlight card, product viewer with loupe, count-up, marquee, video player dialog, product gallery, history timeline, stacking cards, plus the wordmark footer.
+
 ## 21st.dev
 
 **Status: optional, not used so far (user decision, 2026-10-23).** At audit time the 21st.dev MCP was authenticated, but catalogue search returned errors and the free tier allows 2 code retrievals a day with no AI generation. Showpiece sections are therefore built from shadcn/ui + Motion, adapting the effects already designed in V2 (`docs/reference/page-v2.tsx`).
@@ -21,7 +27,11 @@ Local changes to the generated files:
 - `sonner.tsx`: `next-themes` removed (no dark mode); the toaster uses the light theme.
 - `carousel.tsx`: initial scroll state read on the next animation frame (fixes the `react-hooks/set-state-in-effect` lint error), and the `reInit` listener is now removed on cleanup.
 
-Installed (Phase 1): accordion, aspect-ratio, badge, breadcrumb, button, card, carousel, checkbox, command, dialog, drawer, empty, field, hover-card, input, label, navigation-menu, pagination, popover, scroll-area, select, separator, sheet, skeleton, sonner, table, tabs, textarea, toggle, toggle-group, tooltip.
+**In use (final):** badge, breadcrumb, button, checkbox, command, dialog, drawer, empty, field, hover-card, input, label, navigation-menu, pagination, popover, select, separator, sheet, skeleton, sonner, table, tabs, textarea, toggle, toggle-group, tooltip (26).
+
+**Removed in Phase 6 (unused):** accordion, aspect-ratio, card, carousel (and its `embla-carousel-react` dependency), scroll-area.
+
+Changed in Phase 6: every `dark:` class was stripped from the generated files (no dark theme; `dark:` is also tied to an unused `.dark` class).
 
 Changed in Phase 5: `input.tsx`, `textarea.tsx` and `checkbox.tsx` (48px fields, rounder corners, card background, borders in `--steel-dim` for 3:1 non-text contrast, stronger focus ring).
 
@@ -44,7 +54,7 @@ Showpieces built in-house from the V2 design. The list is filled in per phase.
 | `src/components/layout/footer.tsx` | V2 `Footer` (large wordmark) | Wordmark sized from the brand-name length so any name fits on one line. |
 | `src/components/layout/page-hero.tsx` | V2 hero ground (glow, grain) | Reuses the dark placeholder art as a masked decorative image. |
 | `src/features/home/components/hero/hero-art.tsx` ★ | V2 `Hero` (light sweep, pointer light, callouts, rotating badge) | Art drawn from `instrument-art.ts`; sweep starts after load; static light under reduced motion. |
-| `src/components/sections/spotlight-card.tsx` ★ | V2 `.spot` tiles | One component for capability cards and range tiles; glow colour set per surface with `--spot`. |
+| `src/components/sections/spotlight-card.tsx` ★ + `spotlight-tracker.tsx` | V2 `.spot` tiles | Server component for capability cards and range tiles; one delegated pointer listener moves the glow. Glow colour set per surface with `--spot`. |
 | `src/features/home/components/viewer/product-viewer.tsx` ★ | V2 `Viewer` / `Stage` (loupe, view tabs) | shadcn Tabs for the views; the loupe magnifies the same image file; Enlarge opens the product lightbox. |
 | `src/components/sections/count-up.tsx` ★ | V2 `Counter` | Server-renders the final value; screen readers get the final value only. |
 | `src/components/sections/marquee.tsx` ★ | V2 `Marquee` | Range names (no client logos); pauses on hover; off under reduced motion. |
