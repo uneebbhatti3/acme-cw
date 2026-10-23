@@ -1,35 +1,55 @@
 # Components
 
-Location: `src/components/`. Group by purpose: `layout/`, `sections/`, `product/`, `media/`, `ui/`. Every component is typed, accessible, responsive, and takes its content via props (never hard-coded copy).
+Updated for the redesign (shadcn/ui + V2 look). Shared components live in `src/components/` (`layout/`, `sections/`, `media/`, `ui/`, `seo/`); page-specific ones live with their feature in `src/features/<page>/components/`. Every component is typed, accessible and responsive, and takes its content from `src/config` or `src/data` (never hard-coded copy). Sources and credits: `docs/COMPONENT_SOURCES.md`. Visual rules: `docs/DESIGN_SYSTEM.md`.
 
-## Layout
+## Layout (`src/components/layout/`)
 
-- **Header**: sticky, transparent-to-solid on scroll. Desktop mega-menu for Products lists categories (image + name). Mobile slide-in menu with focus trap.
-- **Footer**: columns for brand, links, categories, contact; reads from `siteConfig`.
-- **Container, Section, SectionHeading** (eyebrow, title, intro, alignment).
-- **Breadcrumbs**: with `BreadcrumbList` JSON-LD.
-- **WhatsAppButton**: floating, accessible label, opens `https://wa.me/<number>?text=<prefilled>`; prefilled text includes product name on product pages.
-- **DemoRibbon**: shown only when `NEXT_PUBLIC_DEMO_MODE=true`.
+- **Header** (`header.tsx`):
+  - Floating dark glass pill on every page; gains a shadow after scroll.
+  - Desktop: shadcn NavigationMenu, with a Products mega-menu of every range (thumbnail, name, range size, "All products").
+  - Below `lg`: a menu button opens **MobileMenu** (`mobile-menu.tsx`, shadcn Sheet). The sheet code loads on first tap (prefetched on hover or focus); focus returns to the button on close.
+- **Footer** (`footer.tsx`): brand, links, ranges and contact from `siteConfig`, closed by a metal-gradient wordmark sized to the brand name.
+- **Band** (`band.tsx`): a page section and the building block of every page.
+  - **Look:** `tone` (night, deep, paper, white), a rounded `sheet` top that overlaps the section above, and `pre` bottom room for the next sheet.
+  - **Performance:** `defer` turns on `content-visibility: auto` (off for the first band under a hero), and content sits in its own Suspense boundary for selective hydration.
+- **Container**, **SectionIntro** (display title left, lede right, optional `metal`), **PageHero** (dark inner-page header with masked instrument art).
+- **Breadcrumbs**: shadcn Breadcrumb with `BreadcrumbList` JSON-LD; colours follow the surface.
+- **WhatsAppButton**: floating, with a tooltip; opens `https://wa.me/<number>?text=<prefilled>`, naming the product on product pages. Hidden while `contact.whatsapp` is empty.
+- **Logo**: from `siteConfig.logo`; white on dark when `invertOnDark` is set.
 
-## Sections (page building blocks)
+## Sections (`src/components/sections/`)
 
-- **Hero**: props `headline`, `subline`, `primaryCta`, `secondaryCta`, `video?`, `poster?`. Falls back to the animated steel-sheen background. Video is muted, looped, `playsInline`, lazy, and replaced by the poster for reduced-motion users and slow connections (`navigator.connection.saveData`).
-- **TrustStrip**, **CapabilityCards**, **StatsCounter** (count-up with `IntersectionObserver`), **StoryTeaser**, **CtaBanner**, **ClientLogos** (marquee, pauses on hover and for reduced motion), **CertificationBadges** (opens PDF or modal), **ProcessSteps**, **WorldReach** (dotted SVG map).
-- **Timeline** (history): see below.
+- **CtaBanner**: closing call to action on a dark glow card: quote and catalogue buttons, plus email, phone and WhatsApp.
+- **Certifications**: badge grid. Hover shows the full description (HoverCard); a badge with a `file` opens the document in a Dialog. Used on Home and About.
+- **CountUp**: counts up once when visible (1.4s); server-renders the final value, and screen readers get the final value only.
+- **Marquee**: slow row of range names (CSS); pauses on hover, off under reduced motion.
+- **SpotlightCard** + **SpotlightTracker**:
+  - The card is a server component with a pointer-following glow (`--spot` sets its colour).
+  - One delegated listener in the layout moves every glow.
 
-## Product components
+## Home (`src/features/home/components/`)
 
-- **CategoryCard**: image, name, count, arrow. Entire card is one link.
-- **CategoryGrid**: responsive 1 / 2 / 3 / 4 columns. Mobile variant on Home is a horizontal snap scroller.
-- **ProductCard**: image (primary, swaps to second image on hover on pointer devices), name, code, category chip, "View details". Skeleton variant for loading.
-- **ProductGrid**: handles empty state.
-- **ProductSearch**: client-side, debounced, matches name, code, category, tags. Keyboard navigable results.
-- **ProductFilters**: data-driven facets (checkbox groups), sort select, active-filter chips with "Clear all". State kept in URL search params so filtered views are shareable.
-- **SpecTable**: two-column definition list; mono font for values like codes and sizes; zebra rows; copy-code button.
-- **FeatureList**: icon bullets.
-- **ProductTabs**: Description, Specifications, Packaging and shipping, Care and sterilisation. Accessible tabs (arrow-key navigation).
-- **RelatedProducts**: 4 cards from same category.
-- **QuoteButton**: links to `/contact?product=<slug>`.
+- **HomeHero** + **HeroArt**: one light sweep across the polished forceps after load, then the light follows the pointer. Also has part callouts, a rotating "made to your drawing" badge and a trust strip. Headline and lede are static (they are the LCP element).
+- **Capabilities**, **RangeBento** (8 ranges; snap row on phones), **ViewerSection** + **ProductViewer** (labelled views as Tabs, magnifier loupe, Enlarge opens the lightbox), **StoryTeaser** + **HomeStats**, **FeaturedProducts**, **VideoHighlight**, **CertificationsSection**.
+
+## Product components (`src/features/products/components/`)
+
+- **CategoryCard**: image, name, range size, arrow. The entire card is one link.
+- **CategoryGrid**: 1 / 2 / 4 columns with an ItemList JSON-LD.
+- **ProductCard**:
+  - Image swaps to the side view on hover (pointer devices), with code, category badge and "View details".
+  - The first row on a category page loads eagerly; a skeleton variant covers loading.
+- **ProductGrid**: handles the empty state; `priorityCount` makes the first images eager.
+- **ProductSearch**: shadcn Command (cmdk).
+  - Debounced client-side search on name, code, category and tags; arrow keys, Enter and Esc work.
+  - Starts from `?q=`; `allResultsLink` hands off to `/products?q=…`.
+- **ProductFilters**: state kept in URL search params, so filtered views are shareable and survive a refresh.
+  - Desktop: data-driven facets as ToggleGroup pills, plus a Select for sort.
+  - Phones: **MobileFilters** (Drawer with checkboxes), loaded on first use.
+  - Active-filter chips with "Clear all"; an Empty state; Pagination past 12 products.
+- **SpecTable**: shadcn Table with row headers, mono values, zebra rows and a copy-code button with a tooltip. **FeatureList**: icon bullets.
+- **ProductTabs**: Description, Specifications, Packaging and shipping, Care and sterilisation (shadcn Tabs, arrow keys move between them).
+- **RelatedProducts**: up to 4 cards. **ShareButton**: native share sheet, otherwise copies the link.
 
 ### ProductGallery (most important component)
 
@@ -48,33 +68,47 @@ Behaviour:
 7. **Fallback:** if there is only one image, hide the thumbnail strip but keep zoom and lightbox.
 8. **Accessibility:** stage has `role="group"` with `aria-roledescription="carousel"`; announce view changes politely; all controls are real buttons with labels.
 
-Implementation guidance: a well-maintained lightbox library with the Zoom, Thumbnails and Counter plugins is acceptable (for example `yet-another-react-lightbox`), styled to match the design system. Otherwise build custom. Either way, the inner hover zoom is custom.
+Implementation:
+- **Gallery** (`product-gallery.tsx`): also swipes between views on touch.
+- **Lightbox** (`lightbox.tsx`):
+  - A custom zoom/pan/pinch/swipe engine inside the shadcn Dialog, loaded on first open; no lightbox library.
+  - The Dialog provides the focus trap, Esc and scroll lock; focus returns to the opener by hand, because it opens without a DialogTrigger.
 
-## Media components
+## Media components (`src/components/media/`)
 
-- **PlaceholderImage**: generated SVG art per DESIGN_SYSTEM → Imagery. Props: `kind` (forceps | scissors | retractor | needleHolder | clamp | generic), `view` (front | side | top | detail), `ratio`, `showLabel`, `seed` (for slight variation per product).
-- **VideoCard**: poster, title, duration, play button.
-- **VideoModal**: loads player only when opened. YouTube via `youtube-nocookie.com`; local files via `<video controls playsInline preload="none" poster>`. Focus trap, Esc to close, pauses on close. Captions track slot supported.
-- **ResponsiveImage**: wrapper around `next/image` with sensible `sizes`, blur placeholder and fallback to `PlaceholderImage` when `src` is missing.
+- **PlaceholderImage**: generated polished-steel art (`instrument-art.ts`, served as static SVGs from `/art/<kind>-<view>-<ratio>-<tone>.svg`).
+  - Props: `kind` (forceps, scissors, retractor, needleHolder, clamp, generic), `view` (front, side, top, back, detail, angle), `ratio`, `tone` (steel, ink, clear), `showLabel`, `fill`, `priority`.
+  - `priority` preloads the image from the document head.
+- **ProductVisual**: real photo via `next/image` when `src` is set, otherwise the placeholder for the same view; the aspect ratio is always reserved.
+- **VideoCard**, **VideoPoster**, **VideoTrigger** and **VideoModal** (`src/features/videos/components/`):
+  - The player loads only when opened, inside a shadcn Dialog: YouTube via `youtube-nocookie.com`, local files via `<video controls playsInline preload="none" poster>`.
+  - Esc closes it, playback stops on close, focus returns to the play button, and a captions track slot is supported.
 
 ## Timeline (history)
 
 Props: `events: { year, title, description, image?, highlight? }[]`.
 
-- Desktop: central vertical line, cards alternate left and right, year in large serif numerals on the opposite side, small node dot on the line.
+- Desktop: central vertical line, cards alternate left and right, year in large display numerals on the opposite side, small node dot on the line.
 - Mobile: single column, line on the left.
-- The line fills with accent colour as the section scrolls (scroll-linked, using Motion's `useScroll`). Each card fades up when it enters.
+- The line fills with the glow colour as the section scrolls (one passive scroll listener writing a transform). Each card below the fold fades up when it enters.
 - `highlight: true` makes a milestone larger with an image.
-- Keyboard and screen readers get an ordered list (`<ol>`), with years as headings. Reduced-motion: no scroll-linked fill, line shown filled.
+- Keyboard and screen readers get an ordered list (`<ol>`), with years in the headings. Reduced motion: no scroll-linked fill, line shown filled.
 
-## Forms
+About also uses **ProcessSteps** (seven sticky stacking cards; a plain list under reduced motion) and **WorldReach** (dotted map with glowing markets and CountUp figures).
 
-- **ContactForm**: React Hook Form + Zod. Fields per SITEMAP. Honeypot field. States: idle, submitting, success, error. Success panel with next-step text. In demo mode nothing is sent.
-- Country select: searchable list (plain list of countries from a local file).
+## Forms (`src/features/contact/components/`)
 
-## UI primitives (`ui/`)
+- **ContactForm**: React Hook Form + Zod on shadcn Field, Input, Textarea and Checkbox.
+  - Fields per SITEMAP, plus a honeypot field and `?product=` prefill.
+  - Error summary for screen readers; focus moves to the first invalid field.
+  - States: idle, submitting, success. The success panel has next-step text and a Sonner toast (loaded on submit). In demo mode nothing is sent.
+- **CountryPicker**: searchable list (Popover + Command). The list (`country-list.tsx`) is prefetched when the page is idle.
 
-Button, LinkButton, Chip, Input, Textarea, Select, Checkbox, Tabs, Accordion, Modal (focus-trapped), Tooltip (rarely), Skeleton, IconButton, VisuallyHidden, Reveal (scroll-in wrapper honoring reduced motion).
+## UI primitives (`src/components/ui/`)
+
+shadcn/ui (`new-york`, Radix): Badge, Breadcrumb, Button (pill; `glow` variant for dark), Checkbox, Command, Dialog (labelled close button), Drawer, Empty, Field, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Select, Separator, Sheet, Skeleton, Sonner, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip.
+
+Local helpers: **Reveal** (fade-up on scroll; only hides elements that start below the fold) and **Icon** (named Lucide icons).
 
 ## States every data component must handle
 
