@@ -12,11 +12,11 @@ export function CatalogueSections() {
     slug: c.slug,
     name: c.name,
     kind: c.placeholderKind,
-    products: getProductsByCategory(c.slug).map((p) => ({ name: p.name, code: p.code })),
+    products: getProductsByCategory(c.slug).map((p) => ({ name: p.name, code: p.sku })),
   }));
 
   return (
-    <Band defer={false} tone="paper" labelledBy="catalogue-sections-title">
+    <Band defer={false} tone="grey" labelledBy="catalogue-sections-title">
       <Container>
         <SectionIntro id="catalogue-sections-title" title={catalogueCopy.sectionsTitle} text={catalogueCopy.sectionsIntro} />
         <div className="mt-12">

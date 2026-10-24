@@ -2,34 +2,38 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Section opener: a large display title on the left and a short lede on the
- * right (stacked on mobile). `metal` gives the title the polished-metal fill
- * used on dark sections.
+ * Section opener: optional eyebrow, heading and a short lede. `split` puts the
+ * lede beside the heading on large screens; otherwise it sits below.
  */
 export function SectionIntro({
+  eyebrow,
   title,
   text,
-  metal = false,
   id,
+  split = false,
   className,
   children,
 }: {
+  eyebrow?: string;
   title: string;
   text?: string;
-  metal?: boolean;
   /** Set on the heading so the section can use aria-labelledby. */
   id?: string;
+  split?: boolean;
   className?: string;
-  /** Rendered under the lede (a link or button). */
+  /** Rendered after the lede (a link or button). */
   children?: ReactNode;
 }) {
   return (
-    <div className={cn("grid gap-6 lg:grid-cols-12 lg:items-end", className)}>
-      <h2 id={id} className={cn("text-h2 pb-1 lg:col-span-7", metal && "text-metal")}>
-        {title}
-      </h2>
+    <div className={cn(split ? "grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-8" : "max-w-3xl", className)}>
+      <div className={cn(split && "lg:col-span-7")}>
+        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+        <h2 id={id} className="text-h2">
+          {title}
+        </h2>
+      </div>
       {(text || children) && (
-        <div className="lg:col-span-4 lg:col-start-9">
+        <div className={cn(split ? "lg:col-span-5" : "mt-4")}>
           {text && <p className="text-lede text-muted-foreground">{text}</p>}
           {children}
         </div>

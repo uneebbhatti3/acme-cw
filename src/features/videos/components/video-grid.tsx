@@ -29,7 +29,7 @@ export function VideoGrid({ videos, categories, allLabel }: { videos: VideoItem[
           <ToggleGroupItem
             key={c}
             value={c}
-            className="h-11 rounded-full border border-white/15 px-5 text-sm text-silver hover:bg-white/8 hover:text-white focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-night data-[state=on]:border-white data-[state=on]:bg-white data-[state=on]:text-night"
+            className="h-11 rounded-full border border-white/15 px-5 text-sm text-white/80 hover:bg-white/8 hover:text-white focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-night data-[state=on]:border-white data-[state=on]:bg-white data-[state=on]:text-night"
           >
             {c === ALL ? allLabel : c}
           </ToggleGroupItem>

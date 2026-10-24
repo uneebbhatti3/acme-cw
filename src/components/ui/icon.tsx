@@ -1,6 +1,13 @@
 import {
   BadgeCheck,
+  Barcode,
+  Box,
   CircleCheck,
+  ClipboardCheck,
+  FileText,
+  ShieldCheck,
+  Tag,
+  Wrench,
   Cog,
   Factory,
   Flame,
@@ -29,6 +36,13 @@ const icons = {
   flame: Flame,
   sparkles: Sparkles,
   package: Package,
+  tag: Tag,
+  box: Box,
+  barcode: Barcode,
+  file: FileText,
+  clipboard: ClipboardCheck,
+  shield: ShieldCheck,
+  wrench: Wrench,
 };
 
 export type IconName = keyof typeof icons;

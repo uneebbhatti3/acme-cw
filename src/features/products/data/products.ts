@@ -1,16 +1,21 @@
-import type { Availability, Product, ProductImage } from "@/features/products/types";
+import type { Product, ProductImage, ProductVariant } from "@/features/products/types";
 import type { InstrumentKind, ViewType } from "@/types";
 
 /**
- * Products listed online: a sample of each range. The eight products with
- * plain SKUs (ACME-SC-101 and so on) come from the client's current site.
- * Values in [square brackets] are placeholders to confirm with the client.
+ * SAMPLE PRODUCTS. Everything in [square brackets] (SKUs, sizes, grades,
+ * finishes) is a placeholder that renders with a dashed outline until the
+ * client's catalogue data replaces it. See docs/CONTENT_GUIDE.md.
  *
- * Images have no `src`, so generated drawings render. To use real photos, add
- * files to /public/products/<slug>/ and set `src` on each image.
+ * To add a product: copy an entry, give it a unique `slug` (used in the URL)
+ * and a unique `sku`, and pick its `categorySlug` and `type`. The build checks
+ * that slugs and SKUs are unique and that categories and related products exist.
+ *
+ * Photos: put files in /public/products/<slug>/ and pass them to `views()`,
+ * e.g. views(name, { front: "/products/needle-holder/front.webp" }).
+ * Any number of images is supported; the gallery and cards adapt.
  */
 
-const VIEWS: ViewType[] = ["front", "side", "top", "detail", "angle"];
+const VIEWS: ViewType[] = ["front", "side", "top", "detail"];
 const VIEW_ALT: Record<ViewType, string> = {
   front: "front view",
   side: "side view",
@@ -20,405 +25,453 @@ const VIEW_ALT: Record<ViewType, string> = {
   angle: "angled view",
 };
 
-function views(name: string): ProductImage[] {
-  return VIEWS.map((view) => ({ view, alt: `${name}, ${VIEW_ALT[view]}` }));
+/** The standard four views. Pass real photo paths per view as they arrive. */
+function views(name: string, src: Partial<Record<ViewType, string>> = {}): ProductImage[] {
+  return VIEWS.map((view) => ({ view, alt: `${name}, ${VIEW_ALT[view]}`, src: src[view] }));
 }
 
-/** Shared second paragraph per range. */
-const CATEGORY_TEXT: Record<string, string> = {
+/** Placeholder size rows: one SKU per size. */
+function sizes(sku: string, list: string[]): ProductVariant[] {
+  const base = sku.replace(/[[\]]/g, "");
+  return list.map((size) => ({ sku: `[${base}-${size.replace(/\D/g, "")}]`, size: `[${size}]` }));
+}
+
+const datasheet = { label: "Product datasheet (placeholder)", file: "/docs/datasheet-placeholder.pdf", meta: "PDF" };
+
+interface Seed extends Omit<Product, "images" | "material" | "finish" | "specs" | "variants" | "description"> {
+  kind: InstrumentKind;
+  lead: string;
+  material?: string;
+  finish?: string;
+  specs?: Product["specs"];
+  variants?: ProductVariant[];
+}
+
+/** Shared paragraph per range. */
+const RANGE_TEXT: Record<string, string> = {
   "surgical-instruments":
-    "Each instrument is formed by hand, precision-ground, then sharpened and polished before it is checked and re-checked for alignment and action.",
-  "dental-instruments":
-    "Working ends are shaped and finished by hand for a precise fit, then inspected for alignment, surface finish and function before packing.",
-  "veterinary-instruments":
-    "Built for the demands of animal healthcare, with robust joints and surfaces that are easy to clean between procedures.",
-  "manicure-instruments":
-    "Edges are set and polished by hand. Each piece is checked for a clean cut, smooth action and an even surface finish.",
-  "scissors-forceps":
-    "Blades and tips are ground as a matched pair and set for smooth, even action. Every piece is tested before release.",
-  "electro-surgical-instruments":
-    "Insulated components and conductive tips are checked for fit and finish. Specifications are confirmed with you before production.",
-  "single-use-instruments":
-    "Made for procedures where a fresh instrument is required each time. Packaging and labelling follow your procurement requirements.",
-  "hollow-ware-instruments":
-    "Formed from stainless steel with smooth, rounded edges and a finish that is easy to clean and sterilise.",
+    "Supplied in standard patterns or made to your drawing or sample, with your marking and packaging on request.",
+  "dental-instruments": "Patterns, handle styles and working ends can be matched to your existing range.",
+  "veterinary-instruments": "Made for the demands of veterinary practice, with joints and surfaces that clean easily.",
+  "manicure-instruments": "Available with your brand marking and retail or professional packaging.",
+  "electro-surgical-instruments": "Connector type, insulation and dimensions are agreed with you before production.",
+  "single-use-instruments": "Packaging, labelling and sterility requirements are agreed with you for each order.",
+  "hollow-ware-instruments": "Formed from stainless steel with rolled edges and a finish that is easy to clean.",
 };
 
-interface Seed {
-  slug: string;
-  code: string;
-  name: string;
-  categorySlug: string;
-  kind?: InstrumentKind;
-  shortDescription: string;
-  lead: string;
-  features: string[];
-  length?: string;
-  finish: string;
-  material?: string;
-  availability?: Availability;
-  featured?: boolean;
-  related?: string[];
-  tags?: string[];
-  variants?: string[];
-}
-
 function product(s: Seed): Product {
-  const material = s.material ?? "Stainless steel";
-  const availability = s.availability ?? "Available";
+  const { lead, material, finish, specs, variants, ...rest } = s;
   return {
-    slug: s.slug,
-    code: s.code,
-    name: s.name,
-    categorySlug: s.categorySlug,
-    kind: s.kind,
-    shortDescription: s.shortDescription,
-    description: `${s.lead}\n\n${CATEGORY_TEXT[s.categorySlug]}`,
-    features: s.features,
-    specs: [
-      { label: "Material", value: material },
-      { label: "Finish", value: s.finish },
-      { label: "Length", value: s.length ?? "[Size range on request]" },
-      { label: "Availability", value: availability },
-      { label: "Origin", value: "Manufactured in Sialkot, Pakistan" },
-      { label: "Packaging", value: "[1] piece per pouch, [10] per box" },
-    ],
+    ...rest,
+    description: [lead, RANGE_TEXT[s.categorySlug]],
+    material: material ?? "[Stainless steel, grade to be confirmed]",
+    finish: finish ?? "[Satin]",
+    specs: specs ?? [],
+    variants: variants ?? [],
     images: views(s.name),
-    tags: s.tags,
-    material,
-    availability,
-    datasheet: "/docs/datasheet-placeholder.pdf",
-    featured: s.featured,
-    related: s.related,
-    variants: s.variants,
   };
 }
 
 export const products: Product[] = [
   // Surgical instruments
   product({
-    slug: "needle-holder",
-    code: "ACME-NH-204",
-    name: "Needle Holder",
+    slug: "surgical-scissors",
+    sku: "[ACME-SC-101]",
+    name: "Mayo Dissecting Scissors",
     categorySlug: "surgical-instruments",
+    type: "Scissors",
+    kind: "scissors",
+    shortDescription: "Heavy-pattern scissors for cutting tissue and sutures, in straight and curved versions.",
+    lead: "Blades are ground as a matched pair and set for an even cut along the full length.",
+    features: ["Matched, hand-set blades", "Straight or curved pattern", "Smooth screw-joint action"],
+    specs: [
+      { label: "Pattern", value: "[Straight / curved]" },
+      { label: "Tips", value: "[Blunt / blunt]" },
+      { label: "Joint", value: "[Screw joint]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-SC-101]", ["145 mm", "170 mm", "230 mm"]),
+    documents: [datasheet],
+    featured: true,
+    related: ["iris-scissors", "dissecting-forceps", "needle-holder"],
+    tags: ["mayo scissors", "dissecting scissors"],
+  }),
+  product({
+    slug: "iris-scissors",
+    sku: "[ACME-SC-103]",
+    name: "Iris Scissors",
+    categorySlug: "surgical-instruments",
+    type: "Scissors",
+    kind: "scissors",
+    shortDescription: "Fine, sharp-pointed scissors for delicate tissue work.",
+    lead: "Short, fine blades with sharp points give control in confined areas.",
+    features: ["Fine, sharp points", "Straight or curved blades", "Large finger rings"],
+    specs: [
+      { label: "Pattern", value: "[Straight / curved]" },
+      { label: "Tips", value: "[Sharp / sharp]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-SC-103]", ["105 mm", "115 mm"]),
+    related: ["surgical-scissors", "dissecting-forceps"],
+    tags: ["iris scissors", "fine scissors"],
+  }),
+  product({
+    slug: "dissecting-forceps",
+    sku: "[ACME-FC-102]",
+    name: "Dissecting Forceps",
+    categorySlug: "surgical-instruments",
+    type: "Forceps",
+    kind: "forceps",
+    shortDescription: "Spring forceps for holding tissue, with serrated or toothed tips.",
+    lead: "Tips are aligned and checked so they meet evenly along their length.",
+    features: ["Even tip alignment", "Serrated or 1x2 teeth", "Textured grip"],
+    specs: [
+      { label: "Tips", value: "[Serrated / 1x2 teeth]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-FC-102]", ["130 mm", "145 mm", "200 mm"]),
+    related: ["surgical-scissors", "needle-holder"],
+    tags: ["tissue forceps", "thumb forceps"],
+  }),
+  product({
+    slug: "needle-holder",
+    sku: "[ACME-NH-204]",
+    name: "Mayo-Hegar Needle Holder",
+    categorySlug: "surgical-instruments",
+    type: "Needle holders",
     kind: "needleHolder",
-    shortDescription: "Surgical needle holder developed around grip, alignment, control and repeatable handling.",
-    lead: "Jaws are machined for a secure hold on the needle, and the ratchet is set to close cleanly and release with light pressure.",
-    features: ["Secure, serrated jaws", "Smooth three-step ratchet", "Balanced for fine control"],
-    length: "[140 to 200] mm",
-    finish: "Polished",
+    shortDescription: "Needle holder with serrated jaws and a three-step ratchet for a secure hold.",
+    lead: "Jaws are machined for a secure hold on the needle, and the ratchet closes cleanly and releases with light pressure.",
+    features: ["Serrated jaws, optional tungsten carbide inserts", "Three-step ratchet", "Balanced for fine control"],
+    specs: [
+      { label: "Jaw", value: "[Serrated / TC insert]" },
+      { label: "Ratchet", value: "[3 steps]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-NH-204]", ["140 mm", "160 mm", "180 mm", "200 mm"]),
+    documents: [datasheet],
     featured: true,
     related: ["haemostatic-forceps", "surgical-scissors", "dissecting-forceps"],
     tags: ["needle holder", "suturing"],
-    variants: ["[140] mm", "[160] mm", "[180] mm", "[200] mm"],
   }),
   product({
     slug: "haemostatic-forceps",
-    code: "[ACME-HF-205]",
+    sku: "[ACME-HF-205]",
     name: "Haemostatic Forceps",
     categorySlug: "surgical-instruments",
+    type: "Haemostatic clamps",
     kind: "clamp",
-    shortDescription: "Straight or curved haemostats for clamping vessels and tissue.",
-    lead: "Jaw serrations are cut for even pressure along the length. The ratchet holds firmly at each step and releases smoothly.",
-    features: ["Full-length serrations", "Firm, even ratchet", "Straight or curved pattern"],
-    length: "[125 to 180] mm",
-    finish: "Satin",
-    related: ["needle-holder", "dissecting-forceps", "self-retaining-retractor"],
-    tags: ["haemostat", "clamp", "mosquito"],
+    shortDescription: "Ratcheted forceps for clamping vessels, in straight and curved patterns.",
+    lead: "Jaws close evenly from tip to box joint, and the ratchet holds at every step.",
+    features: ["Fully serrated jaws", "Box joint", "Straight or curved"],
+    specs: [
+      { label: "Pattern", value: "[Straight / curved]" },
+      { label: "Ratchet", value: "[3 steps]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-HF-205]", ["125 mm", "140 mm", "160 mm"]),
+    related: ["needle-holder", "self-retaining-retractor"],
+    tags: ["haemostat", "artery forceps", "mosquito forceps"],
   }),
   product({
     slug: "self-retaining-retractor",
-    code: "[ACME-RT-206]",
+    sku: "[ACME-RT-206]",
     name: "Self-retaining Retractor",
     categorySlug: "surgical-instruments",
+    type: "Retractors",
     kind: "retractor",
-    shortDescription: "Holds the wound open so both hands stay free.",
-    lead: "A ratchet holds the blades at the chosen opening. Blunt or sharp prongs suit different tissue types.",
-    features: ["Ratchet lock", "Blunt or sharp prongs", "Rounded, polished edges"],
-    finish: "Satin",
-    availability: "Made to requirement",
-    related: ["needle-holder", "haemostatic-forceps"],
-    tags: ["retractor", "self-retaining"],
+    shortDescription: "Ratcheted retractor that holds the wound open without an assistant.",
+    lead: "The ratchet locks at each position and releases with one movement.",
+    features: ["Sharp or blunt prongs", "Locking ratchet", "Open finger rings"],
+    specs: [
+      { label: "Prongs", value: "[3x4, sharp / blunt]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-RT-206]", ["140 mm", "165 mm"]),
+    related: ["haemostatic-forceps", "needle-holder"],
+    tags: ["retractor", "wound retractor"],
   }),
 
   // Dental instruments
   product({
     slug: "dental-forceps",
-    code: "ACME-DF-150",
-    name: "Dental Forceps",
+    sku: "[ACME-DF-150]",
+    name: "Dental Extraction Forceps",
     categorySlug: "dental-instruments",
+    type: "Extraction forceps",
     kind: "forceps",
-    shortDescription: "Dental forceps profiles designed for dental professionals, distributors and clinical procurement buyers.",
-    lead: "Beaks are shaped to the tooth type and finished by hand for a precise, secure grip during extraction.",
-    features: ["Anatomically shaped beaks", "Secure, non-slip grip", "Upper and lower patterns"],
-    finish: "Satin / Polished",
+    shortDescription: "Extraction forceps with beaks shaped for specific teeth.",
+    lead: "Beaks are shaped and finished for a secure grip, and handles are sized for control.",
+    features: ["Anatomically shaped beaks", "Upper and lower patterns", "Serrated handles"],
+    specs: [
+      { label: "Pattern", value: "[Figure no.]" },
+      { label: "Jaw", value: "[Upper / lower]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: [
+      { sku: "[ACME-DF-150-UM]", size: "[Upper molars]" },
+      { sku: "[ACME-DF-150-LM]", size: "[Lower molars]" },
+      { sku: "[ACME-DF-150-UI]", size: "[Upper incisors]" },
+    ],
+    documents: [datasheet],
     featured: true,
-    related: ["dental-elevator", "dental-scaler", "surgical-scissors"],
-    tags: ["dental", "extraction"],
-    variants: ["Upper incisors", "Upper molars", "Lower incisors", "Lower molars"],
+    related: ["dental-elevator", "dental-scaler"],
+    tags: ["dental forceps", "extraction forceps"],
   }),
   product({
     slug: "dental-elevator",
-    code: "[ACME-DE-151]",
+    sku: "[ACME-DE-151]",
     name: "Dental Elevator",
     categorySlug: "dental-instruments",
+    type: "Elevators",
     kind: "generic",
-    shortDescription: "Straight and angled elevators for luxating teeth and roots.",
-    lead: "A sharp, polished blade and a broad handle give controlled force with a comfortable hold.",
-    features: ["Sharp, polished blade", "Broad, comfortable handle", "Straight or angled"],
-    finish: "Satin",
+    shortDescription: "Elevator for loosening teeth and roots, in straight and angled patterns.",
+    lead: "Blades are ground thin at the tip for access, with a handle shaped for grip.",
+    features: ["Thin, tempered blade", "Straight or angled", "Ergonomic handle"],
+    specs: [
+      { label: "Blade", value: "[Straight / left / right]" },
+      { label: "Blade width", value: "[3 mm]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    variants: sizes("[ACME-DE-151]", ["2 mm", "3 mm", "4 mm"]),
     related: ["dental-forceps", "dental-scaler"],
-    tags: ["dental", "elevator", "luxator"],
+    tags: ["dental elevator", "root elevator"],
   }),
   product({
     slug: "dental-scaler",
-    code: "[ACME-DS-152]",
+    sku: "[ACME-DS-152]",
     name: "Dental Scaler",
     categorySlug: "dental-instruments",
+    type: "Scalers",
     kind: "generic",
-    shortDescription: "Double-ended scalers for removing calculus above and below the gum line.",
-    lead: "Fine, hardened tips hold their edge. The textured handle gives a steady, controlled grip.",
-    features: ["Hardened, fine tips", "Double-ended", "Textured handle"],
-    finish: "Satin",
-    related: ["dental-forceps", "dental-elevator"],
-    tags: ["dental", "scaler", "periodontal"],
+    shortDescription: "Double-ended scaler for removing deposits above and below the gum line.",
+    lead: "Working ends are shaped by hand and inspected for a consistent edge.",
+    features: ["Double-ended", "Hollow or solid handle", "Fine working ends"],
+    specs: [
+      { label: "Pattern", value: "[H6/H7]" },
+      { label: "Handle", value: "[Hollow, 8 mm]" },
+      { label: "Reusable", value: "Yes" },
+    ],
+    related: ["dental-elevator", "dental-forceps"],
+    tags: ["scaler", "periodontal"],
   }),
 
   // Veterinary instruments
   product({
     slug: "veterinary-forceps",
-    code: "ACME-VF-410",
-    name: "Veterinary Forceps",
+    sku: "[ACME-VF-410]",
+    name: "Veterinary Tissue Forceps",
     categorySlug: "veterinary-instruments",
+    type: "Forceps",
     kind: "forceps",
-    shortDescription: "Veterinary forceps manufactured for professional animal healthcare, clinics and specialist buyers.",
-    lead: "A robust pattern with a firm spring and serrated tips, built for repeated use in busy clinics.",
-    features: ["Robust spring", "Serrated tips", "Easy to clean"],
-    finish: "Polished",
+    shortDescription: "Strong tissue forceps for veterinary surgery.",
+    lead: "Heavier stock and robust teeth for secure grip in veterinary procedures.",
+    features: ["Heavy pattern", "Toothed tips", "Easy to clean"],
+    specs: [{ label: "Reusable", value: "Yes" }],
+    variants: sizes("[ACME-VF-410]", ["150 mm", "200 mm"]),
     featured: true,
-    related: ["hoof-knife", "castrating-forceps"],
-    tags: ["veterinary", "forceps"],
+    related: ["castrating-forceps", "hoof-knife"],
+    tags: ["veterinary forceps"],
   }),
   product({
     slug: "hoof-knife",
-    code: "[ACME-VK-411]",
+    sku: "[ACME-VK-411]",
     name: "Hoof Knife",
     categorySlug: "veterinary-instruments",
+    type: "Hoof care",
     kind: "generic",
-    shortDescription: "A curved, sharpened blade for hoof trimming and care.",
-    lead: "The blade is hardened and sharpened by hand. Left and right-handed versions are available.",
-    features: ["Hand-sharpened blade", "Left or right-handed", "Comfortable handle"],
-    finish: "Satin",
-    availability: "Made to requirement",
+    shortDescription: "Hoof knife for trimming and hoof care, in left and right-hand versions.",
+    lead: "The blade is hardened and sharpened for a clean, controlled cut.",
+    features: ["Hardened blade", "Left or right hand", "Wooden or synthetic handle"],
+    specs: [
+      { label: "Hand", value: "[Left / right]" },
+      { label: "Handle", value: "[Wood / synthetic]" },
+    ],
     related: ["veterinary-forceps", "castrating-forceps"],
-    tags: ["veterinary", "hoof", "farrier"],
+    tags: ["hoof knife", "farrier"],
   }),
   product({
     slug: "castrating-forceps",
-    code: "[ACME-VC-412]",
+    sku: "[ACME-VC-412]",
     name: "Castrating Forceps",
     categorySlug: "veterinary-instruments",
+    type: "Forceps",
     kind: "clamp",
-    shortDescription: "Heavy-duty forceps for bloodless castration procedures.",
-    lead: "Long handles give leverage. Jaws close evenly for consistent pressure.",
-    features: ["Long, leveraged handles", "Even jaw closure", "Heavy-duty pattern"],
-    finish: "Satin",
+    shortDescription: "Bloodless castrating forceps for large-animal practice.",
+    lead: "Long handles give leverage, and the jaws close evenly under load.",
+    features: ["Long handles", "Even jaw closure", "Heavy pattern"],
+    specs: [{ label: "Reusable", value: "Yes" }],
+    variants: sizes("[ACME-VC-412]", ["300 mm", "400 mm"]),
     related: ["veterinary-forceps", "hoof-knife"],
-    tags: ["veterinary", "castration"],
+    tags: ["castrating forceps", "burdizzo"],
   }),
 
-  // Manicure instruments
+  // Beauty & manicure
   product({
     slug: "manicure-scissors",
-    code: "ACME-MS-310",
-    name: "Manicure Scissors",
+    sku: "[ACME-MS-310]",
+    name: "Cuticle Scissors",
     categorySlug: "manicure-instruments",
+    type: "Scissors",
     kind: "scissors",
-    shortDescription: "Professional manicure scissors manufactured with surface finishing, edge quality and handling control.",
-    lead: "Fine, curved blades are set by hand for a clean cut around the nail and cuticle.",
-    features: ["Fine, curved blades", "Hand-set edges", "Mirror-polished finish"],
-    finish: "Mirror polished",
-    availability: "Made to requirement",
+    shortDescription: "Fine curved scissors for cuticle and nail care.",
+    lead: "Fine, curved blades are set by hand for a clean cut close to the nail.",
+    features: ["Fine curved blades", "Hand-set edges", "Brand marking available"],
+    finish: "[Mirror polish]",
+    variants: sizes("[ACME-MS-310]", ["90 mm", "100 mm"]),
     featured: true,
-    related: ["cuticle-nipper", "nail-clipper", "surgical-scissors"],
-    tags: ["manicure", "cuticle", "nail"],
+    related: ["cuticle-nipper", "nail-clipper"],
+    tags: ["cuticle scissors", "nail scissors"],
   }),
   product({
     slug: "cuticle-nipper",
-    code: "[ACME-MC-311]",
+    sku: "[ACME-MC-311]",
     name: "Cuticle Nipper",
     categorySlug: "manicure-instruments",
+    type: "Nippers",
     kind: "scissors",
-    shortDescription: "Spring-loaded nippers with sharp, precisely meeting jaws.",
-    lead: "Jaws are ground to meet precisely for a clean cut. The double spring gives smooth, even action.",
-    features: ["Precisely meeting jaws", "Double spring", "Lap joint"],
-    finish: "Polished",
+    shortDescription: "Double-spring cuticle nipper with a precise bite.",
+    lead: "Jaws are ground to meet along the full edge for a clean cut.",
+    features: ["Double spring", "Full, half or quarter jaw", "Box joint"],
+    finish: "[Satin / mirror]",
+    specs: [{ label: "Jaw", value: "[Full / half / quarter]" }],
     related: ["manicure-scissors", "nail-clipper"],
-    tags: ["manicure", "cuticle", "nipper"],
+    tags: ["cuticle nipper"],
   }),
   product({
     slug: "nail-clipper",
-    code: "[ACME-MN-312]",
+    sku: "[ACME-MN-312]",
     name: "Nail Clipper",
     categorySlug: "manicure-instruments",
+    type: "Clippers",
     kind: "generic",
-    shortDescription: "Straight or curved clippers for fingernails and toenails.",
-    lead: "Hardened cutting edges stay sharp. The lever is sized for a firm, comfortable press.",
-    features: ["Hardened edges", "Straight or curved", "Comfortable lever"],
-    finish: "Satin",
+    shortDescription: "Lever nail clipper with curved or straight jaws.",
+    lead: "Hardened edges and a firm lever give a clean cut with little effort.",
+    features: ["Hardened edges", "Curved or straight jaw", "Optional nail catcher"],
+    variants: sizes("[ACME-MN-312]", ["60 mm", "80 mm"]),
     related: ["manicure-scissors", "cuticle-nipper"],
-    tags: ["manicure", "nail"],
+    tags: ["nail clipper"],
   }),
 
-  // Scissors & forceps
-  product({
-    slug: "surgical-scissors",
-    code: "ACME-SC-101",
-    name: "Surgical Scissors",
-    categorySlug: "scissors-forceps",
-    kind: "scissors",
-    shortDescription: "Precision surgical scissors manufactured for handling, cutting performance and professional healthcare use.",
-    lead: "A dependable pair for cutting and dissecting tissue. Blades are set for a smooth cut from pivot to tip.",
-    features: ["Matched, hand-set blades", "Straight or curved", "Smooth, even action"],
-    length: "[115 to 230] mm",
-    finish: "Polished",
-    featured: true,
-    related: ["dissecting-forceps", "needle-holder", "manicure-scissors"],
-    tags: ["scissors", "Mayo", "Metzenbaum"],
-    variants: ["[145] mm", "[180] mm", "[230] mm"],
-  }),
-  product({
-    slug: "dissecting-forceps",
-    code: "[ACME-FC-102]",
-    name: "Dissecting Forceps",
-    categorySlug: "scissors-forceps",
-    kind: "forceps",
-    shortDescription: "General-purpose dissecting forceps with serrated or toothed tips.",
-    lead: "A lightweight forceps for holding and lifting tissue. Fine cross-serrations give a reliable grip without extra force.",
-    features: ["Serrated or 1x2 toothed tips", "Balanced for fine control", "Textured grip area"],
-    length: "[115 to 180] mm",
-    finish: "Satin",
-    related: ["surgical-scissors", "needle-holder"],
-    tags: ["forceps", "dissecting", "tissue"],
-  }),
-  product({
-    slug: "iris-scissors",
-    code: "[ACME-SC-103]",
-    name: "Iris Scissors",
-    categorySlug: "scissors-forceps",
-    kind: "scissors",
-    shortDescription: "Small, sharp scissors for fine and delicate cutting.",
-    lead: "Short, very sharp blades for detailed work. The small rings suit precise fingertip control.",
-    features: ["Sharp/sharp tips", "Small finger rings", "Straight or curved"],
-    length: "[115] mm",
-    finish: "Polished",
-    related: ["surgical-scissors", "dissecting-forceps"],
-    tags: ["scissors", "iris", "fine"],
-  }),
-
-  // Electro-surgical instruments
-  product({
-    slug: "electro-surgical-handle",
-    code: "ACME-ES-720",
-    name: "Electro-Surgical Handle",
-    categorySlug: "electro-surgical-instruments",
-    kind: "generic",
-    shortDescription: "Electro-surgical instrument profile manufactured for specialist procedural requirements.",
-    lead: "A reusable handle with insulated components, made to fit your specified electrodes and cables.",
-    features: ["Insulated components", "Made to your connector spec", "Reusable"],
-    material: "Stainless steel / insulated components",
-    finish: "Functional finish",
-    availability: "Made to requirement",
-    featured: true,
-    related: ["bipolar-forceps"],
-    tags: ["electrosurgical", "diathermy", "handle"],
-  }),
+  // Electrosurgical
   product({
     slug: "bipolar-forceps",
-    code: "[ACME-EB-721]",
+    sku: "[ACME-EB-721]",
     name: "Bipolar Forceps",
     categorySlug: "electro-surgical-instruments",
+    type: "Bipolar forceps",
     kind: "forceps",
-    shortDescription: "Insulated bipolar forceps with conductive tips.",
-    lead: "Insulation covers the body up to the tips. Tips are aligned so they meet evenly.",
-    features: ["Full-body insulation", "Aligned conductive tips", "Standard connector"],
-    material: "Stainless steel / insulated components",
-    finish: "Functional finish",
-    availability: "Made to requirement",
+    shortDescription: "Insulated bipolar forceps with fine tips for coagulation.",
+    lead: "Insulation, tip size and connector are confirmed with you before production.",
+    features: ["Insulated shafts", "Fine, non-stick tips", "Standard connectors"],
+    material: "[Stainless steel, insulated]",
+    specs: [
+      { label: "Connector", value: "[European / US pin]" },
+      { label: "Tip", value: "[1 mm]" },
+    ],
+    variants: sizes("[ACME-EB-721]", ["160 mm", "190 mm"]),
+    documents: [datasheet],
     related: ["electro-surgical-handle"],
-    tags: ["electrosurgical", "bipolar", "forceps"],
+    tags: ["bipolar forceps", "coagulation forceps"],
+  }),
+  product({
+    slug: "electro-surgical-handle",
+    sku: "[ACME-ES-720]",
+    name: "Electrode Handle",
+    categorySlug: "electro-surgical-instruments",
+    type: "Handles and electrodes",
+    kind: "generic",
+    shortDescription: "Reusable handle for monopolar electrodes.",
+    lead: "Built around your electrode and connector specification.",
+    features: ["Reusable handle", "Standard electrode fitting", "Insulated body"],
+    material: "[Stainless steel / insulated body]",
+    specs: [{ label: "Fitting", value: "[2.4 mm]" }],
+    related: ["bipolar-forceps"],
+    tags: ["electrode handle", "monopolar"],
   }),
 
-  // Single use instruments
+  // Single-use
   product({
-    slug: "single-use-instrument",
-    code: "ACME-SU-610",
-    name: "Single Use Instrument",
+    slug: "single-use-forceps",
+    sku: "[ACME-SU-610]",
+    name: "Single-use Dissecting Forceps",
     categorySlug: "single-use-instruments",
+    type: "Forceps",
     kind: "forceps",
-    shortDescription: "Single use instrument profile designed for healthcare procurement and procedural use.",
-    lead: "Made for procedures where a fresh instrument is required each time, and packed to your labelling requirements.",
-    features: ["Individually packed", "Procurement-ready labelling", "Consistent quality per batch"],
-    material: "Medical grade material",
-    finish: "Standard",
-    featured: true,
+    shortDescription: "Single-use dissecting forceps, individually packed.",
+    lead: "Made for procedures where a new instrument is required each time.",
+    features: ["Single use", "Individually packed", "Labelling to your requirement"],
+    specs: [
+      { label: "Reusable", value: "No, single use" },
+      { label: "Sterility", value: "[To be confirmed per order]" },
+      { label: "Packaging", value: "[1 per pouch, 25 per box]" },
+    ],
     related: ["single-use-scissors"],
-    tags: ["single use", "disposable"],
+    tags: ["single use forceps", "disposable forceps"],
   }),
   product({
     slug: "single-use-scissors",
-    code: "[ACME-SU-611]",
-    name: "Single Use Scissors",
+    sku: "[ACME-SU-611]",
+    name: "Single-use Scissors",
     categorySlug: "single-use-instruments",
+    type: "Scissors",
     kind: "scissors",
-    shortDescription: "Disposable scissors for dressings and minor procedures.",
-    lead: "Sharp, consistent blades in a light pattern, individually packed.",
-    features: ["Individually packed", "Sharp, consistent blades", "Light pattern"],
-    finish: "Standard",
-    related: ["single-use-instrument"],
-    tags: ["single use", "disposable", "scissors"],
+    shortDescription: "Single-use scissors for dressing and suture cutting, individually packed.",
+    lead: "A sharp, consistent cut for one procedure, with no reprocessing.",
+    features: ["Single use", "Individually packed", "Sharp or blunt tips"],
+    specs: [
+      { label: "Reusable", value: "No, single use" },
+      { label: "Sterility", value: "[To be confirmed per order]" },
+      { label: "Packaging", value: "[1 per pouch, 25 per box]" },
+    ],
+    related: ["single-use-forceps"],
+    tags: ["single use scissors", "disposable scissors"],
   }),
 
   // Hollow ware
   product({
-    slug: "hollow-ware-tray",
-    code: "ACME-HW-520",
-    name: "Hollow Ware Tray",
+    slug: "instrument-tray",
+    sku: "[ACME-HW-520]",
+    name: "Instrument Tray",
     categorySlug: "hollow-ware-instruments",
+    type: "Trays",
     kind: "generic",
-    shortDescription: "Hollow ware product manufactured for clinical, surgical and healthcare support environments.",
-    lead: "A deep-drawn stainless steel tray with rolled edges, for holding instruments during procedures.",
-    features: ["Deep-drawn stainless steel", "Rolled, smooth edges", "Several sizes"],
-    finish: "Polished",
-    availability: "Made to requirement",
-    featured: true,
+    shortDescription: "Stainless steel tray for holding instruments, with or without a lid.",
+    lead: "Rolled edges and rounded corners make the tray easy to clean.",
+    features: ["Rolled edges", "With or without lid", "Stackable"],
+    variants: [
+      { sku: "[ACME-HW-520-S]", size: "[250 x 150 x 50 mm]" },
+      { sku: "[ACME-HW-520-M]", size: "[300 x 200 x 50 mm]" },
+    ],
     related: ["kidney-dish", "gallipot"],
-    tags: ["hollow ware", "tray"],
+    tags: ["instrument tray"],
   }),
   product({
     slug: "kidney-dish",
-    code: "[ACME-HW-521]",
+    sku: "[ACME-HW-521]",
     name: "Kidney Dish",
     categorySlug: "hollow-ware-instruments",
+    type: "Dishes and bowls",
     kind: "generic",
-    shortDescription: "Kidney-shaped dish for instruments, dressings and fluids.",
-    lead: "The curved shape sits close to the body. Rolled edges make it easy to handle and clean.",
-    features: ["Kidney shape", "Rolled edges", "Several sizes"],
-    finish: "Polished",
-    related: ["hollow-ware-tray", "gallipot"],
-    tags: ["hollow ware", "kidney dish"],
+    shortDescription: "Kidney-shaped dish for wards, theatres and clinics.",
+    lead: "Seamless, smooth surfaces with no corners where residue can collect.",
+    features: ["Seamless", "Rolled rim", "Several sizes"],
+    variants: sizes("[ACME-HW-521]", ["200 mm", "250 mm"]),
+    related: ["instrument-tray", "gallipot"],
+    tags: ["kidney dish", "emesis basin"],
   }),
   product({
     slug: "gallipot",
-    code: "[ACME-HW-522]",
+    sku: "[ACME-HW-522]",
     name: "Gallipot",
     categorySlug: "hollow-ware-instruments",
+    type: "Dishes and bowls",
     kind: "generic",
     shortDescription: "Small stainless steel pot for solutions and swabs.",
-    lead: "A small, stable pot with a flat base, for holding solutions and swabs during procedures.",
-    features: ["Flat, stable base", "Smooth inner surface", "Several capacities"],
-    finish: "Polished",
-    related: ["hollow-ware-tray", "kidney-dish"],
-    tags: ["hollow ware", "gallipot", "bowl"],
+    lead: "A rolled rim and smooth interior make it easy to pour from and to clean.",
+    features: ["Rolled rim", "Seamless", "Graduated on request"],
+    variants: sizes("[ACME-HW-522]", ["60 ml", "100 ml", "200 ml"]),
+    related: ["kidney-dish", "instrument-tray"],
+    tags: ["gallipot", "solution cup"],
   }),
 ];

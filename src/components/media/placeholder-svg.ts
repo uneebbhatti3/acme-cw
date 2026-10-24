@@ -4,8 +4,8 @@ import { ART_H, ART_W, detailArt, frontArt, sideArt, type ArtTone } from "./inst
 
 /*
  * Builds the placeholder artwork as a standalone SVG document: a polished
- * steel instrument (instrument-art.ts) in the requested view, on a dotted
- * light stage ("steel") or a dark glow ground ("ink"). Served as a static
+ * steel instrument (instrument-art.ts) in the requested view, on the white
+ * product stage ("steel", same as the photo specification) or navy ("ink"). Served as a static
  * image from /art/..., so pages stay light and images lazy-load like the real
  * photos that will replace them.
  */
@@ -22,9 +22,9 @@ export const VIEWS: ViewType[] = ["front", "side", "top", "back", "detail", "ang
 const RATIO_VALUE: Record<Ratio, number> = { "4/3": 4 / 3, "1/1": 1, "3/2": 3 / 2, "16/9": 16 / 9, "4/5": 4 / 5 };
 
 export const ART_TONES: Record<Tone, ArtTone> = {
-  steel: { ln: "#10272D", st: "#CBD6DC", sh: "#8DA0AB", hi: "#FFFFFF", accent: themeColors.brandDeep },
-  ink: { ln: "#0A1519", st: "#C3D0D7", sh: "#7D909B", hi: "#FFFFFF", accent: themeColors.glow },
-  clear: { ln: "#0A1519", st: "#C3D0D7", sh: "#7D909B", hi: "#FFFFFF", accent: themeColors.glow },
+  steel: { ln: "#1A2B42", st: "#CBD5DF", sh: "#8C9BAD", hi: "#FFFFFF", accent: themeColors.tealDeep },
+  ink: { ln: "#0A1626", st: "#C3CEDA", sh: "#7D8DA0", hi: "#FFFFFF", accent: themeColors.tealLight },
+  clear: { ln: "#0A1626", st: "#C3CEDA", sh: "#7D8DA0", hi: "#FFFFFF", accent: themeColors.tealLight },
 };
 
 /** URL of the generated artwork. Ratio "4/3" becomes "4x3" in the file name. */
@@ -77,16 +77,11 @@ export function placeholderSvg(kind: InstrumentKind, view: ViewType, ratio: Rati
     tone === "clear"
       ? ""
       : ink
-        ? `<rect width="${w}" height="${h}" fill="${themeColors.night}"/>
-<rect width="${w}" height="${h}" fill="url(#glowA)"/><rect width="${w}" height="${h}" fill="url(#glowB)"/>`
-        : `<rect width="${w}" height="${h}" fill="url(#bg)"/><rect width="${w}" height="${h}" fill="url(#dots)"/>`;
+        ? `<rect width="${w}" height="${h}" fill="${themeColors.navy}"/>`
+        : `<rect width="${w}" height="${h}" fill="#FFFFFF"/>`;
 
   const defs = `<defs>
-<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F5F7"/></linearGradient>
-<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="1.4" fill="${themeColors.ink}" fill-opacity="0.12"/></pattern>
-<radialGradient id="glowA" cx="0.15" cy="0" r="0.8"><stop offset="0" stop-color="${themeColors.brand}" stop-opacity="0.32"/><stop offset="1" stop-color="${themeColors.brand}" stop-opacity="0"/></radialGradient>
-<radialGradient id="glowB" cx="0.62" cy="0.48" r="0.5"><stop offset="0" stop-color="${themeColors.glow}" stop-opacity="0.1"/><stop offset="1" stop-color="${themeColors.glow}" stop-opacity="0"/></radialGradient>
-<radialGradient id="shadow"><stop offset="0" stop-color="${themeColors.ink}" stop-opacity="0.18"/><stop offset="1" stop-color="${themeColors.ink}" stop-opacity="0"/></radialGradient>
+<radialGradient id="shadow"><stop offset="0" stop-color="${themeColors.navy}" stop-opacity="0.12"/><stop offset="1" stop-color="${themeColors.ink}" stop-opacity="0"/></radialGradient>
 </defs>`;
 
   const shadow = !ink && !detail ? `<ellipse cx="${CX}" cy="${CY + 120}" rx="360" ry="34" fill="url(#shadow)"/>` : "";

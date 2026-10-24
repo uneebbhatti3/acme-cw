@@ -37,7 +37,7 @@ export function ShareButton({ title, className }: { title: string; className?: s
   );
 }
 
-export function CopyCodeButton({ code }: { code: string }) {
+export function CopySkuButton({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <Tooltip>
@@ -49,16 +49,16 @@ export function CopyCodeButton({ code }: { code: string }) {
             setCopied(true);
             window.setTimeout(() => setCopied(false), 1800);
           }}
-          aria-label={copied ? productDetailCopy.codeCopied : `${productDetailCopy.copyCode} ${code}`}
+          aria-label={copied ? productDetailCopy.skuCopied : `${productDetailCopy.copySku} ${code}`}
           className={cn(
-            "inline-flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+            "inline-flex size-9 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
             copied ? "text-link" : "text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
           {copied ? <Check aria-hidden className="size-4" strokeWidth={1.75} /> : <Copy aria-hidden className="size-4" strokeWidth={1.5} />}
         </button>
       </TooltipTrigger>
-      <TooltipContent>{copied ? productDetailCopy.codeCopied : productDetailCopy.copyCode}</TooltipContent>
+      <TooltipContent>{copied ? productDetailCopy.skuCopied : productDetailCopy.copySku}</TooltipContent>
     </Tooltip>
   );
 }

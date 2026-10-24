@@ -1,44 +1,33 @@
 import { siteConfig } from "@/config/site";
 import type { TimelineEvent } from "@/features/about/types";
 
-const { company } = siteConfig;
+const established = siteConfig.facts.find((f) => f.key === "established");
+const foundingYear = established?.verified ? established.value : "[Year]";
 
 /**
- * Company history. The founding year comes from the client's current site;
- * the other years are placeholders for the client to confirm.
+ * Company history. Years in brackets are placeholders for the client to
+ * confirm; the founding year appears once the "established" fact in
+ * siteConfig is verified.
  */
 export const timeline: TimelineEvent[] = [
   {
-    year: String(company.foundingYear),
-    title: `Founded in ${company.location.city}`,
-    description:
-      "The company starts making surgical instruments by hand, in a city known worldwide for instrument craft.",
-    highlight: true,
+    year: foundingYear,
+    title: `Founded in ${siteConfig.location.city}`,
+    description: "The company begins making surgical instruments by hand.",
   },
   {
     year: "[Year]",
     title: "First export orders",
-    description: "The first shipments leave for buyers in Europe. Packing and export paperwork become part of the craft.",
+    description: "The first shipments leave for buyers abroad, and export packing becomes part of the work.",
   },
   {
     year: "[Year]",
-    title: "Dental, veterinary and manicure ranges",
+    title: "Dental, veterinary and beauty ranges",
     description: "The range grows beyond surgical instruments to serve dental practices, clinics and beauty professionals.",
   },
   {
     year: "[Year]",
-    title: "Certified quality system",
-    description: "Written procedures, batch records and inspection steps are introduced across every line.",
-    highlight: true,
-  },
-  {
-    year: "[Year]",
     title: "OEM and private label",
-    description: "Distributors start ordering instruments with their own marking, packaging and catalogue codes.",
-  },
-  {
-    year: "Today",
-    title: `${company.exportMarkets} export markets`,
-    description: `${company.instrumentProfiles} instrument profiles, shipped to buyers across Europe, the Americas, Africa, Asia and Australia.`,
+    description: "Distributors begin ordering instruments with their own marking, codes and packaging.",
   },
 ];

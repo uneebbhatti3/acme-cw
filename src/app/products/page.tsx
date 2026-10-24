@@ -1,37 +1,33 @@
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/layout/page-hero";
-import { CtaBanner } from "@/components/sections/cta-banner";
+import { SectionIntro } from "@/components/layout/section-intro";
 import { CatalogSearchBar } from "@/features/products/components/catalog-search-bar";
 import { CategoryGrid } from "@/features/products/components/category-grid";
-import { FeaturedProducts } from "@/features/products/components/featured-products";
-import { SpecialtiesList } from "@/features/products/components/specialties-list";
+import { CustomRequest } from "@/features/products/components/custom-request";
 import { productsCopy } from "@/features/products/data/copy";
 import { productsSeo } from "@/features/products/data/seo";
-import { JsonLd } from "@/components/seo/json-ld";
-import { layoutCopy } from "@/data/copy";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(productsSeo);
 
 export default function ProductsPage() {
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: layoutCopy.breadcrumbHome, href: "/" }, { name: productsCopy.breadcrumb, href: "/products" }])} />
-      <PageHero title={productsCopy.hero.title} subtitle={productsCopy.hero.subtitle} kind="clamp" />
-      <Band defer={false} tone="paper" label={productsCopy.search.label} className="pt-10 md:pt-14">
+      <PageHero
+        eyebrow={productsCopy.hero.eyebrow}
+        title={productsCopy.hero.title}
+        subtitle={productsCopy.hero.subtitle}
+        crumbs={[{ name: productsCopy.breadcrumb, href: "/products" }]}
+      />
+      <Band defer={false} labelledBy="ranges-title" className="pt-10 md:pt-14">
         <Container>
           <CatalogSearchBar />
-          <div className="mt-16 md:mt-20">
-            <CategoryGrid />
-          </div>
+          <SectionIntro id="ranges-title" title={productsCopy.categoriesTitle} text={productsCopy.categoriesIntro} className="mt-12 md:mt-16" />
+          <CategoryGrid labelledBy="ranges-title" className="mt-8" />
         </Container>
       </Band>
-      <FeaturedProducts />
-      <SpecialtiesList />
-      <div className="sheet surface-dark bg-night pt-[var(--round)]">
-        <CtaBanner />
-      </div>
+      <CustomRequest />
     </>
   );
 }

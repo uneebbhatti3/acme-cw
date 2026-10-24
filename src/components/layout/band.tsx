@@ -2,36 +2,35 @@ import { Suspense, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const TONES = {
-  night: "surface-dark bg-night",
-  deep: "surface-dark bg-deep",
-  paper: "bg-background",
-  white: "bg-card",
+  white: "bg-white",
+  grey: "bg-grey-50",
+  navy: "surface-dark",
 } as const;
 
+export type BandTone = keyof typeof TONES;
+
 /**
- * A page band. Sections are rounded sheets that overlap the one above;
- * `pre` leaves room at the bottom for the next sheet to do the same.
- * Content sits in its own Suspense boundary so React hydrates each band as a
- * separate, short task (selective hydration). Everything is prerendered, so no
- * fallback ever shows.
+ * A full-width page section. Alternate `white` and `grey`, with `navy` for
+ * emphasis. Content sits in its own Suspense boundary so React hydrates each
+ * band as a separate, short task. Everything is prerendered, so no fallback
+ * ever shows.
  */
 export function Band({
-  tone,
+  tone = "white",
   id,
-  sheet = true,
-  pre = true,
   defer = true,
+  bordered = false,
   label,
   labelledBy,
   className,
   children,
 }: {
-  tone: keyof typeof TONES;
+  tone?: BandTone;
   id?: string;
-  sheet?: boolean;
-  pre?: boolean;
-  /** Skip layout and paint while off screen. Turn off for the first band under a hero, which is on screen at load. */
+  /** Skip layout and paint while off screen. Turn off for the first band on a page. */
   defer?: boolean;
+  /** Hairline at the top, for two bands of the same tone in a row. */
+  bordered?: boolean;
   label?: string;
   labelledBy?: string;
   className?: string;
@@ -42,7 +41,7 @@ export function Band({
       id={id}
       aria-label={label}
       aria-labelledby={labelledBy}
-      className={cn("sec", defer && "defer-render", TONES[tone], sheet && "sheet", pre && "sec-pre", className)}
+      className={cn("sec", defer && "defer-render", TONES[tone], bordered && "border-t", className)}
     >
       <Suspense>{children}</Suspense>
     </section>

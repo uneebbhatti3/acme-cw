@@ -1,19 +1,24 @@
 import { PageHero } from "@/components/layout/page-hero";
-import { ContactSection } from "@/features/contact/components/contact-section";
+import { JsonLd } from "@/components/seo/json-ld";
+import { ContactDetails } from "@/features/contact/components/contact-details";
 import { contactCopy } from "@/features/contact/data/copy";
 import { contactSeo } from "@/features/contact/data/seo";
-import { JsonLd } from "@/components/seo/json-ld";
-import { layoutCopy } from "@/data/copy";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { EnquirySection } from "@/features/quote/components/enquiry-section";
+import { contactPageJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(contactSeo);
 
 export default function ContactPage() {
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: layoutCopy.breadcrumbHome, href: "/" }, { name: contactCopy.breadcrumb, href: "/contact" }])} />
-      <PageHero title={contactCopy.hero.title} subtitle={contactCopy.hero.subtitle} kind="generic" />
-      <ContactSection />
+      <JsonLd data={contactPageJsonLd()} />
+      <PageHero
+        eyebrow={contactCopy.hero.eyebrow}
+        title={contactCopy.hero.title}
+        subtitle={contactCopy.hero.subtitle}
+        crumbs={[{ name: contactCopy.breadcrumb, href: "/contact" }]}
+      />
+      <EnquirySection kind="general" aside={<ContactDetails />} asideFirst />
     </>
   );
 }

@@ -4,8 +4,9 @@ import { getCategories, getProducts, productHref } from "@/features/products/lib
 import { absoluteUrl } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["/", "/about", "/products", "/videos", "/contact"];
+  const pages = ["/", "/products", "/manufacturing", "/quality", "/about", "/contact", "/request-quote", "/privacy", "/terms"];
   if (siteConfig.features.showCatalogue) pages.push("/catalogue");
+  if (siteConfig.features.showVideos) pages.push("/videos");
   return [
     ...pages.map((p) => ({ url: absoluteUrl(p), changeFrequency: "monthly" as const, priority: p === "/" ? 1 : 0.8 })),
     ...getCategories().map((c) => ({ url: absoluteUrl(`/products/${c.slug}`), changeFrequency: "monthly" as const, priority: 0.7 })),

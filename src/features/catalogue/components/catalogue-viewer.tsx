@@ -30,13 +30,13 @@ function Page({
   return (
     <S className="@container relative block aspect-[1/1.414] overflow-hidden rounded-md bg-white text-left text-ink shadow-[var(--shadow-lift)]">
       {page === 0 ? (
-        <S className="flex h-full flex-col bg-night p-[8%] text-white">
-          <S className="block text-[6.5cqi] text-steel">{brand}</S>
+        <S className="flex h-full flex-col bg-navy p-[8%] text-white">
+          <S className="block text-[6.5cqi] text-mist">{brand}</S>
           <S className="mt-auto block">
             <PlaceholderImage as="span" kind={section.kind} ratio="4/3" tone="ink" seed={section.slug} />
           </S>
           <S className="mt-[6%] block font-display text-[11cqi] [overflow-wrap:anywhere] leading-tight">{section.name}</S>
-          <S className="mt-[2%] block h-px w-1/4 bg-glow" />
+          <S className="mt-[2%] block h-px w-1/4 bg-teal-light" />
         </S>
       ) : (
         <S className="flex h-full flex-col p-[8%]">

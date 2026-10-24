@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { categories as rawCategories } from "@/features/products/data/categories";
 import { products as rawProducts } from "@/features/products/data/products";
-import type { Category, Product } from "@/features/products/types";
+import type { Category, FilterFacet, Product } from "@/features/products/types";
+import { stripBrackets } from "@/lib/placeholder";
 import type { ProductSummary } from "./search";
 
 export type { ProductSummary };
@@ -21,7 +22,6 @@ const categorySchema = z.object({
   slug,
   name: z.string().min(1),
   description: z.string().min(1),
-  rangeSize: z.number().int().nonnegative(),
   keywords: z.array(z.string()),
   image: z.string().optional(),
   order: z.number(),
@@ -30,14 +30,18 @@ const categorySchema = z.object({
 
 const productSchema = z.object({
   slug,
-  code: z.string().min(1),
+  sku: z.string().min(1),
   name: z.string().min(1),
   categorySlug: slug,
+  type: z.string().min(1),
   kind: z.enum(kinds).optional(),
   shortDescription: z.string().min(1),
-  description: z.string().min(1),
+  description: z.array(z.string().min(1)).min(1),
   features: z.array(z.string()).min(1),
+  material: z.string().min(1),
+  finish: z.string().min(1),
   specs: z.array(z.object({ label: z.string(), value: z.string() })),
+  variants: z.array(z.object({ sku: z.string().min(1), size: z.string().min(1), description: z.string().optional() })),
   images: z
     .array(
       z.object({
@@ -48,13 +52,10 @@ const productSchema = z.object({
       }),
     )
     .min(1),
+  documents: z.array(z.object({ label: z.string().min(1), file: z.string().min(1), meta: z.string().optional() })).optional(),
   tags: z.array(z.string()).optional(),
-  material: z.string().optional(),
-  availability: z.enum(["Available", "Made to requirement"]).optional(),
-  datasheet: z.string().optional(),
   featured: z.boolean().optional(),
   related: z.array(slug).optional(),
-  variants: z.array(z.string()).optional(),
 });
 
 function validate(): { categories: Category[]; products: Product[] } {
@@ -68,9 +69,14 @@ function validate(): { categories: Category[]; products: Product[] } {
     catSlugs.add(c.slug);
   }
   const prodSlugs = new Set<string>();
+  const skus = new Set<string>();
   for (const p of prods) {
     if (prodSlugs.has(p.slug)) problems.push(`Duplicate product slug "${p.slug}"`);
     prodSlugs.add(p.slug);
+    for (const sku of [p.sku, ...p.variants.map((v) => v.sku)]) {
+      if (skus.has(sku)) problems.push(`Duplicate SKU "${sku}" (product "${p.slug}")`);
+      skus.add(sku);
+    }
     if (!catSlugs.has(p.categorySlug))
       problems.push(`Product "${p.slug}" uses unknown category "${p.categorySlug}"`);
   }
@@ -114,6 +120,27 @@ export function getProductBySlug(slug: string): Product | undefined {
   return data.products.find((p) => p.slug === slug);
 }
 
+/** Finds the product, and the variant when it is a variant SKU. Brackets are ignored, so "ACME-SC-101" matches "[ACME-SC-101]". */
+export function findBySku(sku: string): { product: Product; variant?: Product["variants"][number] } | undefined {
+  const key = stripBrackets(sku).trim().toUpperCase();
+  if (!key) return undefined;
+  for (const p of data.products) {
+    if (stripBrackets(p.sku).toUpperCase() === key) return { product: p };
+    const variant = p.variants.find((v) => stripBrackets(v.sku).toUpperCase() === key);
+    if (variant) return { product: p, variant };
+  }
+  return undefined;
+}
+
+/** Facet options present in a list of products, in first-seen order. */
+export function facetsFor(products: Pick<Product, "type" | "material">[]): FilterFacet[] {
+  const unique = (values: string[]) => [...new Set(values)];
+  return [
+    { key: "type", label: "Instrument type", options: unique(products.map((p) => p.type)) },
+    { key: "material", label: "Material", options: unique(products.map((p) => p.material)) },
+  ];
+}
+
 export function getFeaturedProducts(limit = 4): Product[] {
   return data.products.filter((p) => p.featured).slice(0, limit);
 }
@@ -144,13 +171,13 @@ export function toSummary(p: Product): ProductSummary {
   const cat = getCategory(p.categorySlug)!;
   return {
     slug: p.slug,
-    code: p.code,
+    sku: p.sku,
     name: p.name,
     categorySlug: p.categorySlug,
     categoryName: cat.name,
     shortDescription: p.shortDescription,
+    type: p.type,
     material: p.material,
-    availability: p.availability,
     tags: p.tags ?? [],
     kind: p.kind ?? cat.placeholderKind,
     order: data.products.indexOf(p),

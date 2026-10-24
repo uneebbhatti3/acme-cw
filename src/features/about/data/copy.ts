@@ -1,108 +1,68 @@
-/**
- * About page copy. Company facts come from the client's current site
- * (acme-cw.vercel.app). Edit text here, not in components.
- */
+import type { Photo } from "@/components/media/photo-slot";
+import { siteConfig } from "@/config/site";
 
+const { location } = siteConfig;
+
+/**
+ * About page copy. No figures here: verified company facts come from
+ * `siteConfig.facts`. Edit text here, not in components.
+ */
 export const aboutCopy = {
-  breadcrumb: "About",
+  breadcrumb: "About us",
   hero: {
-    title: "Industrial discipline. Clinical purpose.",
-    subtitle:
-      "A Sialkot-based manufacturer and exporter of surgical, dental, veterinary and manicure instruments since 1960.",
+    eyebrow: "About us",
+    title: "An instrument manufacturer built for international buyers",
+    subtitle: `${siteConfig.legalName} manufactures and exports surgical, dental, veterinary and beauty instruments from ${location.city}, ${location.country}.`,
   },
   who: {
     eyebrow: "Company profile",
-    title: "Built for global healthcare buyers.",
+    title: "Who we are",
     paragraphs: [
-      "Based in Sialkot, Pakistan, we manufacture and export surgical and dental instruments for healthcare professionals, procurement teams, distributors and international buyers.",
-      "Since 1960 the range has grown to serve General Surgery, Cardiovascular, ENT, Gynecology, Orthopedic, Neurosurgery, Plastic and Orthodontic Surgery, Veterinary, Ophthalmology and dental professionals.",
-    ],
-    highlights: [
-      "Sialkot-based manufacturing",
-      "International export orientation",
-      "Surgical and dental product range",
-      "OEM and private-label capability",
+      `We are based in ${location.city}, a city known worldwide for surgical instrument making. We manufacture and export instruments for importers, distributors, brand owners and healthcare procurement teams.`,
+      "Our range covers general and specialist surgery, dentistry, veterinary practice and beauty care, supplied in standard patterns or made to the customer's own drawing, marking and packaging.",
     ],
     principles: [
       {
         title: "Mission",
-        text: "To manufacture surgical and dental instruments that support healthcare professionals, distributors and procurement teams with precise, reliable products.",
+        text: "To manufacture instruments that healthcare professionals, distributors and procurement teams can rely on, made precisely and described clearly.",
       },
       {
         title: "Vision",
-        text: "To grow our international presence through reliable manufacturing, export-ready cataloguing and clear, quality-focused communication with buyers.",
+        text: "To be a long-term manufacturing partner for international buyers, through dependable quality and clear communication.",
       },
       {
         title: "Values",
-        text: "Craftsmanship, process control, responsiveness, a quality mindset and ethical, long-term business relationships.",
+        text: "Craftsmanship, process control, responsiveness and ethical, long-term business relationships.",
       },
     ],
+  },
+  facts: {
+    title: "Company facts",
   },
   history: {
-    title: "From one workshop to 50+ export markets",
-    intro: "Key moments since 1960. Years in brackets are placeholders for the client to confirm.",
+    eyebrow: "History",
+    title: "Our history",
+    intro: "Key moments in the company's development. Years in brackets are to be confirmed.",
   },
-  process: {
-    title: "From raw steel to finished instrument",
-    intro: "A controlled path through seven stages, with OEM branding and packaging available at the end of the line.",
-    steps: [
-      {
-        icon: "layers",
-        title: "Raw material selection",
-        text: "Stainless steel grades are chosen for the intended function of each instrument.",
-      },
-      {
-        icon: "hammer",
-        title: "Forging and shaping",
-        text: "Profiles are shaped with attention to repeatability, strength and controlled geometry.",
-      },
-      {
-        icon: "cog",
-        title: "Machining",
-        text: "Controlled machining keeps dimensions, alignment and joints consistent.",
-      },
-      {
-        icon: "flame",
-        title: "Heat treatment",
-        text: "Hardening and tempering give the right hardness and durability for each instrument.",
-      },
-      {
-        icon: "sparkles",
-        title: "Grinding and polishing",
-        text: "Skilled hands refine surfaces, edges and the final finish.",
-      },
-      {
-        icon: "scan",
-        title: "Quality inspection",
-        text: "Dimensional, visual and functional checks before anything is packed.",
-      },
-      {
-        icon: "package",
-        title: "Packaging",
-        text: "Export-ready packing and labelling for distributor, OEM and procurement requirements.",
-      },
+  facility: {
+    eyebrow: "Facility",
+    title: "Our facility",
+    text: "Forging, machining, finishing, inspection and packing under one roof.",
+    photos: [
+      { alt: "Factory exterior", brief: "Exterior of the factory building" },
+      { alt: "Production hall", brief: "Production hall with workers at their stations" },
+      { alt: "Inspection area", brief: "Quality inspection bench" },
+    ] satisfies Photo[],
+  },
+  more: {
+    title: "Learn more",
+    links: [
+      { title: "Manufacturing and OEM", text: "Our process, customisation, marking and packaging options.", href: "/manufacturing" },
+      { title: "Quality", text: "Inspection stages, documentation and certificates.", href: "/quality" },
+      { title: "Products", text: "Browse the instrument ranges and request a quote.", href: "/products" },
     ],
-  },
-  quality: {
-    title: "Quality designed into the process",
-    intro: "Every instrument is checked and re-checked before it reaches the customer.",
-    checkpoints: [
-      { title: "Dimensional accuracy", text: "Geometry, alignment and critical dimensions are reviewed at set checkpoints." },
-      { title: "Surface finish", text: "Surfaces are inspected for an even finish, clean edges and good handling." },
-      { title: "Functional testing", text: "Joints, ratchets, cutting edges and springs are tested for reliable action." },
-      { title: "Material control", text: "Material selection is recorded so each batch can be traced." },
-      { title: "Final packing checks", text: "Labels, quantities and packaging are checked against the order." },
-    ],
-  },
-  reach: {
-    title: "Serving buyers across six continents",
-    text: "Exporting since 1960 to customers in Europe, USA, Canada, Morocco, Brazil, Mexico, Turkey, Australia, South Africa, Thailand and other countries.",
   },
   leadership: {
-    title: "The people behind the work",
-  },
-  certifications: {
-    title: "Certified and documented",
-    text: "Full certificates, with scope and numbers, are shared on request and will appear here once supplied.",
+    title: "Leadership",
   },
 };

@@ -6,11 +6,6 @@ export interface TimelineEvent {
   highlight?: boolean;
 }
 
-export interface Stat {
-  label: string;
-  value: number;
-  suffix?: string;
-}
 
 export interface TeamMember {
   name: string;

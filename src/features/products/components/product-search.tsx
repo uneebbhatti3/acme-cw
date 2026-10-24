@@ -4,7 +4,7 @@ import { ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PlaceholderImage } from "@/components/media/placeholder-image";
+import { ProductVisual } from "@/components/media/product-visual";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { productsCopy } from "@/features/products/data/copy";
 import { filterSummaries, type ProductSummary } from "@/features/products/lib/search";
@@ -82,7 +82,7 @@ export function ProductSearch({
             }}
             onFocus={() => setOpen(true)}
             placeholder={c.placeholder}
-            wrapperClassName="h-14 rounded-full border bg-card pl-5 pr-14 shadow-[var(--shadow-soft)] transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30 [&>svg]:size-5 [&>svg]:opacity-60"
+            wrapperClassName="h-14 rounded-md border bg-white pl-5 pr-14 shadow-[var(--shadow-soft)] transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30 [&>svg]:size-5 [&>svg]:opacity-60"
             className="h-12 text-base"
           />
           {value && (
@@ -93,7 +93,7 @@ export function ProductSearch({
                 setValue("");
                 setQuery("");
               }}
-              className="absolute right-2 top-1/2 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
+              className="absolute right-2 top-1/2 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
             >
               <X aria-hidden className="size-4" strokeWidth={1.75} />
             </button>
@@ -107,7 +107,7 @@ export function ProductSearch({
         {/* Always mounted so the input's aria-controls points at a real list; hidden until there is a query. */}
         <div
           hidden={!showPanel}
-          className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-3xl border bg-popover text-popover-foreground shadow-[var(--shadow-lift)]"
+          className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-[var(--shadow-lift)]"
         >
           <CommandList className="max-h-[60vh] p-2">
             {showPanel && (
@@ -123,17 +123,17 @@ export function ProductSearch({
                 key={p.slug}
                 value={p.slug}
                 onSelect={() => router.push(href(p))}
-                className="art-in gap-4 rounded-2xl px-3 py-2.5 data-[selected=true]:bg-muted data-[selected=true]:text-foreground"
+                className="art-in gap-4 rounded-lg px-3 py-2.5 data-[selected=true]:bg-muted data-[selected=true]:text-foreground"
                 style={{ animationDelay: `${i * 30}ms` }}
               >
                 <span className="w-16 shrink-0 overflow-hidden rounded-lg border">
-                  <PlaceholderImage as="span" kind={p.kind} ratio="4/3" seed={p.slug} />
+                  <ProductVisual image={{ src: p.firstImage, alt: "", view: "front" }} kind={p.kind} seed={p.slug} sizes="64px" marked={false} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{p.name}</span>
                   <span className="block text-sm text-muted-foreground">{p.categoryName}</span>
                 </span>
-                <span className="hidden font-mono text-xs text-muted-foreground sm:block">{p.code}</span>
+                <span className="hidden font-mono text-xs text-muted-foreground sm:block">{p.sku}</span>
               </CommandItem>
             ))}
           </CommandList>

@@ -5,13 +5,13 @@
  * which remain the source for everything rendered in the page.
  */
 export const themeColors = {
-  brand: "#097E9E",
-  brandDeep: "#07657F",
-  glow: "#8EEBFF",
-  night: "#050B0E",
-  deep: "#0B161B",
-  silver: "#EAF1F5",
-  steel: "#9DB0BA",
-  paper: "#EEF3F5",
-  ink: "#08171C",
+  navy: "#0B1F3A",
+  navyDeep: "#07152A",
+  teal: "#097E9E",
+  tealDeep: "#07657F",
+  tealLight: "#7FD3E6",
+  grey50: "#F5F7FA",
+  grey100: "#EDF1F5",
+  slate: "#4A5869",
+  ink: "#0F1B2D",
 } as const;

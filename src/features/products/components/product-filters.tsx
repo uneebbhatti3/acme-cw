@@ -89,7 +89,7 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
                   <ToggleGroupItem
                     key={o.value}
                     value={o.value}
-                    className="h-10 rounded-full border bg-card px-4 text-sm hover:bg-card hover:text-foreground hover:border-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=on]:border-ink data-[state=on]:bg-ink data-[state=on]:text-white"
+                    className="h-10 rounded-md border bg-white px-4 text-sm hover:bg-white hover:text-foreground hover:border-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=on]:border-navy data-[state=on]:bg-navy data-[state=on]:text-white"
                   >
                     {o.value}
                     <span className="tabular-nums opacity-60">{o.count}</span>
@@ -106,7 +106,7 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
             <Button
               ref={filtersButton}
               variant="outline"
-              className="bg-card md:hidden"
+              className="bg-white md:hidden"
               aria-haspopup="dialog"
               aria-expanded={drawerOpen}
               onPointerEnter={loadMobileFilters}
@@ -119,7 +119,7 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
               <SlidersHorizontal aria-hidden />
               {fc.open}
               {active.length > 0 && (
-                <span className="grid size-5 place-items-center rounded-full bg-primary text-xs text-primary-foreground">{active.length}</span>
+                <span className="grid size-5 place-items-center rounded-md bg-primary text-xs text-primary-foreground">{active.length}</span>
               )}
             </Button>
             {drawerLoaded && (
@@ -143,10 +143,10 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
             {fc.sort}
           </span>
           <Select value={sort} onValueChange={(v) => setSort(v as SortValue)}>
-            <SelectTrigger aria-labelledby="sort-label" className="rounded-full bg-card px-4 font-medium data-[size=default]:h-10">
+            <SelectTrigger aria-labelledby="sort-label" className="rounded-md bg-white px-4 font-medium data-[size=default]:h-10">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="rounded-2xl">
+            <SelectContent className="rounded-lg">
               {sortOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value} className="rounded-lg py-2">
                   {o.label}
@@ -166,7 +166,7 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
             key={`${a.key}-${a.value}`}
             type="button"
             onClick={() => toggle(a.key, a.value)}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border bg-card py-1 pl-3 pr-2 text-sm transition-colors hover:border-foreground/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-md border bg-white py-1 pl-3 pr-2 text-sm transition-colors hover:border-foreground/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             aria-label={fc.remove(a.value)}
           >
             {a.value}
@@ -184,12 +184,12 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
         products={shown}
         priorityCount={4}
         empty={
-          <Empty className="rounded-[2rem] border border-dashed bg-card py-16">
+          <Empty className="rounded-lg border border-dashed bg-white py-16">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <SearchX aria-hidden />
               </EmptyMedia>
-              <EmptyTitle className="font-display text-2xl">{fc.emptyTitle}</EmptyTitle>
+              <EmptyTitle className="text-h3">{fc.emptyTitle}</EmptyTitle>
               <EmptyDescription>{fc.emptyText}</EmptyDescription>
             </EmptyHeader>
             <EmptyContent>

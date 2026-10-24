@@ -11,8 +11,16 @@ export type InstrumentKind =
   | "generic";
 
 export interface Certification {
+  /** e.g. the standard and edition. */
   name: string;
-  description?: string;
-  image?: string;
+  issuer: string;
+  number: string;
+  scope: string;
+  validUntil: string;
+  /** PDF under /public/docs/certificates/. */
   file?: string;
+  /** Thumbnail of the certificate under /public. */
+  image?: string;
+  /** Only verified certificates are shown. */
+  verified: boolean;
 }

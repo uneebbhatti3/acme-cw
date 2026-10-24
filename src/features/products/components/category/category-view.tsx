@@ -1,18 +1,17 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Breadcrumbs } from "@/components/layout/breadcrumbs";
-import { PageHero } from "@/components/layout/page-hero";
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
+import { PageHero } from "@/components/layout/page-hero";
+import { CtaBanner } from "@/components/sections/cta-banner";
 import { JsonLd } from "@/components/seo/json-ld";
 import { productsCopy } from "@/features/products/data/copy";
-import { filterFacets } from "@/features/products/data/filters";
-import { categoryHref, getCategory, getProductsByCategory, productHref, toSummary } from "@/features/products/lib/content";
+import { categoryHref, facetsFor, getCategory, getProductsByCategory, productHref, toSummary } from "@/features/products/lib/content";
 import { itemListJsonLd } from "@/lib/seo";
 import { ProductFilters, ProductFiltersStatic } from "../product-filters";
 import { OtherCategories } from "./other-categories";
 
-/** Category page body: hero, filterable product list and the other ranges. */
+/** Range page body: header, filterable product list, the other ranges and the quote band. */
 export async function CategoryView({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
   const cat = getCategory(category);
@@ -20,7 +19,7 @@ export async function CategoryView({ params }: { params: Promise<{ category: str
 
   const products = getProductsByCategory(cat.slug);
   const summaries = products.map(toSummary);
-  const href = categoryHref(cat.slug);
+  const facets = facetsFor(products);
 
   return (
     <>
@@ -28,34 +27,28 @@ export async function CategoryView({ params }: { params: Promise<{ category: str
       <PageHero
         title={cat.name}
         subtitle={cat.description}
-        kind={cat.placeholderKind}
-        before={
-          <Breadcrumbs
-            items={[
-              { name: productsCopy.breadcrumb, href: "/products" },
-              { name: cat.name, href },
-            ]}
-          />
-        }
+        crumbs={[
+          { name: productsCopy.breadcrumb, href: "/products" },
+          { name: cat.name, href: categoryHref(cat.slug) },
+        ]}
       >
-        <p className="mt-6 text-sm text-muted-foreground">
-          {productsCopy.rangeLabel(cat.rangeSize)}. {productsCopy.listedNote(products.length)}
-        </p>
+        <p className="mt-5 text-sm text-muted-foreground">{productsCopy.listedNote(products.length)}</p>
       </PageHero>
 
-      <Band defer={false} tone="paper" labelledBy="range-products" className="pt-12 md:pt-16">
+      <Band defer={false} labelledBy="range-products" className="pt-8 md:pt-12">
         <Container>
           <h2 id="range-products" className="sr-only">
             {productsCopy.listLabel(cat.name)}
           </h2>
           {/* The prerendered fallback shows the full list with the same layout. */}
-          <Suspense fallback={<ProductFiltersStatic products={summaries} facets={filterFacets} />}>
-            <ProductFilters products={summaries} facets={filterFacets} />
+          <Suspense fallback={<ProductFiltersStatic products={summaries} facets={facets} />}>
+            <ProductFilters products={summaries} facets={facets} />
           </Suspense>
         </Container>
       </Band>
 
       <OtherCategories currentSlug={cat.slug} />
+      <CtaBanner />
     </>
   );
 }

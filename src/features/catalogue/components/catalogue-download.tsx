@@ -7,7 +7,7 @@ import { catalogueCopy } from "@/features/catalogue/data/copy";
 export function CatalogueDownload() {
   return (
     <div className="mt-8 flex flex-wrap items-center gap-4">
-      <Button asChild variant="glow" size="lg">
+      <Button asChild variant="inverse" size="lg">
         <a href={siteConfig.catalogueFile} download>
           <Download aria-hidden strokeWidth={1.75} />
           {catalogueCopy.download}

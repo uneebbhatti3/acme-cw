@@ -92,7 +92,7 @@ export function ProductGallery({
         role="group"
         aria-roledescription="carousel"
         aria-label={`${productName} images`}
-        className="relative overflow-hidden rounded-[2rem] border bg-card"
+        className="relative overflow-hidden rounded-lg border bg-white"
       >
         <div
           className={cn("relative touch-pan-y overflow-hidden", zoom ? "cursor-zoom-in" : "cursor-pointer")}
@@ -110,11 +110,11 @@ export function ProductGallery({
             className="art-in transition-transform duration-200 ease-out will-change-transform"
             style={zoom ? { transform: `scale(${ZOOM})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : { transform: "scale(1)" }}
           >
-            <ProductVisual image={current} kind={kind} seed={seed} ratio="4/3" priority={index === 0} sizes="(min-width: 1024px) 50vw, 100vw" />
+            <ProductVisual image={current} kind={kind} seed={seed} priority={index === 0} sizes="(min-width: 1280px) 720px, (min-width: 1024px) 58vw, 100vw" />
           </div>
         </div>
 
-        <span className="pointer-events-none absolute left-4 top-4 rounded-full border bg-card/90 px-3 py-1.5 text-xs font-semibold shadow-sm backdrop-blur-sm">
+        <span className="pointer-events-none absolute left-3 top-3 rounded-sm border bg-white/90 px-2 py-1 text-xs font-semibold">
           {viewLabel(current)}
         </span>
         <button
@@ -122,13 +122,13 @@ export function ProductGallery({
           onClick={open}
           aria-haspopup="dialog"
           aria-label={productDetailCopy.enlarge}
-          className="absolute right-4 top-4 inline-flex h-10 items-center gap-2 rounded-full border bg-card px-4 text-sm font-semibold shadow-sm transition-colors hover:border-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="absolute right-3 top-3 inline-flex h-11 items-center gap-2 rounded-md border bg-white px-3.5 text-sm font-semibold transition-colors hover:border-grey-300 hover:bg-grey-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           <Maximize2 aria-hidden className="size-4" strokeWidth={1.75} />
           <span className="hidden sm:inline">{productDetailCopy.enlargeShort}</span>
         </button>
         {many && (
-          <span aria-hidden className="pointer-events-none absolute bottom-4 right-4 rounded-full bg-night/75 px-2.5 py-1 font-mono text-xs text-white">
+          <span aria-hidden className="pointer-events-none absolute bottom-3 right-3 rounded-sm bg-navy/80 px-2 py-1 font-mono text-xs text-white">
             {index + 1} / {images.length}
           </span>
         )}
@@ -142,7 +142,7 @@ export function ProductGallery({
           role="tablist"
           aria-label={productDetailCopy.viewsLabel}
           onKeyDown={onThumbKey}
-          className="scrollbar-none -mx-5 mt-4 flex snap-x gap-3 overflow-x-auto scroll-px-5 px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-5 sm:overflow-visible sm:px-0"
+          className="scrollbar-none -mx-4 mt-3 flex snap-x gap-2.5 overflow-x-auto scroll-px-4 px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
         >
           {images.map((img, i) => (
             <button
@@ -157,15 +157,15 @@ export function ProductGallery({
               tabIndex={i === index ? 0 : -1}
               aria-label={`${viewLabel(img)} view`}
               onClick={() => setIndex(i)}
-              className="group w-[22%] min-w-20 shrink-0 snap-start rounded-xl text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
+              className="group w-[23%] min-w-20 max-w-28 shrink-0 snap-start rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-24"
             >
               <span
                 className={cn(
-                  "block overflow-hidden rounded-xl border-2 bg-card transition-colors",
-                  i === index ? "border-primary" : "border-border group-hover:border-foreground/30",
+                  "block overflow-hidden rounded-md border-2 bg-white transition-colors",
+                  i === index ? "border-teal" : "border-border group-hover:border-grey-300",
                 )}
               >
-                <ProductVisual image={img} kind={kind} seed={seed} ratio="1/1" sizes="120px" />
+                <ProductVisual image={img} kind={kind} seed={seed} sizes="120px" marked={false} />
               </span>
               <span className={cn("mt-1.5 block text-center text-xs font-semibold", i === index ? "text-link" : "text-muted-foreground")}>
                 {viewLabel(img)}
