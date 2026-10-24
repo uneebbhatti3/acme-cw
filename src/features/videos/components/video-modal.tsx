@@ -33,12 +33,12 @@ export default function VideoModal({
         }}
         className="surface-dark max-w-5xl gap-0 overflow-hidden border-white/10 bg-deep p-0 sm:max-w-5xl"
       >
-        <div className="relative aspect-video w-full bg-night">
+        <div className="relative aspect-video w-full bg-navy">
           {!video.src ? (
             <div className="absolute inset-0">
               <PlaceholderImage kind={video.art ?? "generic"} tone="ink" ratio="16/9" fill />
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-night/80 p-6 text-center">
-                <Clapperboard aria-hidden className="mb-4 size-9 text-glow" strokeWidth={1.25} />
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-navy/80 p-6 text-center">
+                <Clapperboard aria-hidden className="mb-4 size-9 text-teal-light" strokeWidth={1.25} />
                 <p className="font-display text-2xl text-white md:text-3xl">{videosCopy.comingSoonTitle}</p>
                 <p className="mt-2 max-w-sm text-muted-foreground">{videosCopy.comingSoonText}</p>
               </div>

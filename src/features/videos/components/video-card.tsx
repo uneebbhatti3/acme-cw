@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export function VideoPoster({ video, sizes, large = false, priority = false }: { video: VideoItem; sizes: string; large?: boolean; priority?: boolean }) {
   return (
-    <span className="relative block aspect-video w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-night">
+    <span className="relative block aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-navy">
       {video.poster ? (
         <Image src={video.poster} alt="" fill sizes={sizes} priority={priority} className="object-cover" />
       ) : (
@@ -24,7 +24,7 @@ export function VideoPoster({ video, sizes, large = false, priority = false }: {
         <Play aria-hidden className={cn("translate-x-0.5 fill-current", large ? "size-7" : "size-5")} strokeWidth={1.5} />
       </span>
       {video.duration && (
-        <span className="absolute bottom-3 right-3 rounded-full bg-night/80 px-2.5 py-0.5 font-mono text-xs text-white">
+        <span className="absolute bottom-3 right-3 rounded-full bg-navy/80 px-2.5 py-0.5 font-mono text-xs text-white">
           {video.duration}
         </span>
       )}
@@ -49,7 +49,7 @@ export function VideoCard({
     <VideoTrigger
       video={video}
       label={`${videosCopy.play}: ${video.title}${video.duration ? `, ${video.duration}` : ""}`}
-      className="group block w-full rounded-[1.5rem] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+      className="group block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
     >
       <VideoPoster video={video} sizes={sizes} large={large} priority={priority} />
       <span className="mt-4 block">

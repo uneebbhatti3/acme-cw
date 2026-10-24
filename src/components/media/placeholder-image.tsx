@@ -1,4 +1,5 @@
 import { preload } from "react-dom";
+import { mediaCopy } from "@/data/copy";
 import { cn } from "@/lib/utils";
 import type { InstrumentKind, ViewType } from "@/types";
 import { placeholderSrc, type Ratio, type Tone } from "./placeholder-svg";
@@ -32,6 +33,8 @@ export interface PlaceholderImageProps {
   as?: "div" | "span";
   /** Load immediately (main product image). Everything else lazy-loads. */
   priority?: boolean;
+  /** Show a small "Placeholder image" tag so the art is never mistaken for a final photo. */
+  marked?: boolean;
 }
 
 /**
@@ -50,6 +53,7 @@ export function PlaceholderImage({
   fill = false,
   as: Wrapper = "div",
   priority = false,
+  marked = false,
 }: PlaceholderImageProps) {
   const ink = tone !== "steel";
   const src = placeholderSrc(kind, view, ratio, tone);
@@ -59,7 +63,7 @@ export function PlaceholderImage({
     <Wrapper
       className={cn(
         "relative block overflow-hidden",
-        tone === "clear" ? "bg-transparent" : ink ? "bg-night" : "bg-card",
+        tone === "clear" ? "bg-transparent" : ink ? "bg-navy" : "bg-white",
         fill ? "absolute inset-0" : "w-full",
         className,
       )}
@@ -79,11 +83,16 @@ export function PlaceholderImage({
       {showLabel && (
         <span
           className={cn(
-            "absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium leading-none",
-            ink ? "bg-white/10 text-silver ring-1 ring-white/15" : "bg-card/90 text-foreground shadow-sm ring-1 ring-border",
+            "absolute left-3 top-3 rounded-sm px-2 py-1 text-xs font-medium leading-none",
+            ink ? "bg-white/10 text-white ring-1 ring-white/15" : "bg-white/90 text-foreground ring-1 ring-border",
           )}
         >
           {label ?? `${VIEW_LABELS[view]} view`}
+        </span>
+      )}
+      {marked && (
+        <span className="pointer-events-none absolute bottom-2 left-2 rounded-sm border border-dashed border-slate/40 bg-white/90 px-1.5 py-0.5 text-[0.6875rem] font-medium leading-none text-slate">
+          {mediaCopy.imagePending}
         </span>
       )}
     </Wrapper>

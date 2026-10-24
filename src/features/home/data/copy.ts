@@ -1,118 +1,76 @@
+import type { Photo } from "@/components/media/photo-slot";
 import { siteConfig } from "@/config/site";
-import type { HeroCallout, HomeFeature, HomeStat, Milestone } from "@/features/home/types";
 
-const { company } = siteConfig;
-const markets = parseInt(company.exportMarkets, 10);
-const profiles = parseInt(company.instrumentProfiles, 10);
+const { location } = siteConfig;
 
 /**
- * Home page copy and content. Company facts come from `siteConfig`, which
- * holds the values from the client's current site. Edit text here, not in
- * components.
+ * Home page copy. No figures or certifications appear here: verified company
+ * facts come from `siteConfig.facts`, and certificates from
+ * src/data/certifications.ts, each shown only once verified.
  */
 export const homeCopy = {
   hero: {
-    lines: ["Precision instruments", "for healthcare, worldwide."],
-    text: `Surgical, dental, veterinary and manicure instruments, made in ${company.location.city} since ${company.foundingYear} for hospitals, distributors and importers in ${company.exportMarkets} markets.`,
-    primary: { label: "Explore products", href: "/products" },
-    secondary: { label: "Request a quote", href: "/contact" },
-    note: "Certificates and inspection documents are available on request.",
-    artLabel: "A polished steel forceps, with light moving across it.",
-    callouts: [
-      { label: "Finger rings", x: 11.3, y: 33.2 },
-      { label: "Box lock joint", x: 47.7, y: 48 },
-      { label: "Serrated jaw", x: 82.4, y: 37.9, below: true },
-    ] satisfies HeroCallout[],
-    badge: {
-      text: "Made to your drawing • OEM and private label •",
-      label: "Instruments made to your drawing or sample. Ask for a quote.",
-      href: "/contact",
-    },
+    eyebrow: `Manufacturer and exporter · ${location.city}, ${location.country}`,
+    title: "Surgical and dental instruments, made to your specification",
+    text: "We manufacture surgical, dental, veterinary and beauty instruments for distributors, brand owners and healthcare buyers, in standard patterns or to your drawing, under our name or yours.",
+    primary: "Request a quote",
+    secondary: "View products",
+    points: ["OEM and private label", "Made to drawing or sample", "Export packing and documents"],
+    photo: {
+      alt: "Stainless steel surgical instruments",
+      brief: "Hero image: a group of finished instruments on a neutral background, or the production floor",
+    } satisfies Photo,
   },
-  trust: {
-    label: "Why buyers work with us",
-    items: [
-      { icon: "factory", title: `Made in ${company.location.city}`, text: `Manufacturing since ${company.foundingYear}.` },
-      { icon: "globe", title: `${company.exportMarkets} export markets`, text: "Shipped to buyers worldwide." },
-      { icon: "tag", title: "OEM and private label", text: "Your marking and packaging." },
-      { icon: "file", title: "Documented quality", text: "Certificates on request." },
-    ] satisfies HomeFeature[],
+  ranges: {
+    eyebrow: "Product ranges",
+    title: "Instruments for surgery, dentistry, veterinary and beauty care",
+    text: "Browse sample products with specifications and sizes in each range. Patterns not listed online can be quoted on request.",
+    link: "View all products",
   },
   capabilities: {
-    title: "What we do for buyers.",
-    text: "One manufacturer for the instrument, the finish, the marking and the paperwork.",
-    items: [
-      {
-        icon: "wrench",
-        title: "Manufacturing",
-        text: "Forging, grinding, finishing and assembly in our own facility, for steady quality from batch to batch.",
-      },
-      {
-        icon: "ruler",
-        title: "Customisation",
-        text: "Instruments made to your drawing or sample, with your marking, finish and packaging.",
-      },
-      {
-        icon: "shield",
-        title: "Quality assurance",
-        text: "Every instrument is checked and re-checked before it is packed, with documents for your order.",
-      },
-    ] satisfies HomeFeature[],
+    eyebrow: "Manufacturing",
+    title: "Made in our own facility, from forging to finishing",
+    text: "Each stage of production is carried out in-house, with checks before an instrument moves on.",
+    link: "Manufacturing capabilities",
   },
-  range: {
-    title: "Eight ranges. One manufacturer.",
-    text: "Browse by range. Every product page shows each angle, the specifications and a quote request.",
+  oem: {
+    eyebrow: "OEM and private label",
+    title: "Your brand, your codes, your packaging",
+    text: "Source complete instrument ranges under your own name. We work from your drawings, samples or product list, and sample before production.",
+    link: "OEM and private-label services",
+    cta: "Discuss a project",
   },
-  viewer: {
-    productSlug: "needle-holder",
-    title: "Check every angle before you order.",
-    text: "Front, side, top and a close-up of the working end. Move the cursor over a view to magnify it, or select Enlarge.",
-    viewsLabel: "Product views",
-    enlarge: "Enlarge",
-    enlargeLabel: (view: string) => `Enlarge the ${view.toLowerCase()} view`,
-    quote: "Request a quote",
-    view: "View product page",
+  quality: {
+    eyebrow: "Quality and certifications",
+    title: "Inspected at every stage, documented for every order",
+    text: "Dimensions, finish and function are checked during production and before packing. Inspection and material records are kept for each batch.",
+    link: "Quality and documentation",
+    certificatesPending: "Certificate details will be published here once verified against the original documents.",
+    certificatesLink: "Certificates",
   },
-  story: {
-    title: `From a ${company.location.city} workshop in ${company.foundingYear} to buyers in ${company.exportMarkets} markets.`,
-    text: "Instrument making is an exacting skill that takes dexterity, concentration and patience. The craft has not changed: make each instrument to the drawing, and check it before it ships.",
-    link: "Read our history",
-    stripLabel: "Company history. Scroll sideways to see more.",
+  company: {
+    eyebrow: "About us",
+    title: `An instrument manufacturer in ${location.city}`,
+    paragraphs: [
+      `${siteConfig.legalName} manufactures and exports surgical, dental, veterinary and beauty instruments from ${location.city}, ${location.country}, a city known worldwide for instrument making.`,
+      "We work with importers, distributors, brand owners and healthcare buyers who need consistent quality, clear specifications and dependable lead times.",
+    ],
+    link: "About the company",
+    photo: {
+      alt: "Company facility",
+      brief: "Exterior of the facility, or the team in the workshop",
+    } satisfies Photo,
   },
-  stats: {
-    label: "By the numbers",
-  },
-  featured: {
-    title: "Featured products.",
-    text: "A few instruments from across the ranges. Hover a card to see a second angle.",
-    link: "All products",
-  },
-  videos: {
-    title: "See how it’s made.",
-    text: "Short clips from the workshop floor and the inspection bench.",
-    play: (title: string) => `Play video: ${title}`,
-  },
-  certifications: {
-    title: "Certified and documented.",
-    text: "Buyers can ask for the certificates and inspection documents that apply to the instruments they order.",
-    link: "Ask for documents",
-  },
-  marquee: {
-    label: "Product ranges",
+  quote: {
+    eyebrow: "Quotations",
+    title: "Request a quotation",
+    text: "Send us product names or SKUs, quantities and your destination market. Drawings and samples for custom work are welcome.",
+    steps: [
+      { title: "Send your requirements", text: "Products or SKUs, quantities, and drawings or samples for custom items." },
+      { title: "We confirm the details", text: "Specifications, marking, packaging and documents for your market." },
+      { title: "Receive your quotation", text: "Prices, minimum quantities and lead times." },
+    ],
+    primary: "Request a quote",
+    secondary: "Contact our team",
   },
 };
-
-/** The founding year is from the client's site; the other steps are general. */
-export const milestones: Milestone[] = [
-  { when: String(company.foundingYear), title: "Founded", text: `Instrument making begins in ${company.location.city}, ${company.location.country}.` },
-  { when: "Export", title: "First shipments abroad", text: "Buyers in Europe, then the USA and Canada." },
-  { when: "Range", title: "More specialties", text: "Dental, veterinary and manicure instruments join the surgical range." },
-  { when: "Today", title: `${company.exportMarkets} export markets`, text: "OEM and private-label work for distributors worldwide." },
-];
-
-export const homeStats: HomeStat[] = [
-  { value: company.foundingYear, display: String(company.foundingYear), label: "Established" },
-  { value: markets, suffix: "+", label: "Export markets" },
-  { value: profiles, suffix: "+", label: "Instrument profiles" },
-  { value: company.certifications.length, label: "Certifications held" },
-];

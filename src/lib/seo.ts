@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { primaryEmail, siteConfig, verifiedFacts } from "@/config/site";
+import { isPlaceholder } from "@/lib/placeholder";
 import type { Category, Product } from "@/features/products/types";
 
 /*
@@ -31,8 +32,10 @@ export const baseKeywords = [
   "surgical instruments manufacturer",
   "dental instruments manufacturer",
   "surgical instruments exporter",
-  `surgical instruments ${siteConfig.company.location.city}`,
-  `${siteConfig.company.location.country} surgical instruments`,
+  "OEM surgical instruments",
+  "private label instruments",
+  `surgical instruments ${siteConfig.location.city}`,
+  `${siteConfig.location.country} surgical instruments`,
 ] as const;
 
 /** Shared social card (src/app/opengraph-image.tsx). Child routes must list it explicitly. */
@@ -89,20 +92,22 @@ export function pageMetadata({
 }
 
 function postalAddress() {
-  const { contact, company } = siteConfig;
+  const { contact, location } = siteConfig;
   return {
     "@type": "PostalAddress",
     streetAddress: contact.street,
-    addressLocality: company.location.city,
-    addressRegion: company.location.region,
+    addressLocality: location.city,
+    addressRegion: location.region,
     postalCode: contact.postalCode,
-    addressCountry: company.location.countryCode,
+    addressCountry: location.countryCode,
   };
 }
 
+/** Organisation data. Only verified facts (see siteConfig.facts) are included. */
 export function organizationJsonLd() {
-  const { contact, company } = siteConfig;
+  const { contact, location } = siteConfig;
   const sameAs = Object.values(siteConfig.social).filter(Boolean);
+  const established = verifiedFacts().find((f) => f.key === "established");
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -112,17 +117,16 @@ export function organizationJsonLd() {
     alternateName: siteConfig.shortName,
     url: siteConfig.url,
     description: siteConfig.description,
-    foundingDate: String(company.foundingYear),
-    foundingLocation: `${company.location.city}, ${company.location.country}`,
-    email: contact.email,
-    telephone: contact.phone,
+    ...(established ? { foundingDate: established.value } : {}),
+    foundingLocation: `${location.city}, ${location.country}`,
+    email: primaryEmail,
+    telephone: contact.phones[0].number,
     address: postalAddress(),
-    areaServed: company.markets,
-    knowsAbout: company.specialties,
-    contactPoint: contact.phones.map((telephone) => ({
+    knowsAbout: siteConfig.specialties,
+    contactPoint: contact.phones.map(({ number }) => ({
       "@type": "ContactPoint",
-      telephone,
-      email: contact.email,
+      telephone: number,
+      email: primaryEmail,
       contactType: "sales",
       availableLanguage: ["English", "Urdu"],
     })),
@@ -182,17 +186,18 @@ export function productJsonLd(product: Product, category: Category, path: string
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    sku: product.code,
-    mpn: product.code,
+    ...(isPlaceholder(product.sku) ? {} : { sku: product.sku, mpn: product.sku }),
     category: category.name,
     description: product.shortDescription,
     url: absoluteUrl(path),
     image: images.length ? images : [absoluteUrl("/opengraph-image")],
-    material: product.material,
+    ...(isPlaceholder(product.material) ? {} : { material: product.material }),
     brand: { "@type": "Brand", name: siteConfig.brandName },
     manufacturer: org,
-    countryOfOrigin: siteConfig.company.location.country,
-    additionalProperty: product.specs.map((s) => ({ "@type": "PropertyValue", name: s.label, value: s.value })),
+    countryOfOrigin: siteConfig.location.country,
+    additionalProperty: [{ label: "Finish", value: product.finish }, ...product.specs]
+      .filter((s) => !isPlaceholder(s.value))
+      .map((s) => ({ "@type": "PropertyValue", name: s.label, value: s.value })),
   };
 }
 

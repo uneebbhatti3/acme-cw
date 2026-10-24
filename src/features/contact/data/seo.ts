@@ -15,5 +15,5 @@ export const contactSeo: PageSeo = {
   ],
   socialTitle: "Contact Acme Commercial Ways | Get a Quote",
   socialDescription:
-    "Send your product requirements, OEM requests or distribution inquiries. We serve buyers in 50+ markets worldwide.",
+    "Send product questions, OEM requests or distribution enquiries to our sales team in Sialkot, Pakistan.",
 };

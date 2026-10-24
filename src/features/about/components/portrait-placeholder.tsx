@@ -10,10 +10,10 @@ export function PortraitPlaceholder({ src, alt }: { src?: string; alt: string })
     );
   }
   return (
-    <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-muted to-rule">
+    <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-muted to-grey-300">
       <svg viewBox="0 0 200 250" className="absolute inset-0 size-full" role="img" aria-label={alt}>
-        <circle cx="100" cy="98" r="38" fill="var(--paper)" fillOpacity="0.6" stroke="var(--steel)" strokeWidth="1.5" />
-        <path d="M30 250 C34 186 64 160 100 160 C136 160 166 186 170 250 Z" fill="var(--paper)" fillOpacity="0.6" stroke="var(--steel)" strokeWidth="1.5" />
+        <circle cx="100" cy="98" r="38" fill="var(--grey-50)" fillOpacity="0.6" stroke="var(--grey-300)" strokeWidth="1.5" />
+        <path d="M30 250 C34 186 64 160 100 160 C136 160 166 186 170 250 Z" fill="var(--grey-50)" fillOpacity="0.6" stroke="var(--grey-300)" strokeWidth="1.5" />
       </svg>
     </div>
   );

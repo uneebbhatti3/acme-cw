@@ -44,7 +44,7 @@ export default function MobileFilters({ open, onOpenChange, facets, selected, on
         }}
       >
         <DrawerHeader className="text-left">
-          <DrawerTitle className="font-display text-2xl">{fc.drawerTitle}</DrawerTitle>
+          <DrawerTitle className="text-h3">{fc.drawerTitle}</DrawerTitle>
           <DrawerDescription>{fc.drawerText}</DrawerDescription>
         </DrawerHeader>
         <div className="max-h-[50vh] space-y-6 overflow-y-auto px-4">

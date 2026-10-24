@@ -1,44 +1,35 @@
 import type { ReactNode } from "react";
-import { placeholderSrc } from "@/components/media/placeholder-svg";
-import type { InstrumentKind } from "@/types";
+import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { Container } from "./container";
 
 /**
- * Dark header for inner pages: metal-gradient title, one-line subtitle and
- * the instrument art fading in from the right. Leaves room at the bottom for
- * a following `.sheet` section to overlap it.
+ * Header band for inner pages: breadcrumbs, eyebrow, title, lede and optional
+ * actions on navy with a fine engineering grid. Starts under the transparent
+ * fixed header, so its top padding includes the header height. Compact, so content starts
+ * above the fold on phones.
  */
 export function PageHero({
   title,
   subtitle,
-  kind = "scissors",
-  before,
+  eyebrow,
+  crumbs,
   children,
 }: {
   title: string;
   subtitle?: string;
-  kind?: InstrumentKind;
-  /** Rendered above the title (breadcrumbs). */
-  before?: ReactNode;
-  /** Rendered below the subtitle. */
+  eyebrow?: string;
+  /** Trail after Home. The last item is the current page. */
+  crumbs?: Crumb[];
+  /** Rendered below the subtitle (buttons, notes). */
   children?: ReactNode;
 }) {
   return (
-    <section className="surface-dark grain page-hero overflow-hidden pb-20 pt-[calc(var(--header-h)+48px)] md:pb-28 md:pt-[calc(var(--header-h)+80px)]">
-      {/* Decorative art: the dark placeholder shares the section's background, so it blends in. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={placeholderSrc(kind, "angle", "16/9", "ink")}
-        alt=""
-        aria-hidden
-        loading="eager"
-        decoding="async"
-        className="pointer-events-none absolute -right-[4%] top-1/2 -z-10 hidden w-[50%] max-w-[860px] -translate-y-1/2 opacity-70 [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent,#000_45%),linear-gradient(to_bottom,transparent,#000_22%,#000_78%,transparent)] lg:block"
-      />
-      <Container className="relative z-[2]">
-        {before && <div className="mb-8">{before}</div>}
-        <h1 className="text-h1 text-metal max-w-3xl pb-1">{title}</h1>
-        {subtitle && <p className="text-lede mt-5 max-w-xl text-muted-foreground">{subtitle}</p>}
+    <section className="surface-dark page-head border-b border-white/10 pb-12 pt-[calc(var(--header-h)+2.5rem)] md:pb-16 md:pt-[calc(var(--header-h)+3.5rem)] lg:pb-20 lg:pt-[calc(var(--header-h)+4.5rem)]">
+      <Container>
+        {crumbs && <Breadcrumbs items={crumbs} className="mb-6 text-sm md:mb-8" />}
+        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+        <h1 className="text-h1 max-w-3xl">{title}</h1>
+        {subtitle && <p className="text-lede mt-4 max-w-2xl text-muted-foreground">{subtitle}</p>}
         {children}
       </Container>
     </section>

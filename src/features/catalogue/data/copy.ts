@@ -3,7 +3,7 @@
 export const catalogueCopy = {
   hero: {
     title: "Catalogue",
-    subtitle: "Eight instrument ranges in one document, ready to share with your procurement team.",
+    subtitle: "All instrument ranges in one document, ready to share with your procurement team. The final catalogue will replace this placeholder.",
   },
   download: "Download PDF",
   fileNote: "PDF, placeholder file",

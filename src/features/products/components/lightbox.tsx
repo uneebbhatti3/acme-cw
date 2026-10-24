@@ -172,7 +172,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
   };
 
   const btn =
-    "inline-flex size-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-glow disabled:opacity-40 disabled:hover:bg-transparent";
+    "inline-flex size-11 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-glow disabled:opacity-40 disabled:hover:bg-transparent";
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && close()}>
@@ -189,7 +189,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
           e.preventDefault();
           returnTo.current?.focus?.();
         }}
-        className="surface-dark top-0 left-0 h-dvh w-screen max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 bg-night/97 p-0 text-white shadow-none sm:max-w-none data-[state=closed]:zoom-out-100 data-[state=open]:zoom-in-100"
+        className="surface-dark top-0 left-0 h-dvh w-screen max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 bg-navy/97 p-0 text-white shadow-none sm:max-w-none data-[state=closed]:zoom-out-100 data-[state=open]:zoom-in-100"
       >
         <DialogTitle className="sr-only">{`${title}: image viewer`}</DialogTitle>
         <DialogDescription className="sr-only">
@@ -198,17 +198,17 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between gap-4 px-3 py-2 md:px-6">
             <p className="min-w-0 text-sm">
-              <span className="font-mono tabular-nums text-steel">
+              <span className="font-mono tabular-nums text-mist">
                 {index + 1} / {count}
               </span>
               <span className="ml-3 font-medium">{viewLabel(current)}</span>
-              <span className="ml-3 hidden truncate text-steel md:inline">{title}</span>
+              <span className="ml-3 hidden truncate text-mist md:inline">{title}</span>
             </p>
             <div className="flex items-center gap-1">
               <button type="button" className={btn} onClick={() => zoomTo(scale - 0.5)} disabled={scale <= MIN} aria-label="Zoom out">
                 <ZoomOut aria-hidden className="size-5" strokeWidth={1.5} />
               </button>
-              <span className="w-12 text-center font-mono text-xs tabular-nums text-steel" aria-live="polite">
+              <span className="w-12 text-center font-mono text-xs tabular-nums text-mist" aria-live="polite">
                 {Math.round(scale * 100)}%
               </span>
               <button type="button" className={btn} onClick={() => zoomTo(scale + 0.5)} disabled={scale >= MAX} aria-label="Zoom in">
@@ -238,7 +238,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
               onPointerUp={onPointerUp}
               onPointerCancel={onPointerUp}
               className={cn(
-                "relative w-full max-w-[min(100%,calc((100dvh-220px)*4/3))] touch-none select-none overflow-hidden rounded-2xl",
+                "relative w-full max-w-[min(100%,calc((100dvh-220px)*4/3))] touch-none select-none overflow-hidden rounded-lg",
                 scale > 1 ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-zoom-in",
               )}
               style={{
@@ -250,7 +250,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
                 className={cn(!dragging && "transition-transform duration-200 ease-out")}
                 style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}
               >
-                <ProductVisual image={current} kind={kind} seed={seed} ratio="4/3" sizes="100vw" priority />
+                <ProductVisual image={current} kind={kind} seed={seed} sizes="100vw" priority />
               </div>
             </div>
             {count > 1 && (
@@ -259,7 +259,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
                   type="button"
                   onClick={() => go(-1)}
                   aria-label="Previous view"
-                  className="absolute left-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:inline-flex"
+                  className="absolute left-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 md:inline-flex"
                 >
                   <ChevronLeft aria-hidden className="size-6" strokeWidth={1.5} />
                 </button>
@@ -267,7 +267,7 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
                   type="button"
                   onClick={() => go(1)}
                   aria-label="Next view"
-                  className="absolute right-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:inline-flex"
+                  className="absolute right-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 md:inline-flex"
                 >
                   <ChevronRight aria-hidden className="size-6" strokeWidth={1.5} />
                 </button>
@@ -292,12 +292,12 @@ export default function Lightbox({ open, images, index, onIndexChange, onClose, 
                   <span
                     className={cn(
                       "block overflow-hidden rounded-md border-2 transition-opacity",
-                      i === index ? "border-glow" : "border-transparent opacity-60 hover:opacity-100",
+                      i === index ? "border-teal-light" : "border-transparent opacity-60 hover:opacity-100",
                     )}
                   >
-                    <ProductVisual image={img} kind={kind} seed={seed} ratio="1/1" sizes="80px" />
+                    <ProductVisual image={img} kind={kind} seed={seed} sizes="80px" marked={false} />
                   </span>
-                  <span className={cn("mt-1 block text-center text-[11px]", i === index ? "text-white" : "text-steel")}>
+                  <span className={cn("mt-1 block text-center text-[11px]", i === index ? "text-white" : "text-mist")}>
                     {viewLabel(img)}
                   </span>
                 </button>

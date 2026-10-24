@@ -3,7 +3,7 @@ import type { PageSeo } from "@/lib/seo";
 export const productsSeo: PageSeo = {
   title: "Surgical, Dental & Veterinary Instruments Catalog",
   description:
-    "Browse 1000+ instrument profiles from Acme Commercial Ways: surgical, dental, veterinary and manicure instruments, scissors, forceps, electro-surgical, single use and hollow ware.",
+    "Surgical, dental, veterinary, beauty, electrosurgical, single-use and hollow ware instruments from Acme Commercial Ways. Specifications, sizes and quote requests.",
   path: "/products",
   keywords: [
     "surgical instruments catalog",
@@ -22,14 +22,14 @@ export const productsSeo: PageSeo = {
   ],
   socialTitle: "Product Catalog | Acme Commercial Ways",
   socialDescription:
-    "1000+ precision surgical, dental, veterinary and manicure instrument profiles. Search, filter and request specifications from an export-ready catalog.",
+    "Browse instrument ranges, compare specifications and sizes, and request a quotation with OEM or private-label options.",
 };
 
 /** Category page: title and description built from the category data. */
 export const categorySeo = {
-  title: (name: string, rangeSize: number) => `${name}: ${rangeSize}+ Instrument Profiles`,
-  description: (description: string, name: string, rangeSize: number) =>
-    `${description} Browse ${rangeSize}+ ${name.toLowerCase()} manufactured by Acme Commercial Ways in Sialkot, Pakistan. OEM and private label available.`,
+  title: (name: string) => `${name}: Manufacturer and Exporter`,
+  description: (description: string, name: string) =>
+    `${description} ${name} manufactured by Acme Commercial Ways in Sialkot, Pakistan. Specifications, sizes, OEM and private label.`,
   keywords: (name: string) => [
     name,
     `${name} manufacturer`,
@@ -43,11 +43,11 @@ export const categorySeo = {
 /** Product page: title and description built from the product data. */
 export const productSeo = {
   title: (name: string, categoryName: string) => `${name} (${categoryName})`,
-  description: (summary: string, code: string, material: string | undefined) =>
-    `${summary} SKU ${code}${material ? `. Material: ${material}` : ""}. Manufactured by Acme Commercial Ways, Sialkot. Request a quote, OEM or private label.`,
-  keywords: (name: string, code: string, categoryName: string) => [
+  description: (summary: string, sku: string) =>
+    `${summary} SKU ${sku}. Manufactured by Acme Commercial Ways, Sialkot. Sizes, specifications and quote requests, with OEM and private label.`,
+  keywords: (name: string, sku: string, categoryName: string) => [
     name,
-    code,
+    sku,
     categoryName,
     `${name} manufacturer`,
     `buy ${name.toLowerCase()} wholesale`,

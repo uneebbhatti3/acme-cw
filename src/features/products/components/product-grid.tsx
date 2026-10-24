@@ -17,7 +17,7 @@ export function ProductGrid({
 }) {
   if (!products.length) return <>{empty}</>;
   return (
-    <ul className={cn("grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", className)}>
+    <ul className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4", className)}>
       {products.map((p, i) => (
         <li key={p.slug}>
           <ProductCard product={p} priority={i < priorityCount} />

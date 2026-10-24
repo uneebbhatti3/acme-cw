@@ -1,27 +1,22 @@
+import { siteConfig } from "@/config/site";
 import type { PageSeo } from "@/lib/seo";
 
 export const homeSeo: PageSeo = {
-  title: "Acme Commercial Ways (Pvt) Ltd. | Surgical & Dental Instruments Manufacturer",
+  title: `${siteConfig.legalName} | Surgical & Dental Instrument Manufacturer`,
   absoluteTitle: true,
   description:
-    "Sialkot-based manufacturer and exporter of surgical, dental, veterinary and manicure instruments and scissors. Serving healthcare professionals in 50+ markets since 1960.",
+    "Manufacturer and exporter of surgical, dental, veterinary and beauty instruments in Sialkot, Pakistan. OEM and private label, made to drawing, export packing.",
   path: "/",
   keywords: [
     "surgical instruments",
     "dental instruments",
     "veterinary instruments",
     "manicure instruments",
-    "scissors",
-    "forceps",
-    "needle holder",
-    "Sialkot",
-    "Pakistan",
-    "manufacturer",
-    "exporter",
-    "ISO 9001",
-    "ISO 13485",
+    "surgical instruments manufacturer Pakistan",
+    "Sialkot surgical instruments",
     "OEM surgical instruments",
+    "private label dental instruments",
   ],
   socialDescription:
-    "Precision surgical, dental, veterinary and manicure instruments manufactured in Sialkot, Pakistan. Serving 50+ export markets since 1960.",
+    "Surgical, dental, veterinary and beauty instruments made in Sialkot, Pakistan, in standard patterns or to your drawing, under your brand.",
 };
