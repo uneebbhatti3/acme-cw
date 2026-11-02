@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
@@ -64,7 +65,17 @@ export function QualityCertificates() {
     <Band tone="grey" id="certificates" labelledBy="certs-title">
       <Container>
         <SectionIntro id="certs-title" eyebrow={q.certificates.eyebrow} title={q.certificates.title} />
-        <Certificates className="mt-8" />
+        <div className="mt-8 rounded-lg border bg-white p-4 sm:p-6 lg:p-8">
+          <Image
+            src={q.certificates.logos.src}
+            alt={q.certificates.logos.alt}
+            width={q.certificates.logos.width}
+            height={q.certificates.logos.height}
+            sizes="(min-width: 1280px) 1000px, 100vw"
+            className="mx-auto h-auto w-full max-w-[1000px]"
+          />
+        </div>
+        <Certificates className="mt-6" />
       </Container>
     </Band>
   );

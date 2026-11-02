@@ -21,6 +21,17 @@ export async function getProductImage(key: string) {
   }
 }
 
+/** A catalogue PDF as a stream, or null when it does not exist. The bucket is private; only the download route reads it. */
+export async function getCatalogueFile(slug: string) {
+  try {
+    const res = await s3.send(new GetObjectCommand({ Bucket: PRODUCTS_BUCKET, Key: `catalogues/${slug}.pdf` }));
+    return res.Body ? { stream: res.Body.transformToWebStream(), size: res.ContentLength } : null;
+  } catch (err) {
+    if ((err as Error).name === "NoSuchKey") return null;
+    throw err;
+  }
+}
+
 export async function deleteProductImage(key: string) {
   await s3.send(new DeleteObjectCommand({ Bucket: PRODUCTS_BUCKET, Key: key }));
 }

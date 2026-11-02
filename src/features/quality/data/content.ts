@@ -39,6 +39,12 @@ export const qualityCopy = {
   certificates: {
     eyebrow: "Certificates",
     title: "Certificates and registrations",
+    logos: {
+      src: "/iso-logo.png",
+      width: 1130,
+      height: 178,
+      alt: "Sialkot Chamber of Commerce and Industry member, Surgical Instrument Manufacturers Association of Pakistan, cGMP, ISO 9001:2015 QA International with UKAS, and CE marks",
+    },
     pendingTitle: "Certificate details are being verified",
     pendingText:
       "Each certificate will be listed here with its number, issuing body, scope and expiry date once it has been checked against the original document.",

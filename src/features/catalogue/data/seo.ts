@@ -1,14 +1,14 @@
 import type { PageSeo } from "@/lib/seo";
 
 export const catalogueSeo: PageSeo = {
-  title: "Download the Instruments Catalogue (PDF)",
+  title: "Instrument Catalogues: Browse Online or Request a PDF",
   description:
-    "Download the Acme Commercial Ways product catalogue as a PDF, or preview each range: sterilization boxes and trays, retractor systems, ophthalmic, dental and more.",
+    "Turn through Acme Commercial Ways catalogues online or request them as PDFs: general, ophthalmic and podiatry instruments, retractor systems and sterilization boxes.",
   path: "/catalogue",
   keywords: [
     "surgical instruments catalogue PDF",
     "dental instruments catalogue",
-    "instrument catalogue download",
+    "instrument catalogue online",
     "surgical instruments price list",
     "wholesale instruments catalogue",
   ],

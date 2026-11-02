@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/layout/page-hero";
 import { CtaBanner } from "@/components/sections/cta-banner";
 import { siteConfig } from "@/config/site";
-import { CatalogueDownload } from "@/features/catalogue/components/catalogue-download";
 import { CatalogueSections } from "@/features/catalogue/components/catalogue-sections";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 import { catalogueSeo } from "@/features/catalogue/data/seo";
@@ -14,9 +13,7 @@ export default function CataloguePage() {
   if (!siteConfig.features.showCatalogue) notFound();
   return (
     <>
-      <PageHero title={catalogueCopy.hero.title} subtitle={catalogueCopy.hero.subtitle} crumbs={[{ name: catalogueCopy.hero.title, href: "/catalogue" }]}>
-        <CatalogueDownload />
-      </PageHero>
+      <PageHero title={catalogueCopy.hero.title} subtitle={catalogueCopy.hero.subtitle} crumbs={[{ name: catalogueCopy.hero.title, href: "/catalogue" }]} />
       <CatalogueSections />
       <CtaBanner />
     </>

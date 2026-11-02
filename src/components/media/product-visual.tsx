@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { InstrumentKind } from "@/types";
 import type { ProductImage } from "@/features/products/types";
 import { PRODUCT_RATIO } from "@/config/media";
+import { cn } from "@/lib/utils";
 import { PlaceholderImage, type Ratio } from "./placeholder-image";
 
 /**
@@ -20,6 +21,7 @@ export function ProductVisual({
   showLabel = false,
   marked = true,
   className,
+  imageClassName,
 }: {
   image: ProductImage;
   kind: InstrumentKind;
@@ -31,6 +33,8 @@ export function ProductVisual({
   /** Tag placeholder art as "Placeholder image". */
   marked?: boolean;
   className?: string;
+  /** Extra classes on the photo itself, such as padding to keep it off the frame. */
+  imageClassName?: string;
 }) {
   if (!image.src) {
     return (
@@ -51,7 +55,7 @@ export function ProductVisual({
   }
   return (
     <span className={`relative block w-full overflow-hidden ${className ?? ""}`} style={{ aspectRatio: ratio }}>
-      <Image src={image.src} alt={image.alt} fill sizes={sizes} priority={priority} className="object-contain" />
+      <Image src={image.src} alt={image.alt} fill sizes={sizes} priority={priority} className={cn("object-contain", imageClassName)} />
     </span>
   );
 }

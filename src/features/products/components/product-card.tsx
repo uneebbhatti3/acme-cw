@@ -8,6 +8,7 @@ import type { ProductSummary } from "@/features/products/lib/search";
 import { cn } from "@/lib/utils";
 
 const SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw";
+const IMAGE_PADDING = "p-6 sm:p-8";
 
 /**
  * Product card: 4:3 image on the white stage, range and type, name, SKU and a
@@ -24,10 +25,10 @@ export function ProductCard({ product, className, priority = false }: { product:
       )}
     >
       <div className="relative border-b">
-        <ProductVisual image={{ src: product.firstImage, alt: "", view: "front" }} kind={product.kind} seed={product.slug} sizes={SIZES} priority={priority} />
+        <ProductVisual image={{ src: product.firstImage, alt: "", view: "front" }} kind={product.kind} seed={product.slug} sizes={SIZES} priority={priority} imageClassName={IMAGE_PADDING} />
         {product.secondImage && (
           <div className="absolute inset-0 opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover:opacity-100">
-            <ProductVisual image={{ src: product.secondImage, alt: "", view: "side" }} kind={product.kind} seed={product.slug} sizes={SIZES} />
+            <ProductVisual image={{ src: product.secondImage, alt: "", view: "side" }} kind={product.kind} seed={product.slug} sizes={SIZES} imageClassName={IMAGE_PADDING} />
           </div>
         )}
       </div>

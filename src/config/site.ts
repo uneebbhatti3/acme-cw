@@ -91,8 +91,6 @@ export const siteConfig = {
   },
   /** Home hero photo under /public, shown whole in a bordered 4:3 frame with no background. Empty shows the placeholder. */
   heroImage: "/home/turnbull-plier.png" as string,
-  /** Path to the catalogue PDF under /public. */
-  catalogueFile: "/docs/catalogue-placeholder.pdf",
   features: { showTeam: false, showCatalogue: true, showVideos: true },
 
   /** Where the Request a Quote buttons go. */
@@ -100,6 +98,7 @@ export const siteConfig = {
   /** Main navigation. `menu: "products"` adds the product-range dropdown. */
   nav: [
     { label: "Products", href: "/products", menu: "products" },
+    { label: "Catalogue", href: "/catalogue" },
     { label: "Manufacturing", href: "/manufacturing" },
     { label: "Quality", href: "/quality" },
     { label: "About Us", href: "/about" },
@@ -113,8 +112,8 @@ export const siteConfig = {
       { label: "Contact", href: "/contact" },
     ],
     resources: [
+      { label: "Catalogue", href: "/catalogue" },
       { label: "Request a quote", href: "/request-quote" },
-      { label: "Product catalogue", href: "/catalogue" },
       { label: "Videos", href: "/videos" },
     ],
     legal: [

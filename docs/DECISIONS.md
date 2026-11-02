@@ -184,3 +184,17 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **The whole section is hidden when there are no products or the read fails**, so a database fault cannot take down the home page. The fault is logged. The section title and a card skeleton show while it loads.
   - **The database pool has a 10-second connection timeout** (`src/lib/db.ts`). There was none, so an unreachable database kept loading states on screen until the operating system gave up. This applies to every database read and write.
   - **Home photos are copies in `public/home`,** because `public/products` is replaced with each upload batch. They are product photos under 600 px wide, because no factory or facility photos have been supplied. They show whole in a bordered frame with an 8px radius and no background (`fit: "contain"`), and product images elsewhere have no background of their own, at the user's request. The manufacturing and about pages keep their photo slots.
+- **Catalogue flipbook (2026-11-02, user's request).**
+  - **The catalogue page shows the PDFs in `public/catalogue` as turning books**, and replaces the placeholder preview by range and the placeholder PDF download.
+  - **The page turn is our own code** (`features/catalogue/lib/page-curl.ts`, `book-scene.ts`), modelled on the behaviour of a flipbook the user showed as an example. No flipbook plugin is used. The site keeps its own navy look and layout.
+  - **`three` is a new dependency**, loaded only when a catalogue is opened.
+  - **Every page takes the first page's shape.** A page of another shape, such as Nathanson page 2, is centred on white rather than stretched.
+  - **Phones show one page at a time**, using the same book, so a page turn still plays.
+  - **If WebGL fails, the viewer offers the PDF request form.** With reduced motion turned on, pages change without the animation.
+- **Catalogue PDF protection (2026-11-02, user's request).**
+  - **The PDFs left `public/`.** The repository is public, so they are not committed either. They are in the private `products` bucket under `catalogues/`, with local copies in the git-ignored `private/catalogue`.
+  - **The viewer shows pre-rendered pictures, not the PDF.** A PDF sent to the browser for viewing could be saved from the network tab, so PDF.js moved to the publish script. Pictures are 1600 px tall and watermarked, and the downloaded PDF is clean.
+  - **"Sent by the owner" is read as: the code goes straight to the requester from the company's mailbox, and the company gets a notice of each request.** Approving each request by hand would need a stored queue and an admin screen.
+  - **Codes are stateless,** signed with `CATALOGUE_SECRET`, so no migration was needed. A code lasts 15 minutes and is valid for one catalogue and email. Each link lasts 5 minutes. A code can be reused until it expires.
+  - **The catalogue routes have no rate limit, at the user's request (2026-11-02), for now.** They had 3 codes an hour per email, 10 an hour per IP and 5 guesses per 15 minutes. Without these, a script can guess a six-digit code within its 15 minutes and can send repeated mail to any address, so restore them before launch.
+  - **Screenshots cannot truly be blocked by a web page.** The shield hides the book on window blur and known shortcuts, and pages print blank. The watermark is the protection that survives a capture.

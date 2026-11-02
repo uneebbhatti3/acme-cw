@@ -41,7 +41,7 @@ Open `/dashboard`. Sign in at `/admin/login` with an account in the `users` tabl
 ## Deploy to Vercel
 
 1. Push the repository to GitHub.
-2. In Vercel, choose **Add New → Project** and import the repository. The framework is detected automatically.
+2. In Vercel, choose **Add New â†’ Project** and import the repository. The framework is detected automatically.
 3. Add the environment variables above, then deploy.
 
 ## Rebrand and replace content
@@ -64,11 +64,23 @@ No component changes are needed.
    - Any image without `src` keeps the generated drawing. The gallery, loupe and lightbox work the same with real photos.
 6. **Products and categories:** add products in `/dashboard/products`. Categories are in `src/features/products/data/categories.ts`, validated at build time: duplicate slugs fail the build with a clear message.
 7. **History, team, map regions:** `src/features/about/data/` (`timeline.ts`, `team.ts`, `reach.ts`). Certifications are in `src/data/certifications.ts`.
-8. **Documents:** put certificate and catalogue PDFs in `public/docs/`, then set `file` on a certification (its badge then opens the document) and `catalogueFile` in the site config.
+8. **Documents:** put certificate PDFs in `public/docs/`, then set `file` on a certification (its badge then opens the document). For catalogues, see below.
 9. **Videos:** in `src/features/videos/data/videos.ts`, set `src` to a local MP4 (`provider: "file"`, plus a `poster`) or a YouTube ID (`provider: "youtube"`). An empty `src` shows a "coming soon" state.
 10. **Page copy and SEO:**
     - Each page's text is in `src/features/<page>/data/copy.ts`, and its title, description and keywords in `src/features/<page>/data/seo.ts`.
     - Header, footer, CTA and certificate copy is in `src/data/copy.ts`.
+
+## Add a catalogue
+
+1. Put the PDF in `private/catalogue/<slug>.pdf`. That folder is git-ignored, because the repository is public.
+2. Run `npm run catalogue:publish`. It writes watermarked page pictures and a cover to `public/catalogue`, uploads the PDF to the private bucket and prints the page count and shape.
+3. Add a row to `src/features/catalogue/data/catalogues.ts`.
+
+The website shows only the pictures. The PDF is reached only through `/api/catalogue/download`, with a link given after a correct email code.
+
+### Email for download codes
+
+Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` and `CATALOGUE_SECRET` locally and in Vercel. `MAIL_FROM` and `CATALOGUE_NOTIFY_EMAIL` are optional. Until SMTP is set, requests for a code show an error. Mail is sent by `src/lib/mail.ts` (nodemailer) with the templates in `src/features/catalogue/emails` (React Email).
 
 ## Project structure
 
@@ -84,7 +96,7 @@ src/
                         world reach, leadership, certifications
     products/           cards, grid, search (Command), filters (ToggleGroup, Drawer, Select),
                         gallery, lightbox, category/ and detail/ views, data, content accessors
-    catalogue/          download, preview grid, page viewer
+    catalogue/          shelf, flipbook viewer (three.js page curl), PDF requests by emailed code
     videos/             grid, card, trigger, player dialog
     contact/            form (react-hook-form + Zod), country picker, details, map
     not-found/
@@ -121,7 +133,7 @@ Set in `src/lib/rate-limit.ts` and counted in the `rate_limits` table, so they h
 
 - Enquiries are sent by email or webhook once the variables in `.env.example` are set.
 - The admin dashboard figures and enquiries are sample data. Adding and editing products is live; products added there do not appear on the public site yet, and Delete and Archive do nothing yet.
-- Placeholder images are generated SVG drawings. The 360° gallery slot is not built because there are no spin frames.
+- Placeholder images are generated SVG drawings. The 360Â° gallery slot is not built because there are no spin frames.
 - The map on the contact page is a static illustration.
 - Certificates show their description on hover until real files are supplied.
 - Years in square brackets on the history timeline are placeholders for the client to confirm.

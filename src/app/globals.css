@@ -425,3 +425,10 @@
     transform: none;
   }
 }
+
+/* Catalogue pages print blank. Other pages, such as the terms, still print. */
+@media print {
+  body:has([data-protected-content]) {
+    display: none;
+  }
+}
