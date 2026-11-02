@@ -27,7 +27,7 @@ export function ProductOverview({ product, category }: { product: Product; categ
     { label: pc.material, value: product.material },
     { label: pc.finish, value: product.finish },
     ...(product.variants.length ? [{ label: pc.variants, value: `${product.variants.length}` }] : []),
-  ];
+  ].filter((f) => f.value);
 
   return (
     <div data-solid-header className="bg-white pb-14 pt-[calc(var(--header-h)+1.5rem)] md:pb-20 md:pt-[calc(var(--header-h)+2rem)]">
@@ -58,10 +58,14 @@ export function ProductOverview({ product, category }: { product: Product; categ
               <Link href={catHref} className="text-link hover:underline">
                 {category.name}
               </Link>
-              <span aria-hidden className="mx-2">
-                /
-              </span>
-              {product.type}
+              {product.type && (
+                <>
+                  <span aria-hidden className="mx-2">
+                    /
+                  </span>
+                  {product.type}
+                </>
+              )}
             </p>
             <h1 className="text-h1 mt-3">{product.name}</h1>
             <div className="mt-4 flex items-center gap-2">

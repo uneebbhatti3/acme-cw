@@ -13,8 +13,9 @@ const h = homeCopy.hero;
 
 /**
  * Home hero on navy: headline, one-paragraph introduction, quote and product
- * buttons, three service points, and a 4:3 space for product or factory
- * photography (instrument art with a "photo to be supplied" tag until then).
+ * buttons, three service points, and a 4:3 bordered space showing a product
+ * photo whole, with no background (instrument art with a "photo to be supplied"
+ * tag if there is none).
  */
 export function HomeHero() {
   const photo = siteConfig.heroImage;
@@ -48,9 +49,9 @@ export function HomeHero() {
           </ul>
         </div>
         <div className="lg:col-span-6">
-          <figure className="relative overflow-hidden rounded-lg border border-white/10" style={{ aspectRatio: "4/3" }}>
+          <figure className="relative overflow-hidden rounded-lg border border-white/20" style={{ aspectRatio: "4/3" }}>
             {photo ? (
-              <Image src={photo} alt={h.photo.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+              <Image src={photo} alt={h.photo.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-contain p-8 sm:p-12" />
             ) : (
               <>
                 <PlaceholderImage kind="scissors" view="angle" ratio="4/3" tone="ink" fill priority alt="" />

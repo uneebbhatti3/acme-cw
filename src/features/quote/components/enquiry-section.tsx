@@ -1,7 +1,6 @@
 import { Suspense, type ReactNode } from "react";
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
-import { buildSkuLookup } from "@/features/quote/lib/lookup";
 import { EnquiryForm, type EnquiryKind } from "./enquiry-form";
 import { EnquiryFormSkeleton } from "./enquiry-form-skeleton";
 
@@ -14,7 +13,7 @@ export function EnquirySection({ kind, aside, asideFirst = false }: { kind: Enqu
           <div className="min-w-0 lg:col-span-8">
             {/* The form reads ?sku= from the URL, so it renders on the client. */}
             <Suspense fallback={<EnquiryFormSkeleton />}>
-              <EnquiryForm kind={kind} lookup={kind === "quote" ? buildSkuLookup() : {}} />
+              <EnquiryForm kind={kind} />
             </Suspense>
           </div>
           <div className={asideFirst ? "order-first lg:order-none lg:col-span-4" : "lg:col-span-4"}>{aside}</div>

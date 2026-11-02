@@ -15,12 +15,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { siteConfig } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
+import { categoryHref, subcategoryHref } from "@/features/products/lib/paths";
 import type { Category } from "@/features/products/types";
 import { isActive } from "@/lib/nav";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import { Logo } from "./logo";
 
-export type NavCategory = Pick<Category, "slug" | "name" | "description">;
+export type NavCategory = Pick<Category, "slug" | "name"> & { subcategories?: { slug: string; name: string }[] };
 
 interface HeaderProps {
   categories: NavCategory[];
@@ -77,7 +78,7 @@ export function HeaderBar({ categories, pathname }: HeaderProps & { pathname: st
                   >
                     <ChevronDown aria-hidden className="size-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                   </NavigationMenuPrimitive.Trigger>
-                  <NavigationMenuContent className="left-0 top-[calc(100%+14px)] rounded-lg border bg-white p-0 shadow-[var(--shadow-lift)] md:w-[min(720px,calc(100vw-2rem))]">
+                  <NavigationMenuContent className="rounded-lg border bg-white p-0 shadow-[var(--shadow-lift)] group-data-[viewport=false]/navigation-menu:top-[var(--header-h)] md:fixed md:inset-x-4 md:mx-auto md:w-auto md:max-w-[1040px]">
                     <ProductsMenu categories={categories} />
                   </NavigationMenuContent>
                 </NavigationMenuItem>
@@ -102,16 +103,28 @@ export function HeaderBar({ categories, pathname }: HeaderProps & { pathname: st
 
 function ProductsMenu({ categories }: HeaderProps) {
   return (
-    <div className="grid grid-cols-[1fr_14rem]">
-      <ul className="grid grid-cols-2 gap-1 p-3">
+    <div className="grid max-h-[calc(100dvh-6rem)] grid-cols-[1fr_12rem] overflow-y-auto">
+      <ul className="columns-2 gap-2 p-3 xl:columns-3">
         {categories.map((c) => (
-          <li key={c.slug}>
-            <NavigationMenuLink asChild className="block rounded-md px-3 py-2.5 hover:bg-grey-50 focus:bg-grey-50">
-              <Link href={`/products/${c.slug}`}>
-                <span className="block text-sm font-semibold text-navy">{c.name}</span>
-                <span className="mt-0.5 line-clamp-2 block text-[0.8125rem] leading-snug text-muted-foreground">{c.description}</span>
+          <li key={c.slug} className="break-inside-avoid pb-2">
+            <NavigationMenuLink asChild className="block rounded-md px-3 py-1.5 hover:bg-grey-50 focus:bg-grey-50">
+              <Link href={categoryHref(c.slug)} className="text-sm font-semibold text-navy">
+                {c.name}
               </Link>
             </NavigationMenuLink>
+            {c.subcategories && (
+              <ul>
+                {c.subcategories.map((s) => (
+                  <li key={s.slug}>
+                    <NavigationMenuLink asChild className="block rounded-md px-3 py-1 hover:bg-grey-50 focus:bg-grey-50">
+                      <Link href={subcategoryHref(c.slug, s.slug)} className="text-[0.8125rem] leading-snug text-muted-foreground">
+                        {s.name}
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

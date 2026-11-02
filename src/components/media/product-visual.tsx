@@ -6,8 +6,8 @@ import { PlaceholderImage, type Ratio } from "./placeholder-image";
 
 /**
  * Shows a real photo when `src` is set, otherwise the generated placeholder
- * for the same view. Photos are letterboxed (object-contain) on the white
- * stage inside a fixed ratio, so a photo of any shape never breaks the layout.
+ * for the same view. Photos are letterboxed (object-contain) with no background
+ * inside a fixed ratio, so a photo of any shape never breaks the layout.
  * next/image serves AVIF/WebP at the width `sizes` asks for.
  */
 export function ProductVisual({
@@ -50,7 +50,7 @@ export function ProductVisual({
     );
   }
   return (
-    <span className={`relative block w-full overflow-hidden bg-white ${className ?? ""}`} style={{ aspectRatio: ratio }}>
+    <span className={`relative block w-full overflow-hidden ${className ?? ""}`} style={{ aspectRatio: ratio }}>
       <Image src={image.src} alt={image.alt} fill sizes={sizes} priority={priority} className="object-contain" />
     </span>
   );

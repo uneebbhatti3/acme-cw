@@ -9,6 +9,13 @@ export interface ProductImage {
   label?: string;
 }
 
+export interface Subcategory {
+  slug: string;
+  name: string;
+  /** One sentence for the sub-category page intro. */
+  description: string;
+}
+
 export interface Category {
   slug: string;
   name: string;
@@ -20,6 +27,7 @@ export interface Category {
   image?: string;
   order: number;
   placeholderKind: InstrumentKind;
+  subcategories?: Subcategory[];
 }
 
 /** One orderable size or pattern of a product, with its own SKU. */
@@ -46,6 +54,8 @@ export interface Product {
   sku: string;
   name: string;
   categorySlug: string;
+  /** Must belong to the category. Leave out when no sub-category fits. */
+  subcategorySlug?: string;
   /** Instrument type inside the range (filter facet), e.g. "Scissors". */
   type: string;
   /** Drawing used until real photos are added. Defaults to the category drawing. */

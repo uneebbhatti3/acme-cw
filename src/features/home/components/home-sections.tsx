@@ -10,31 +10,15 @@ import { Button } from "@/components/ui/button";
 import { siteConfig, verifiedFacts } from "@/config/site";
 import { verifiedCertifications } from "@/data/certifications";
 import { homeCopy } from "@/features/home/data/copy";
-import { customisation, factoryPhotos, processSteps } from "@/features/manufacturing/data/content";
-import { CategoryGrid } from "@/features/products/components/category-grid";
+import { customisation, processSteps } from "@/features/manufacturing/data/content";
 import { checkpoints } from "@/features/quality/data/content";
 
-function TextLink({ href, children }: { href: string; children: string }) {
+export function TextLink({ href, children }: { href: string; children: string }) {
   return (
     <Link href={href} className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-link hover:underline">
       {children}
       <ArrowRight aria-hidden className="size-4" />
     </Link>
-  );
-}
-
-export function RangesSection() {
-  const c = homeCopy.ranges;
-  return (
-    <Band defer={false} labelledBy="ranges-title">
-      <Container>
-        <SectionIntro id="ranges-title" eyebrow={c.eyebrow} title={c.title} text={c.text} split />
-        <CategoryGrid labelledBy="ranges-title" className="mt-10" />
-        <div className="mt-8">
-          <TextLink href="/products">{c.link}</TextLink>
-        </div>
-      </Container>
-    </Band>
   );
 }
 
@@ -46,7 +30,7 @@ export function CapabilitiesSection() {
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
             <SectionIntro id="capabilities-title" eyebrow={c.eyebrow} title={c.title} text={c.text} />
-            <PhotoSlot photo={factoryPhotos.process} className="mt-8" />
+            <PhotoSlot photo={c.photo} className="mt-8" />
             <div className="mt-6">
               <TextLink href="/manufacturing">{c.link}</TextLink>
             </div>

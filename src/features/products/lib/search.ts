@@ -12,7 +12,7 @@ export interface ProductSummary {
   material: string;
   tags: string[];
   kind: InstrumentKind;
-  /** Position in the data file; higher is newer. */
+  /** Higher is newer. */
   order: number;
   firstImage?: string;
   secondImage?: string;

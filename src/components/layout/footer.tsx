@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { fullAddress, primaryEmail, siteConfig, telHref } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
-import { getCategories } from "@/features/products/lib/content";
+import { categoryHref, getCategories } from "@/features/products/lib/content";
 import { Container } from "./container";
 import { Logo } from "./logo";
 import { SocialIcons } from "./social-icons";
@@ -59,7 +59,7 @@ export function Footer() {
 
           <div className="lg:col-span-2">
             <Column title={fc.products} label="Footer: products">
-              <Links items={categories.map((c) => ({ label: c.name, href: `/products/${c.slug}` }))} />
+              <Links items={categories.map((c) => ({ label: c.name, href: categoryHref(c.slug) }))} />
             </Column>
           </div>
 

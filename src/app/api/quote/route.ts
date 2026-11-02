@@ -1,7 +1,9 @@
 import { attachmentRules, minFillSeconds } from "@/features/quote/data/options";
 import { deliverEnquiry, type Attachment } from "@/features/quote/lib/deliver";
 import { checkAttachments, enquirySchema } from "@/features/quote/lib/schema";
-import { rateLimited, verifyCaptcha } from "@/features/quote/lib/spam";
+import { verifyCaptcha } from "@/features/quote/lib/spam";
+import { clientIp, isSameOrigin, json, tooManyRequests } from "@/lib/api";
+import { rateLimit } from "@/lib/rate-limit";
 
 /** Vercel rejects request bodies over 4.5 MB before they reach the function. */
 const MAX_BODY = 4.5 * 1024 * 1024;
@@ -14,10 +16,6 @@ const SIGNATURES: Record<string, number[][]> = {
   jpeg: [[0xff, 0xd8, 0xff]],
   webp: [[0x52, 0x49, 0x46, 0x46]],
 };
-
-function json(body: object, status = 200) {
-  return Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
-}
 
 function reference() {
   const d = new Date();
@@ -32,14 +30,13 @@ function reference() {
  */
 export async function POST(request: Request) {
   // Same-origin only: the form posts from this site.
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (origin && host && new URL(origin).host !== host) return json({ ok: false, error: "forbidden" }, 403);
+  if (!isSameOrigin(request)) return json({ ok: false, error: "forbidden" }, 403);
 
   if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY) return json({ ok: false, error: "too_large" }, 413);
 
-  const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
-  if (rateLimited(ip)) return json({ ok: false, error: "rate_limited" }, 429);
+  const ip = clientIp(request);
+  const limit = await rateLimit("quote", ip);
+  if (!limit.ok) return tooManyRequests(limit.retryAfter);
 
   let form: FormData;
   try {

@@ -20,6 +20,11 @@ export const layoutCopy = {
   closeMenu: "Close menu",
   menuTitle: "Site menu",
   showRanges: "Show product ranges",
+  error: {
+    title: "Something went wrong",
+    text: "This page could not be loaded. Please try again in a moment.",
+    retry: "Try again",
+  },
   allProducts: "View all products",
   oemLink: "OEM and private label",
   megaTitle: "Product ranges",
@@ -38,7 +43,6 @@ export const layoutCopy = {
   },
   whatsapp: "Chat with us on WhatsApp",
   whatsappText: "Hello, I have a question about your instruments.",
-  whatsappProduct: (name: string) => `Hello, I would like information about: ${name}`,
   breadcrumbHome: "Home",
 };
 

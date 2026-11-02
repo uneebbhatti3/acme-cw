@@ -1,15 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
-import { Footer } from "@/components/layout/footer";
-import { Header, HeaderBar } from "@/components/layout/header";
-import { WhatsAppButton, WhatsAppLink } from "@/components/layout/whatsapp-button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { themeColors } from "@/config/theme";
-import { layoutCopy } from "@/data/copy";
-import { getCategories, getProducts } from "@/features/products/lib/content";
-import { baseKeywords, jsonLdString, organizationJsonLd } from "@/lib/seo";
-import { Suspense } from "react";
+import { baseKeywords } from "@/lib/seo";
 import "./globals.css";
 
 /** One family for headings and body: an engineered, neutral sans suited to technical catalogues. */
@@ -54,35 +48,12 @@ export const viewport: Viewport = {
   themeColor: themeColors.navy,
 };
 
+/** Root document only. The public site's chrome is in (site)/layout.tsx; the admin panel has its own layout. */
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  const navCategories = getCategories().map((c) => ({ slug: c.slug, name: c.name, description: c.description }));
-  const productNames = Object.fromEntries(getProducts().map((p) => [p.slug, p.name]));
-
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
-        <TooltipProvider delayDuration={200}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd()) }}
-        />
-        <a
-          href="#main"
-          className="fixed left-4 top-3 z-[60] -translate-y-24 rounded-md bg-navy px-5 py-3 font-medium text-white shadow-[var(--shadow-lift)] transition-transform focus:translate-y-0"
-        >
-          {layoutCopy.skip}
-        </a>
-        <Suspense fallback={<HeaderBar categories={navCategories} pathname="" />}>
-          <Header categories={navCategories} />
-        </Suspense>
-        <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
-          {children}
-        </main>
-        <Footer />
-        <Suspense fallback={<WhatsAppLink productNames={productNames} pathname="" />}>
-          <WhatsAppButton productNames={productNames} />
-        </Suspense>
-        </TooltipProvider>
+        <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
       </body>
     </html>
   );

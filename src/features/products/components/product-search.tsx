@@ -6,29 +6,30 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductVisual } from "@/components/media/product-visual";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Spinner } from "@/components/ui/spinner";
 import { productsCopy } from "@/features/products/data/copy";
-import { filterSummaries, type ProductSummary } from "@/features/products/lib/search";
+import { useProductSummaries } from "@/features/products/hooks/use-product-summaries";
+import { productHref } from "@/features/products/lib/paths";
+import { filterSummaries } from "@/features/products/lib/search";
 import { cn } from "@/lib/utils";
 
 const MAX_RESULTS = 8;
 
 /** Search that starts from `?q=` in the URL (used by the 404 page's search box). */
-export function ProductSearchFromUrl(props: { products: ProductSummary[]; className?: string }) {
+export function ProductSearchFromUrl(props: { className?: string }) {
   return <ProductSearch {...props} initialQuery={useSearchParams().get("q") ?? ""} />;
 }
 
 /**
  * Client-side product search (name, code, category, tags) on shadcn Command:
- * results appear as you type (debounced); arrow keys move, Enter opens the
- * product, Esc clears.
+ * the list loads from the API on first use, results appear as you type
+ * (debounced); arrow keys move, Enter opens the product, Esc clears.
  */
 export function ProductSearch({
-  products,
   className,
   initialQuery = "",
   allResultsLink = false,
 }: {
-  products: ProductSummary[];
   className?: string;
   initialQuery?: string;
   /** Show a link to the products page with this search (used outside the catalog, e.g. on the 404 page). */
@@ -54,11 +55,11 @@ export function ProductSearch({
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
+  const showPanel = open && query.trim().length > 0;
+  const { products, loading } = useProductSummaries(showPanel);
   const matches = useMemo(() => filterSummaries(query, products), [query, products]);
   const results = matches.slice(0, MAX_RESULTS);
-  const showPanel = open && query.trim().length > 0;
-  const href = (p: ProductSummary) => `/products/${p.categorySlug}/${p.slug}`;
-
+  
   return (
     <div ref={wrapRef} className={cn("relative", className)}>
       <Command
@@ -101,7 +102,7 @@ export function ProductSearch({
         </div>
 
         <p aria-live="polite" className="sr-only">
-          {showPanel ? (matches.length ? c.count(matches.length) : `${c.noResults} "${query}"`) : ""}
+          {showPanel && !loading ? (matches.length ? c.count(matches.length) : `${c.noResults} "${query}"`) : ""}
         </p>
 
         {/* Always mounted so the input's aria-controls points at a real list; hidden until there is a query. */}
@@ -110,7 +111,13 @@ export function ProductSearch({
           className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-[var(--shadow-lift)]"
         >
           <CommandList className="max-h-[60vh] p-2">
-            {showPanel && (
+            {loading && (
+              <p role="status" className="flex items-center gap-2 px-4 py-6 text-sm text-muted-foreground">
+                <Spinner aria-hidden />
+                {c.loading}
+              </p>
+            )}
+            {showPanel && !loading && (
               <CommandEmpty className="px-4 py-6 text-left">
                 <span className="block font-medium">
                   {c.noResults} &ldquo;{query}&rdquo;
@@ -122,7 +129,7 @@ export function ProductSearch({
               <CommandItem
                 key={p.slug}
                 value={p.slug}
-                onSelect={() => router.push(href(p))}
+                onSelect={() => router.push(productHref(p))}
                 className="art-in gap-4 rounded-lg px-3 py-2.5 data-[selected=true]:bg-muted data-[selected=true]:text-foreground"
                 style={{ animationDelay: `${i * 30}ms` }}
               >

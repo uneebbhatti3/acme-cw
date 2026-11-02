@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { primaryEmail, siteConfig, telHref } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
+import { categoryHref, subcategoryHref } from "@/features/products/lib/paths";
 import type { NavCategory } from "./header";
 import { isActive } from "@/lib/nav";
 import { Logo } from "./logo";
@@ -61,14 +62,30 @@ export default function MobileMenu({ open, onOpenChange, categories, pathname, r
                   </Link>
                 </SheetClose>
                 {"menu" in item && (
-                  <ul className="-mt-1 grid gap-x-4 pb-3 min-[400px]:grid-cols-2">
+                  <ul className="-mt-1 pb-3">
                     {categories.map((c) => (
                       <li key={c.slug}>
                         <SheetClose asChild>
-                          <Link href={`/products/${c.slug}`} className="flex min-h-11 items-center text-[0.9375rem] text-muted-foreground hover:text-navy">
+                          <Link href={categoryHref(c.slug)} className="flex min-h-11 items-center text-[0.9375rem] font-medium text-navy">
                             {c.name}
                           </Link>
                         </SheetClose>
+                        {c.subcategories && (
+                          <ul className="border-l pl-4">
+                            {c.subcategories.map((s) => (
+                              <li key={s.slug}>
+                                <SheetClose asChild>
+                                  <Link
+                                    href={subcategoryHref(c.slug, s.slug)}
+                                    className="flex min-h-11 items-center text-[0.9375rem] text-muted-foreground hover:text-navy"
+                                  >
+                                    {s.name}
+                                  </Link>
+                                </SheetClose>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
                     ))}
                   </ul>

@@ -121,3 +121,66 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **`dark:` is tied to a `.dark` class** the site never sets. By default, shadcn's dark styles would have followed the visitor's system dark mode.
   - **BreadcrumbList JSON-LD** added to About, Products, Catalogue, Videos and Contact.
   - **Focus rings** added to tab panels, which are focusable by default in Radix.
+- **Admin panel (2026-10-30).**
+  - **Requested by the user**, which lifts the brief's "no auth, no CMS, no database" rule for this feature only. The layout is the shadcn `dashboard-01` block the user installed; its sidebar, header, cards and chart were adapted and moved to `src/features/admin/components`. Its demo table and `data.json` were removed in the 2026-11-01 clean-up.
+  - **Route groups.** Public pages moved to `src/app/(site)` with the header and footer in `(site)/layout.tsx`, so `/dashboard` renders without the site chrome. URLs did not change. The root `not-found.tsx` wraps itself in `SiteShell` because it renders outside the group.
+  - **UI only (user's request, 2026-10-31).** The working admin logic was removed so the user can write their own: server actions, the JSON file store, enquiry saving in `/api/quote`, `/media/products` and the attachment download route, product validation and stats. `/api/quote` is back to email and webhook delivery only. Screens read static data from `src/features/admin/data/sample.ts`, and components keep the same props, so swapping in real data means replacing those imports. Search, filters, tabs, image preview and dialogs still work; save, delete, archive and status buttons change nothing. There is no sign-in, so access control must be added with the logic. `docker-compose.yml` and its Postgres variables were left for the user's own backend.
+  - **"Catalogs" are the product ranges** (categories), the only catalog concept in the data.
+  - **Lint fixes in installed shadcn files:** `useIsMobile` uses `useSyncExternalStore` (it set state inside an effect), and `SidebarMenuSkeleton` derives its width from `useId` instead of `Math.random` during render.
+- **New category taxonomy (2026-11-01, user's request).**
+  - **12 categories replace the 7 old ranges** in `src/features/products/data/categories.ts`, with sub-categories on 5 of them. The text in brackets after a sub-category (for example the list after Orthopedic Implant Boxes) is its description, not part of its name. Category descriptions restate the user's list and add no claims.
+  - **Sub-category URLs** are `/products/<category>/<sub-category>`, on the same route as product pages (`category-child-view.tsx` picks which to render). The build fails if a product slug matches a sub-category slug in its category.
+  - **Uncategorised products** live in `uncategorisedProducts` in `products.ts`. They have no public page and appear only in the admin list. Conservative choices: manicure products were not moved to Podiatry and single-use forceps and scissors were not moved to Podiatry, because nothing marks them as podiatry instruments. Iris Scissors stayed in General Surgery & ENT because their description is general fine-tissue work, not eye surgery. The Instrument Tray sits in Sterilization Boxes & Trays with no sub-category.
+  - **About timeline** still mentions the dental, veterinary and beauty ranges, because it is company history rather than a category label.
+  - **The header menu** drops category descriptions and widens, so all 12 categories and their sub-categories fit. The admin product form has no sub-category field yet.
+- **Product images on Neon (2026-11-01, user's request).**
+  - **The admin add and edit forms are live.** Details go to the Postgres `products` table (`db/migrations`, applied with `npm run db:migrate`) and images to the `products` bucket. This reverses part of the "UI only" entry above, for these two actions only.
+  - **The `products` bucket is private, so the database stores an app URL**, `/media/products/<file>`, which `src/app/media/products/[file]/route.ts` serves from the bucket. A direct bucket URL would not load, and a presigned URL would expire. If the bucket is made `public_read` behind a CDN later, only `productImageUrl` and the stored rows change.
+  - **Driver:** `pg` with `attachDatabasePool`, Neon's advice for Vercel. Migrations use the direct connection, the app uses the pooled one.
+  - **Public site:** replaced by the "Database products on the website" entry below.
+- **Email sign-up with Neon Auth (2026-11-01, user's request).**
+  - **Pages:** `/auth/sign-up`, `/auth/sign-in` and `/account` (current user, sign out), with code in `src/features/auth`. They are custom forms using the site's components, not Better Auth UI, to avoid adding TanStack Query and generated components for a simple form. None are linked from the site navigation.
+  - **This does not protect `/dashboard`.** Anyone can sign up, so being signed in cannot mean being an admin. Admin access still needs a role check as well as a session.
+  - **`neon.ts` declares the `products` bucket** as well as `auth`, so the file matches the project. The bucket stays private.
+  - **Production email:** emails use Neon's shared SMTP, and Neon requires custom SMTP for production.
+- **Admin login API (2026-11-01, user's request).**
+  - **Admins are rows in `public.users` with role `admin`**; that table has the columns the user described. `POST /api/admin/login` and `GET /api/admin/me` are in `src/app/api/admin`, with the logic in `src/features/admin/lib/auth.ts`.
+  - **Neon Auth cannot read the bcrypt hash in `users`.** The first login checks that hash, creates the Neon Auth account and saves its id in `users.auth_user_id`. Later logins go to Neon Auth only, so `users.password` then stops being used, and changing it has no effect.
+  - **Admin rights follow `auth_user_id`, never email**, because sign-up is public and emails are unverified. If someone registers an admin's email before that admin's first login, the attacker gets no access, but the admin's first login fails until that Neon Auth account is removed.
+  - **Login page and guards:** the form is at `/admin/login`. Every dashboard page wraps its view in `AdminGuard`, `AdminShell` in the layout hides the sidebar, and both product server actions check the admin themselves. The page checks are required, not duplication: Next.js does not re-run layouts on client navigation, so a layout check alone would not protect a page's data. New dashboard pages and actions must add the same check.
+- **Clean-up and rate limiting (2026-11-01, user's request).**
+  - **Removed:** unreachable files (`data-table.tsx`, `nav-documents.tsx`, `ui/hover-card.tsx`, `ui/sonner.tsx`, `dashboard/data.json`), dead functions, the packages only they used, and `docker-compose.yml` with its Postgres variables, because the database is Neon. Unused sub-components inside `components/ui` were kept: those files are vendored from shadcn, and trimming them makes updates harder.
+  - **The `cn` package was removed** and five shadcn files now use `@/lib/utils`. It had been installed by accident, against the rule in `REDESIGN_PLAN.md`, and its merge did not know the custom `text-h1` sizes.
+  - **Shared code:** product URLs are in `features/products/lib/paths.ts`, safe for client components. Route helpers are in `src/lib/api.ts`.
+  - **Rate limits are stored in Postgres** (`src/lib/rate-limit.ts`, table `rate_limits`), not in memory. Serverless instances do not share memory, so the old limiter barely limited anything on Vercel. Postgres needs no new service. Keys are hashed. If the check itself fails, the request is allowed and logged, so a database fault cannot block enquiries.
+  - **`/media/products` is not limited:** a database write per image view would cost more than it protects, and those files are cached by the CDN.
+- **Failure handling (2026-11-01).**
+  - **`src/app/error.tsx` is at the root** because an `error.tsx` cannot catch errors from the layout beside it, and the dashboard layout is what checks the admin.
+  - **The database pool has an `error` listener.** Neon closes idle connections when it scales to zero, and an unhandled pool error would stop the Node process.
+  - **First login can resume.** If it stops after the Neon Auth account is created, the next login signs in to that account with the password that passed the bcrypt check, then links it.
+  - **Neon Auth needs an `Origin` header on server-side calls.** Browsers send one; a script calling `/api/admin/login` must too, or it gets a 401.
+- **Products API (2026-11-01, user's request).**
+  - **`POST /api/admin/products`, `PUT` and `DELETE /api/admin/products/[id]` replace the two server actions**, so there is one write path. The form sends multipart data with `fetch`, and `serverActions.bodySizeLimit` was removed because no server actions remain. There is no `GET`: the admin pages read the database directly.
+  - **Each route calls `denyProductWrite` first:** same origin, then admin, then the `adminSave` limit. Route handlers do not get the origin check Next.js gives server actions, so it is explicit.
+  - **Delete is live.** It removes the row, then the image, and the dialog treats a 404 as already deleted.
+  - **The form remounts after a save.** Next.js keeps visited pages mounted, so `/dashboard/products/new` would otherwise reopen with the old values. The edit form is keyed on `updatedAt` for the same reason.
+  - **Loading and empty states are in `src/features/admin/components/states`,** one file per component, with `Spinner` and `Empty` from shadcn. They replace the admin `Skeleton` fallbacks. Dashboard cards and enquiries still use sample data that does not load asynchronously, so they have no Suspense boundary of their own beyond `AdminGuard`.
+  - **The edit page shows an empty state for a missing product** instead of the public 404, so the admin keeps the sidebar.
+  - **`cn` package removed again.** The shadcn CLI writes `from "cn"` in new files, so check that import after each `shadcn add` and change it to `@/lib/utils`.
+- **Database products on the website (2026-11-01, user's request).**
+  - **`data/products.ts` is deleted.** This replaces the "24 products" and "Uncategorised products" entries above. Postgres is the only product source; categories stay in `categories.ts`. Reads are in `features/products/lib/store.ts`.
+  - **`GET /api/products?category=<slug>` is public** and returns summaries. The search box calls it on first use, so pages with search stay static. Server-rendered pages call `getStoreProducts`, the function behind that route, because a server component fetching its own API only adds a network hop.
+  - **Product reads are uncached** (`connection()` inside Suspense), so a saved product appears at once, at the cost of one database read per view. Category pages keep a prerendered hero and stream the list behind `ProductListLoading`. `/sitemap.xml` is dynamic for the same reason.
+  - **`/products` keeps the range cards** and adds "Products by range": up to four newest per category, with empty categories left out.
+  - **Fields the admin form does not collect** (type, material, finish, features, specs) are left out of the pages. Cards and the top of the product page show the full title as the short description. There is one photo per product.
+  - **Sub-category pages always show the empty state**, linking to the category. `products` has no sub-category column, and adding one needs a migration and a form field.
+  - **Sizes share the product's model.** The size table has no SKU column, and each size's quote link fills in "model size".
+  - **The WhatsApp message no longer names the product**, and the quote form shows the SKU without a product name, because both read the static list.
+  - **Slugs avoid every sub-category slug**, because products and sub-categories share `/products/<category>/<slug>`.
+  - **The dashboard's product figures are real.** Enquiry figures are still samples.
+  - **A missing product returns status 200 with the 404 page**, because the response has already started streaming. Next.js adds `noindex` to it.
+- **Home page products and photos (2026-11-02, user's request).**
+  - **The home products section shows eight database products**, one from each range in turn, so the largest range does not fill it. The range cards stay on `/products`.
+  - **The whole section is hidden when there are no products or the read fails**, so a database fault cannot take down the home page. The fault is logged. The section title and a card skeleton show while it loads.
+  - **The database pool has a 10-second connection timeout** (`src/lib/db.ts`). There was none, so an unreachable database kept loading states on screen until the operating system gave up. This applies to every database read and write.
+  - **Home photos are copies in `public/home`,** because `public/products` is replaced with each upload batch. They are product photos under 600 px wide, because no factory or facility photos have been supplied. They show whole in a bordered frame with an 8px radius and no background (`fit: "contain"`), and product images elsewhere have no background of their own, at the user's request. The manufacturing and about pages keep their photo slots.

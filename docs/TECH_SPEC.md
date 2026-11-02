@@ -15,7 +15,7 @@
 | Hosting         | Vercel                                                                     |
 | Lint and format | ESLint, Prettier                                                           |
 
-No backend, database or CMS in the demo. Keep the data layer behind small accessor functions (`getCategories()`, `getProductsByCategory()`, `getProduct()`, `searchProducts()`) in `src/lib/content.ts` so a CMS can replace the local files later without touching pages.
+Catalogue content stays behind small accessor functions (`getCategories()`, `getProductsByCategory()`, `getProduct()`) in `src/features/products/lib/content.ts`, so a CMS can replace the local files later without touching pages. The admin panel, auth and product images use Neon (see `docs/DECISIONS.md`).
 
 ## Folder structure
 

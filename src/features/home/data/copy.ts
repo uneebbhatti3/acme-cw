@@ -12,19 +12,19 @@ export const homeCopy = {
   hero: {
     eyebrow: `Manufacturer and exporter · ${location.city}, ${location.country}`,
     title: "Surgical and dental instruments, made to your specification",
-    text: "We manufacture surgical, dental, veterinary and beauty instruments for distributors, brand owners and healthcare buyers, in standard patterns or to your drawing, under our name or yours.",
+    text: "We manufacture surgical, orthopedic, ophthalmic and dental instruments for distributors, brand owners and healthcare buyers, in standard patterns or to your drawing, under our name or yours.",
     primary: "Request a quote",
     secondary: "View products",
     points: ["OEM and private label", "Made to drawing or sample", "Export packing and documents"],
     photo: {
-      alt: "Stainless steel surgical instruments",
+      alt: "Stainless steel Turnbull plier",
       brief: "Hero image: a group of finished instruments on a neutral background, or the production floor",
     } satisfies Photo,
   },
   ranges: {
-    eyebrow: "Product ranges",
-    title: "Instruments for surgery, dentistry, veterinary and beauty care",
-    text: "Browse sample products with specifications and sizes in each range. Patterns not listed online can be quoted on request.",
+    eyebrow: "Products",
+    title: "Instruments for surgery, orthopedics, ophthalmology and dentistry",
+    text: "Browse products with their sizes and details in each range. Patterns not listed online can be quoted on request.",
     link: "View all products",
   },
   capabilities: {
@@ -32,6 +32,12 @@ export const homeCopy = {
     title: "Made in our own facility, from forging to finishing",
     text: "Each stage of production is carried out in-house, with checks before an instrument moves on.",
     link: "Manufacturing capabilities",
+    photo: {
+      src: "/home/box-joint-nail-cutter.png",
+      alt: "Stainless steel box joint nail cutter",
+      brief: "Close-up of an instrument being ground or polished by hand",
+      fit: "contain",
+    } satisfies Photo,
   },
   oem: {
     eyebrow: "OEM and private label",
@@ -52,13 +58,15 @@ export const homeCopy = {
     eyebrow: "About us",
     title: `An instrument manufacturer in ${location.city}`,
     paragraphs: [
-      `${siteConfig.legalName} manufactures and exports surgical, dental, veterinary and beauty instruments from ${location.city}, ${location.country}, a city known worldwide for instrument making.`,
+      `${siteConfig.legalName} manufactures and exports surgical, orthopedic, ophthalmic and dental instruments from ${location.city}, ${location.country}, a city known worldwide for instrument making.`,
       "We work with importers, distributors, brand owners and healthcare buyers who need consistent quality, clear specifications and dependable lead times.",
     ],
     link: "About the company",
     photo: {
-      alt: "Company facility",
+      src: "/home/silicon-grip-nail-cutter.png",
+      alt: "Nail cutter with red silicon grips",
       brief: "Exterior of the facility, or the team in the workshop",
+      fit: "contain",
     } satisfies Photo,
   },
   quote: {

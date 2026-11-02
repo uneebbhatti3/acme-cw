@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
 import { productsCopy } from "@/features/products/data/copy";
-import { getCategories } from "@/features/products/lib/content";
+import { categoryHref, getCategories } from "@/features/products/lib/content";
 
 /** The other ranges as a compact link list, so visitors can move between them. */
 export function OtherCategories({ currentSlug }: { currentSlug: string }) {
@@ -18,7 +18,7 @@ export function OtherCategories({ currentSlug }: { currentSlug: string }) {
           {others.map((c) => (
             <li key={c.slug} className="bg-white">
               <Link
-                href={`/products/${c.slug}`}
+                href={categoryHref(c.slug)}
                 className="group flex min-h-14 items-center justify-between gap-4 px-5 py-3 font-medium text-navy hover:bg-grey-50"
               >
                 {c.name}

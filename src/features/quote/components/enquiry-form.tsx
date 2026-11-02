@@ -80,13 +80,9 @@ type Failure = { message: string } | null;
  * Posts to /api/quote, which validates again and emails the company. Spam
  * protection: honeypot, minimum fill time, rate limit and optional Turnstile.
  */
-export function EnquiryForm({ kind, lookup }: { kind: EnquiryKind; lookup: Record<string, string> }) {
+export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
   const params = useSearchParams();
-  const prefill = (() => {
-    const sku = params.get("sku")?.replace(/[[\]]/g, "").trim().toUpperCase();
-    const slug = params.get("product") ?? "";
-    return (sku && (lookup[sku] ?? sku)) || lookup[slug] || "";
-  })();
+  const prefill = params.get("sku")?.replace(/[[\]]/g, "").trim() ?? "";
 
   const [sent, setSent] = useState<{ reference: string; preview: boolean } | null>(null);
   const [failure, setFailure] = useState<Failure>(null);

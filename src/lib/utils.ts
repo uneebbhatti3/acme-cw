@@ -10,16 +10,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Small deterministic hash used to vary placeholder art per item. */
-export function hashString(value: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < value.length; i++) {
-    h ^= value.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
 export function whatsappHref(number: string, text: string) {
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
 }

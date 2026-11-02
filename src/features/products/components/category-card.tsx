@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
 import { CATEGORY_RATIO } from "@/config/media";
 import { productsCopy } from "@/features/products/data/copy";
+import { categoryHref } from "@/features/products/lib/paths";
 import type { Category } from "@/features/products/types";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +32,7 @@ export function CategoryCard({ category, headingLevel = "h3", className }: { cat
       </div>
       <div className="flex flex-1 flex-col p-5">
         <Heading className="text-h3">
-          <Link href={`/products/${category.slug}`} className="after:absolute after:inset-0 focus-visible:outline-none">
+          <Link href={categoryHref(category.slug)} className="after:absolute after:inset-0 focus-visible:outline-none">
             {category.name}
           </Link>
         </Heading>

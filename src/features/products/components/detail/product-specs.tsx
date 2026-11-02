@@ -17,7 +17,7 @@ export function ProductSpecs({ product }: { product: Product }) {
     { label: pc.material, value: product.material },
     { label: pc.finish, value: product.finish },
     ...product.specs,
-  ];
+  ].filter((row) => row.value);
   const withDescription = product.variants.some((v) => v.description);
 
   return (
@@ -31,10 +31,14 @@ export function ProductSpecs({ product }: { product: Product }) {
                 <p key={p}>{p}</p>
               ))}
             </div>
-            <h3 className="mt-8 text-base font-semibold">{pc.features}</h3>
-            <div className="mt-3">
-              <FeatureList features={product.features} />
-            </div>
+            {product.features.length > 0 && (
+              <>
+                <h3 className="mt-8 text-base font-semibold">{pc.features}</h3>
+                <div className="mt-3">
+                  <FeatureList features={product.features} />
+                </div>
+              </>
+            )}
           </div>
           <div className="lg:col-span-7">
             <h2 className="text-h2">{pc.specs}</h2>
@@ -54,7 +58,6 @@ export function ProductSpecs({ product }: { product: Product }) {
               <Table aria-labelledby="variants">
                 <TableHeader>
                   <TableRow className="bg-grey-50 hover:bg-grey-50">
-                    <TableHead className="px-4 sm:px-5">{pc.variantsHead.sku}</TableHead>
                     <TableHead className="px-4 sm:px-5">{pc.variantsHead.size}</TableHead>
                     {withDescription && <TableHead className="px-4 sm:px-5">{pc.variantsHead.description}</TableHead>}
                     <TableHead className="px-4 text-right sm:px-5">
@@ -65,9 +68,6 @@ export function ProductSpecs({ product }: { product: Product }) {
                 <TableBody>
                   {product.variants.map((v) => (
                     <TableRow key={v.sku}>
-                      <TableCell className="px-4 py-3 font-mono text-sm text-navy sm:px-5">
-                        <Pending value={v.sku} />
-                      </TableCell>
                       <TableCell className="px-4 py-3 text-[0.9375rem] sm:px-5">
                         <Pending value={v.size} />
                       </TableCell>

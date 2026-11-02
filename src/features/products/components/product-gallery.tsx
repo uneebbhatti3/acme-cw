@@ -92,7 +92,7 @@ export function ProductGallery({
         role="group"
         aria-roledescription="carousel"
         aria-label={`${productName} images`}
-        className="relative overflow-hidden rounded-lg border bg-white"
+        className="relative overflow-hidden rounded-lg border"
       >
         <div
           className={cn("relative touch-pan-y overflow-hidden", zoom ? "cursor-zoom-in" : "cursor-pointer")}
@@ -161,7 +161,7 @@ export function ProductGallery({
             >
               <span
                 className={cn(
-                  "block overflow-hidden rounded-md border-2 bg-white transition-colors",
+                  "block overflow-hidden rounded-lg border-2 transition-colors",
                   i === index ? "border-teal" : "border-border group-hover:border-grey-300",
                 )}
               >

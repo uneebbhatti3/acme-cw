@@ -1,25 +1,15 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { layoutCopy } from "@/data/copy";
 import { whatsappHref } from "@/lib/utils";
 
-/**
- * Floating WhatsApp link. On product pages the prefilled message names the
- * product. Hidden when no number is set in config.
- */
-export function WhatsAppButton({ productNames }: { productNames: Record<string, string> }) {
-  return <WhatsAppLink productNames={productNames} pathname={usePathname()} />;
-}
-
-export function WhatsAppLink({ productNames, pathname }: { productNames: Record<string, string>; pathname: string }) {
+/** Floating WhatsApp link. Hidden when no number is set in config. */
+export function WhatsAppButton() {
   const number = siteConfig.contact.whatsapp;
   if (!number) return null;
-  const slug = pathname.match(/^\/products\/[^/]+\/([^/]+)/)?.[1];
-  const product = slug ? productNames[slug] : undefined;
-  const text = product ? layoutCopy.whatsappProduct(product) : layoutCopy.whatsappText;
+  const text = layoutCopy.whatsappText;
 
   return (
     <Tooltip>

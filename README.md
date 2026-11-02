@@ -30,6 +30,14 @@ npm run dev                  # http://localhost:3000
 | `NEXT_PUBLIC_DEMO_MODE` | `true` adds "nothing was sent" to the contact form's success state |
 | `NEXT_PUBLIC_SITE_URL`  | Public URL for canonical links, sitemap and Open Graph             |
 
+## Admin panel
+
+Open `/dashboard`. Sign in at `/admin/login` with an account in the `users` table that has role `admin`. Adding, editing and deleting products is live on Neon through `/api/admin/products`: details go to the `products` table and images to the private `products` bucket, with the image URL (`/media/products/<file>`) saved on the row. The website reads products from that table, and `GET /api/products?category=<slug>` returns them. Enquiries show sample data from `src/features/admin/data/sample.ts`, and the enquiry Delete, Archive and Mark as unread buttons do not change anything yet. It has:
+
+- **Dashboard:** total products, catalogs (product ranges), contact form enquiries and quote requests, a chart of enquiries over time, the latest enquiries and products per catalog.
+- **Products:** every product in one list, with search and a catalog filter, an add / edit form (image, name, model, full title, category, sizes, description) and a delete dialog.
+- **Enquiries:** every contact and quote form submission, with tabs (unread, quotes, general, archived), search, a detail page, reply by email, and archive and delete controls.
+
 ## Deploy to Vercel
 
 1. Push the repository to GitHub.
@@ -51,10 +59,10 @@ No component changes are needed.
    Mirror them in `src/config/theme.ts`, which colours the generated art, the social image and the browser theme. Keep the contrast rules in `docs/DESIGN_SYSTEM.md`.
 3. **Fonts:** `src/app/layout.tsx` (`next/font`).
 4. **Logo and favicon:** put the logo in `public/` and point `siteConfig.logo` at it; replace `src/app/favicon.ico`.
-5. **Product photos:** add files to `public/products/<slug>/` (for example `front.webp`, `side.webp`, `top.webp`, `detail.webp`, `angle.webp`), then set `src` on each image in `src/features/products/data/products.ts`.
+5. **Product photos:** upload them with the product in `/dashboard/products`.
    - Use a white or neutral background, at least 2000 px on the long edge for zoom.
    - Any image without `src` keeps the generated drawing. The gallery, loupe and lightbox work the same with real photos.
-6. **Products and categories:** `src/features/products/data/products.ts` and `categories.ts`. Data is validated at build time: duplicate slugs, unknown categories or unknown related products fail the build with a clear message.
+6. **Products and categories:** add products in `/dashboard/products`. Categories are in `src/features/products/data/categories.ts`, validated at build time: duplicate slugs fail the build with a clear message.
 7. **History, team, map regions:** `src/features/about/data/` (`timeline.ts`, `team.ts`, `reach.ts`). Certifications are in `src/data/certifications.ts`.
 8. **Documents:** put certificate and catalogue PDFs in `public/docs/`, then set `file` on a certification (its badge then opens the document) and `catalogueFile` in the site config.
 9. **Videos:** in `src/features/videos/data/videos.ts`, set `src` to a local MP4 (`provider: "file"`, plus a `poster`) or a YouTube ID (`provider: "youtube"`). An empty `src` shows a "coming soon" state.
@@ -80,6 +88,8 @@ src/
     videos/             grid, card, trigger, player dialog
     contact/            form (react-hook-form + Zod), country picker, details, map
     not-found/
+    admin/              admin panel: sidebar shell (from the shadcn dashboard block), dashboard,
+                        products table and form, enquiries (UI only, sample data in data/sample.ts)
   components/
     ui/                 shadcn/ui primitives (restyled; see docs/COMPONENT_SOURCES.md)
     layout/             header, footer, Band (page sheets), container, page hero, breadcrumbs
@@ -97,11 +107,20 @@ docs/                   brief, specs, REDESIGN plan, DECISIONS.md, COMPONENT_SOU
 npx shadcn@latest add <name>
 ```
 
-Then change `import { cn } from "cn"` to `import { cn } from "@/lib/utils"` in the new file (the project keeps its own `cn`), and remove any `dark:` classes (the site has no dark theme).
+Then change `import { cn } from "cn"` to `import { cn } from "@/lib/utils"` in the new file (the project keeps its own `cn`, and the `cn` package is not installed), and remove any `dark:` classes (the site has no dark theme).
+
+## Database
+
+Schema changes are SQL files in `db/migrations`. Apply them with `npm run db:migrate`.
+
+## Rate limits
+
+Set in `src/lib/rate-limit.ts` and counted in the `rate_limits` table, so they hold across server instances: admin login, sign-in, sign-up, password and email codes, the quote form and admin saves. Client addresses come from `x-real-ip`, which Vercel sets. On another host, the proxy in front of the app must set that header, or clients can fake it. Page traffic and images are not limited here; use your host's firewall for that.
 
 ## Known limitations (demo)
 
-- The contact form validates and shows a success state, but sends nothing.
+- Enquiries are sent by email or webhook once the variables in `.env.example` are set.
+- The admin dashboard figures and enquiries are sample data. Adding and editing products is live; products added there do not appear on the public site yet, and Delete and Archive do nothing yet.
 - Placeholder images are generated SVG drawings. The 360° gallery slot is not built because there are no spin frames.
 - The map on the contact page is a static illustration.
 - Certificates show their description on hover until real files are supplied.

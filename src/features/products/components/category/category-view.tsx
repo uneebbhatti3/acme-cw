@@ -4,12 +4,14 @@ import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/layout/page-hero";
 import { CtaBanner } from "@/components/sections/cta-banner";
-import { JsonLd } from "@/components/seo/json-ld";
 import { productsCopy } from "@/features/products/data/copy";
-import { categoryHref, facetsFor, getCategory, getProductsByCategory, productHref, toSummary } from "@/features/products/lib/content";
-import { itemListJsonLd } from "@/lib/seo";
-import { ProductFilters, ProductFiltersStatic } from "../product-filters";
+import { categoryHref, getCategory, subcategoryHref } from "@/features/products/lib/content";
+import type { Category, Subcategory } from "@/features/products/types";
+import { ProductListEmpty } from "../states/product-list-empty";
+import { ProductListLoading } from "../states/product-list-loading";
+import { CategoryProducts } from "./category-products";
 import { OtherCategories } from "./other-categories";
+import { SubcategoryLinks } from "./subcategory-links";
 
 /** Range page body: header, filterable product list, the other ranges and the quote band. */
 export async function CategoryView({ params }: { params: Promise<{ category: string }> }) {
@@ -17,33 +19,42 @@ export async function CategoryView({ params }: { params: Promise<{ category: str
   const cat = getCategory(category);
   if (!cat) notFound();
 
-  const products = getProductsByCategory(cat.slug);
-  const summaries = products.map(toSummary);
-  const facets = facetsFor(products);
+  return <RangeBody category={cat} />;
+}
+
+/** Sub-category page. Products have no sub-category yet, so it points to the category's full list. */
+export function SubcategoryView({ category, subcategory }: { category: Category; subcategory: Subcategory }) {
+  return <RangeBody category={category} subcategory={subcategory} />;
+}
+
+function RangeBody({ category: cat, subcategory: sub }: { category: Category; subcategory?: Subcategory }) {
+  const name = sub?.name ?? cat.name;
 
   return (
     <>
-      <JsonLd data={itemListJsonLd(cat.name, products.map((p) => ({ name: p.name, href: productHref(p) })))} />
       <PageHero
-        title={cat.name}
-        subtitle={cat.description}
+        title={name}
+        subtitle={sub?.description ?? cat.description}
         crumbs={[
           { name: productsCopy.breadcrumb, href: "/products" },
           { name: cat.name, href: categoryHref(cat.slug) },
+          ...(sub ? [{ name: sub.name, href: subcategoryHref(cat.slug, sub.slug) }] : []),
         ]}
-      >
-        <p className="mt-5 text-sm text-muted-foreground">{productsCopy.listedNote(products.length)}</p>
-      </PageHero>
+      />
 
       <Band defer={false} labelledBy="range-products" className="pt-8 md:pt-12">
         <Container>
           <h2 id="range-products" className="sr-only">
-            {productsCopy.listLabel(cat.name)}
+            {productsCopy.listLabel(name)}
           </h2>
-          {/* The prerendered fallback shows the full list with the same layout. */}
-          <Suspense fallback={<ProductFiltersStatic products={summaries} facets={facets} />}>
-            <ProductFilters products={summaries} facets={facets} />
-          </Suspense>
+          <SubcategoryLinks category={cat} currentSlug={sub?.slug} />
+          {sub ? (
+            <ProductListEmpty name={sub.name} browseHref={categoryHref(cat.slug)} browseLabel={productsCopy.allInRange(cat.name)} />
+          ) : (
+            <Suspense fallback={<ProductListLoading />}>
+              <CategoryProducts category={cat} />
+            </Suspense>
+          )}
         </Container>
       </Band>
 

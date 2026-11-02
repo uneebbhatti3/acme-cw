@@ -10,6 +10,8 @@ export interface Photo {
   alt: string;
   /** What the photo should show, printed on the empty slot as a brief for the photographer. */
   brief: string;
+  /** "contain" shows a product shot whole: no background, a border and an 8px radius. The default crops to fill, for factory and team photos. */
+  fit?: "cover" | "contain";
 }
 
 /**
@@ -33,9 +35,9 @@ export function PhotoSlot({
   className?: string;
 }) {
   return (
-    <figure className={cn("relative overflow-hidden rounded-lg", className)} style={{ aspectRatio: ratio }}>
+    <figure className={cn("relative overflow-hidden rounded-lg", photo.fit === "contain" && "border", className)} style={{ aspectRatio: ratio }}>
       {photo.src ? (
-        <Image src={photo.src} alt={photo.alt} fill sizes={sizes} priority={priority} className="object-cover" />
+        <Image src={photo.src} alt={photo.alt} fill sizes={sizes} priority={priority} className={photo.fit === "contain" ? "object-contain p-6 sm:p-8" : "object-cover"} />
       ) : (
         <div
           role="img"

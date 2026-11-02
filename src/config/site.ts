@@ -17,10 +17,15 @@ export const siteConfig = {
   tagline: "Surgical & Dental Instrument Manufacturer",
   /** Used for meta descriptions and the footer. Keep it free of figures that are not verified. */
   description:
-    "Manufacturer and exporter of surgical, dental, veterinary and beauty instruments in Sialkot, Pakistan, with OEM and private-label production for distributors and healthcare buyers.",
+    "Manufacturer and exporter of surgical, orthopedic, ophthalmic and dental instruments in Sialkot, Pakistan, with OEM and private-label production for distributors and healthcare buyers.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://acme-cw.vercel.app",
   locale: "en_US",
-  location: { city: "Sialkot", region: "Punjab", country: "Pakistan", countryCode: "PK" },
+  location: {
+    city: "Sialkot",
+    region: "Punjab",
+    country: "Pakistan",
+    countryCode: "PK",
+  },
 
   /**
    * Company figures. A fact is shown on the site only when `verified` is true,
@@ -28,21 +33,32 @@ export const siteConfig = {
    * from their previous site, awaiting confirmation.
    */
   facts: [
-    { key: "established", label: "Established", value: "1960", verified: false },
+    {
+      key: "established",
+      label: "Established",
+      value: "1960",
+      verified: false,
+    },
     { key: "markets", label: "Export markets", value: "50+", verified: false },
-    { key: "patterns", label: "Instrument patterns", value: "1000+", verified: false },
+    {
+      key: "patterns",
+      label: "Instrument patterns",
+      value: "1000+",
+      verified: false,
+    },
   ],
 
   /** Clinical fields the product range serves (describes the range, not a claim). */
   specialties: [
     "General surgery",
     "Dental",
-    "Veterinary",
     "ENT",
-    "Gynaecology",
-    "Orthopaedics",
-    "Plastic surgery",
+    "Gynecology",
+    "Orthopedics",
+    "Cardiovascular",
+    "Neurosurgery",
     "Ophthalmology",
+    "Podiatry",
   ],
 
   contact: {
@@ -73,8 +89,8 @@ export const siteConfig = {
     youtube: "",
     x: "",
   },
-  /** Home hero photo under /public (4:3, at least 1600 x 1200 px). Empty shows the placeholder. */
-  heroImage: "" as string,
+  /** Home hero photo under /public, shown whole in a bordered 4:3 frame with no background. Empty shows the placeholder. */
+  heroImage: "/home/turnbull-plier.png" as string,
   /** Path to the catalogue PDF under /public. */
   catalogueFile: "/docs/catalogue-placeholder.pdf",
   features: { showTeam: false, showCatalogue: true, showVideos: true },
@@ -110,8 +126,6 @@ export const siteConfig = {
   /** Last review date shown on the legal pages. */
   legalUpdated: "[Date of legal review]",
 } as const;
-
-export type SiteConfig = typeof siteConfig;
 
 /** Facts the client has confirmed. Components read facts only through this. */
 export function verifiedFacts() {

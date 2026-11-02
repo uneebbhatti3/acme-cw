@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { categorySeo, productSeo } from "@/features/products/data/seo";
+import { categorySeo, productSeo, subcategorySeo } from "@/features/products/data/seo";
 import { stripBrackets } from "@/lib/placeholder";
 import { pageMetadata } from "@/lib/seo";
-import { categoryHref, getCategory, getProduct, productHref } from "./content";
+import { categoryHref, getCategory, getSubcategory, productHref, subcategoryHref } from "./content";
+import { getStoreProduct } from "./store";
 
 export function categoryMetadata(slug: string): Metadata {
   const cat = getCategory(slug);
@@ -15,8 +16,25 @@ export function categoryMetadata(slug: string): Metadata {
   });
 }
 
-export function productMetadata(categorySlug: string, slug: string): Metadata {
-  const product = getProduct(categorySlug, slug);
+function subcategoryMetadata(categorySlug: string, slug: string): Metadata {
+  const cat = getCategory(categorySlug);
+  const sub = getSubcategory(categorySlug, slug);
+  if (!cat || !sub) return {};
+  return pageMetadata({
+    title: subcategorySeo.title(sub.name, cat.name),
+    description: subcategorySeo.description(sub.description, sub.name),
+    path: subcategoryHref(cat.slug, sub.slug),
+    keywords: [...subcategorySeo.keywords(sub.name), cat.name],
+  });
+}
+
+/** Metadata for /products/<category>/<slug>, which is a sub-category or a product page. */
+export async function categoryChildMetadata(categorySlug: string, slug: string): Promise<Metadata> {
+  return getSubcategory(categorySlug, slug) ? subcategoryMetadata(categorySlug, slug) : productMetadata(categorySlug, slug);
+}
+
+async function productMetadata(categorySlug: string, slug: string): Promise<Metadata> {
+  const product = await getStoreProduct(categorySlug, slug);
   const cat = getCategory(categorySlug);
   if (!product || !cat) return {};
   return pageMetadata({

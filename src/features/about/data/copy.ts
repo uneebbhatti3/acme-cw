@@ -12,14 +12,14 @@ export const aboutCopy = {
   hero: {
     eyebrow: "About us",
     title: "An instrument manufacturer built for international buyers",
-    subtitle: `${siteConfig.legalName} manufactures and exports surgical, dental, veterinary and beauty instruments from ${location.city}, ${location.country}.`,
+    subtitle: `${siteConfig.legalName} manufactures and exports surgical, orthopedic, ophthalmic and dental instruments from ${location.city}, ${location.country}.`,
   },
   who: {
     eyebrow: "Company profile",
     title: "Who we are",
     paragraphs: [
       `We are based in ${location.city}, a city known worldwide for surgical instrument making. We manufacture and export instruments for importers, distributors, brand owners and healthcare procurement teams.`,
-      "Our range covers general and specialist surgery, dentistry, veterinary practice and beauty care, supplied in standard patterns or made to the customer's own drawing, marking and packaging.",
+      "Our range covers general and specialist surgery, orthopedics, ophthalmology, dentistry and podiatry, supplied in standard patterns or made to the customer's own drawing, marking and packaging.",
     ],
     principles: [
       {

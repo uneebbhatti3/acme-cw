@@ -191,12 +191,12 @@ export function productJsonLd(product: Product, category: Category, path: string
     description: product.shortDescription,
     url: absoluteUrl(path),
     image: images.length ? images : [absoluteUrl("/opengraph-image")],
-    ...(isPlaceholder(product.material) ? {} : { material: product.material }),
+    ...(!product.material || isPlaceholder(product.material) ? {} : { material: product.material }),
     brand: { "@type": "Brand", name: siteConfig.brandName },
     manufacturer: org,
     countryOfOrigin: siteConfig.location.country,
     additionalProperty: [{ label: "Finish", value: product.finish }, ...product.specs]
-      .filter((s) => !isPlaceholder(s.value))
+      .filter((s) => s.value && !isPlaceholder(s.value))
       .map((s) => ({ "@type": "PropertyValue", name: s.label, value: s.value })),
   };
 }

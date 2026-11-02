@@ -9,12 +9,24 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
 ];
 
-/** Old URLs from the previous range structure, kept so links and search results still work. */
+/**
+ * Old URLs from previous category structures, kept so links and search results
+ * still work. Specific paths come first. Ranges and products with no match in
+ * the current categories go to the products page.
+ */
 const legacyRedirects = [
-  { source: "/products/scissors-forceps", destination: "/products/surgical-instruments" },
-  { source: "/products/scissors-forceps/:slug", destination: "/products/surgical-instruments/:slug" },
-  { source: "/products/single-use-instruments/single-use-instrument", destination: "/products/single-use-instruments/single-use-forceps" },
-  { source: "/products/hollow-ware-instruments/hollow-ware-tray", destination: "/products/hollow-ware-instruments/instrument-tray" },
+  { source: "/products/scissors-forceps", destination: "/products/general-surgery-ent" },
+  { source: "/products/scissors-forceps/:slug", destination: "/products/general-surgery-ent/:slug" },
+  { source: "/products/surgical-instruments", destination: "/products/general-surgery-ent" },
+  { source: "/products/surgical-instruments/:slug", destination: "/products/general-surgery-ent/:slug" },
+  { source: "/products/hollow-ware-instruments", destination: "/products/sterilization-boxes-trays" },
+  { source: "/products/hollow-ware-instruments/instrument-tray", destination: "/products/sterilization-boxes-trays/instrument-tray" },
+  { source: "/products/hollow-ware-instruments/hollow-ware-tray", destination: "/products/sterilization-boxes-trays/instrument-tray" },
+  { source: "/products/hollow-ware-instruments/:slug", destination: "/products" },
+  { source: "/products/veterinary-instruments/:slug*", destination: "/products" },
+  { source: "/products/manicure-instruments/:slug*", destination: "/products" },
+  { source: "/products/electro-surgical-instruments/:slug*", destination: "/products" },
+  { source: "/products/single-use-instruments/:slug*", destination: "/products" },
 ].map((r) => ({ ...r, permanent: true }));
 
 const nextConfig: NextConfig = {
@@ -22,7 +34,9 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   reactCompiler: true,
   // Tailwind output is small; inlining it removes the render-blocking stylesheet request.
-  experimental: { inlineCss: true },
+  experimental: {
+    inlineCss: true,
+  },
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],

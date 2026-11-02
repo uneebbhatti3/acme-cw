@@ -16,7 +16,7 @@ You are building a **demo business website** for a surgical instruments manufact
 
 ## Stack (summary; details in TECH_SPEC)
 
-Next.js (App Router) + TypeScript + Tailwind CSS + Motion (Framer Motion) for animation. Content lives in typed local data files, no backend and no CMS for the demo. Deploy target: Vercel.
+Next.js (App Router) + TypeScript + Tailwind CSS + Motion (Framer Motion) for animation. Categories and page copy live in typed local data files. Products, admin data, auth and product images are on Neon (Postgres, Auth, Object Storage). Deploy target: Vercel.
 
 ## Commands
 
@@ -35,7 +35,8 @@ The project uses npm (`package-lock.json`):
 4. **No lorem ipsum anywhere visible.** Write short, believable, neutral placeholder copy instead.
 5. **No hotlinked or third-party copyrighted images.** Use generated SVG placeholders (see DESIGN_SYSTEM → Imagery). Real photos will be dropped in later without code changes.
 6. **Accessibility and performance are requirements, not extras** (targets in TECH_SPEC).
-7. **Do not add features outside the brief** (no auth, cart, checkout, payments, CMS, database) unless told to.
+7. **Do not add features outside the brief** (no cart, checkout, payments or CMS) unless told to.
+8. **Protect every admin surface.** Each dashboard page uses `AdminGuard`, each server action checks the admin itself, and login-style routes use `rateLimit`.
 
 ## Working method
 

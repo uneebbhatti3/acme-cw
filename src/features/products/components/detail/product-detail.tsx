@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { CtaBanner } from "@/components/sections/cta-banner";
 import { JsonLd } from "@/components/seo/json-ld";
-import { getCategory, getProduct, productHref } from "@/features/products/lib/content";
+import { getCategory, productHref } from "@/features/products/lib/content";
+import { getStoreProduct } from "@/features/products/lib/store";
 import { productJsonLd } from "@/lib/seo";
 import { ProductOverview } from "./product-overview";
 import { ProductSpecs } from "./product-specs";
@@ -15,7 +16,7 @@ import { RelatedProducts } from "./related-products";
  */
 export async function ProductDetail({ params }: { params: Promise<{ category: string; slug: string }> }) {
   const { category, slug } = await params;
-  const product = getProduct(category, slug);
+  const product = await getStoreProduct(category, slug);
   const cat = getCategory(category);
   if (!product || !cat) notFound();
 
