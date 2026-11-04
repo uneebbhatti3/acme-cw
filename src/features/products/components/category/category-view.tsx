@@ -3,10 +3,12 @@ import { Suspense } from "react";
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/layout/page-hero";
+import { JsonLd } from "@/components/seo/json-ld";
 import { CtaBanner } from "@/components/sections/cta-banner";
 import { productsCopy } from "@/features/products/data/copy";
 import { categoryHref, getCategory, subcategoryHref } from "@/features/products/lib/content";
 import type { Category, Subcategory } from "@/features/products/types";
+import { webPageJsonLd } from "@/lib/seo";
 import { ProductListEmpty } from "../states/product-list-empty";
 import { ProductListLoading } from "../states/product-list-loading";
 import { CategoryProducts } from "./category-products";
@@ -32,6 +34,13 @@ function RangeBody({ category: cat, subcategory: sub }: { category: Category; su
 
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd("CollectionPage", {
+          name,
+          description: sub?.description ?? cat.description,
+          path: sub ? subcategoryHref(cat.slug, sub.slug) : categoryHref(cat.slug),
+        })}
+      />
       <PageHero
         title={name}
         subtitle={sub?.description ?? cat.description}

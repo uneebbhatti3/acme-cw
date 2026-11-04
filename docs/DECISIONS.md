@@ -198,3 +198,10 @@ Work happens on the `redesign` branch. Plan: `docs/REDESIGN_PLAN.md`; brief: `do
   - **Codes are stateless,** signed with `CATALOGUE_SECRET`, so no migration was needed. A code lasts 15 minutes and is valid for one catalogue and email. Each link lasts 5 minutes. A code can be reused until it expires.
   - **The catalogue routes have no rate limit, at the user's request (2026-11-02), for now.** They had 3 codes an hour per email, 10 an hour per IP and 5 guesses per 15 minutes. Without these, a script can guess a six-digit code within its 15 minutes and can send repeated mail to any address, so restore them before launch.
   - **Screenshots cannot truly be blocked by a web page.** The shield hides the book on window blur and known shortcuts, and pages print blank. The watermark is the protection that survives a capture.
+- **SEO pass (2026-11-04, user's request).**
+  - **Titles and descriptions are fitted, not hand-counted.** `fitTitle` takes candidates and uses the first that fits in 60 characters, with " | brand" when it still fits; `composeDescription` adds sentences by priority up to 160. A rebrand or a long product name cannot push a page past what search results show.
+  - **Product titles use the pattern from the short description** ("Nail Cutter – Box Joint, Curved"), because several products share a plain name and gave duplicate titles (`features/products/lib/label.ts`).
+  - **Range titles name a product** ("Gynecology Instruments Manufacturer", not "Gynecology Manufacturer"), via `rangeNoun`.
+  - **Sub-category pages are `noindex, follow` and out of the sitemap** while they list no products (they show a "browse the whole range" notice). Thin, near-empty pages read as soft 404s. Set `indexSubcategories` in `features/products/data/seo.ts` to true once products carry a `subcategorySlug`.
+  - **No `VideoObject` data yet:** the sample videos have no file, and an upload date would be invented. Add it when real clips arrive.
+  - **Product data has no `offers`**, as prices are quoted per order. Product pages are understood by search engines but are not eligible for price rich results.

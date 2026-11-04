@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { primaryEmail, siteConfig, verifiedFacts } from "@/config/site";
 import { isPlaceholder } from "@/lib/placeholder";
+import { productLabel } from "@/features/products/lib/label";
 import type { Category, Product } from "@/features/products/types";
 
 /*
@@ -10,9 +11,13 @@ import type { Category, Product } from "@/features/products/types";
  */
 
 export interface PageSeo {
-  /** Page title. The layout template appends the brand name. */
-  title: string;
-  /** 140 to 160 characters: what the page offers and who it is for. */
+  /**
+   * Page title, or candidates from most to least preferred. The first one that
+   * fits in 60 characters is used, with " | <brand>" appended when that still
+   * fits (see `fitTitle`), so long product or range names never get cut off.
+   */
+  title: string | readonly string[];
+  /** Up to 160 characters: what the page offers and who it is for. Longer text is trimmed at a sentence or word. */
   description: string;
   path: string;
   keywords?: readonly string[];
@@ -23,6 +28,67 @@ export interface PageSeo {
   absoluteTitle?: boolean;
   type?: "website" | "article";
   noIndex?: boolean;
+  /** Image for social cards (path under /public). Defaults to the shared card. */
+  image?: { src: string; alt: string };
+}
+
+/** Google shows about 60 characters of a title and 155 to 160 of a description. */
+export const TITLE_MAX = 60;
+export const DESCRIPTION_MAX = 160;
+
+const brandSuffix = ` | ${siteConfig.brandName}`;
+
+/**
+ * Picks the first candidate that fits, preferring each candidate with the brand
+ * suffix, then without it, before moving on to the next. The last resort is
+ * the final candidate cut at a word boundary.
+ */
+export function fitTitle(candidates: readonly string[]): { title: string; absolute: boolean } {
+  for (const c of candidates) {
+    if (c.length + brandSuffix.length <= TITLE_MAX) return { title: c, absolute: false };
+    if (c.length <= TITLE_MAX) return { title: c, absolute: true };
+  }
+  return { title: truncate(candidates[candidates.length - 1], TITLE_MAX), absolute: true };
+}
+
+function truncate(text: string, max: number) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max / 2)).replace(/[\s,;:–-]+$/, "")}…`;
+}
+
+/** Ends a fragment with a full stop if it has no closing punctuation. */
+export function sentence(text: string) {
+  const t = text.trim().replace(/\s+/g, " ");
+  return !t || /[.!?]$/.test(t) ? t : `${t}.`;
+}
+
+/**
+ * Builds a description from sentences in priority order: required parts
+ * always (trimmed if they overflow), then each optional part that still fits.
+ * An optional part given as an array is a set of alternatives, longest first:
+ * the first one that fits is used.
+ */
+export function composeDescription(
+  required: readonly string[],
+  optional: readonly (string | readonly string[])[] = [],
+  max = DESCRIPTION_MAX,
+) {
+  let out = required.map(sentence).filter(Boolean).join(" ");
+  for (const part of optional) {
+    const options = (typeof part === "string" ? [part] : part).map(sentence).filter(Boolean);
+    const fit = options.find((o) => `${out} ${o}`.length <= max);
+    if (fit) out = out ? `${out} ${fit}` : fit;
+  }
+  return fitDescription(out, max);
+}
+
+/** Trims to the limit at the last full sentence, or else at a word. */
+export function fitDescription(text: string, max = DESCRIPTION_MAX) {
+  const t = text.trim().replace(/\s+/g, " ");
+  if (t.length <= max) return t;
+  const end = t.slice(0, max).lastIndexOf(". ");
+  return end > max * 0.6 ? t.slice(0, end + 1) : truncate(t, max);
 }
 
 /** Keywords that apply to every page. */
@@ -55,14 +121,19 @@ export function pageMetadata({
   absoluteTitle = false,
   type = "website",
   noIndex = false,
+  image,
 }: PageSeo): Metadata {
-  const fullTitle = absoluteTitle ? title : `${title} | ${siteConfig.brandName}`;
+  const fitted = fitTitle(typeof title === "string" ? [title] : title);
+  const absolute = absoluteTitle || fitted.absolute;
+  const fullTitle = absolute ? fitted.title : `${fitted.title}${brandSuffix}`;
   const shareTitle = socialTitle ?? fullTitle;
-  const shareDescription = socialDescription ?? description;
+  const metaDescription = fitDescription(description);
+  const shareDescription = fitDescription(socialDescription ?? description, 200);
+  const shareImage = image ? { url: image.src, alt: image.alt } : socialImage;
 
   return {
-    title: absoluteTitle ? { absolute: title } : title,
-    description,
+    title: absolute ? { absolute: fitted.title } : fitted.title,
+    description: metaDescription,
     keywords: [...new Set([...keywords, ...baseKeywords])],
     alternates: { canonical: path },
     // Nested objects replace the layout's values, so each one is complete.
@@ -73,13 +144,13 @@ export function pageMetadata({
       siteName: siteConfig.brandName,
       locale: siteConfig.locale,
       type,
-      images: [socialImage],
+      images: [shareImage],
     },
     twitter: {
       card: "summary_large_image",
       title: shareTitle,
       description: shareDescription,
-      images: [socialImage.url],
+      images: [shareImage.url],
     },
     robots: noIndex
       ? { index: false, follow: true }
@@ -116,6 +187,13 @@ export function organizationJsonLd() {
     legalName: siteConfig.legalName,
     alternateName: siteConfig.shortName,
     url: siteConfig.url,
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteUrl(siteConfig.logo.src),
+      width: siteConfig.logo.width,
+      height: siteConfig.logo.height,
+    },
+    image: absoluteUrl("/opengraph-image"),
     description: siteConfig.description,
     ...(established ? { foundingDate: established.value } : {}),
     foundingLocation: `${location.city}, ${location.country}`,
@@ -185,7 +263,7 @@ export function productJsonLd(product: Product, category: Category, path: string
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
+    name: productLabel(product),
     ...(isPlaceholder(product.sku) ? {} : { sku: product.sku, mpn: product.sku }),
     category: category.name,
     description: product.shortDescription,
@@ -198,6 +276,21 @@ export function productJsonLd(product: Product, category: Category, path: string
     additionalProperty: [{ label: "Finish", value: product.finish }, ...product.specs]
       .filter((s) => s.value && !isPlaceholder(s.value))
       .map((s) => ({ "@type": "PropertyValue", name: s.label, value: s.value })),
+  };
+}
+
+/** WebPage subtypes (AboutPage, CollectionPage…) tying a page to the site and organisation. */
+export function webPageJsonLd(type: "AboutPage" | "CollectionPage" | "WebPage", { name, description, path }: { name: string; description: string; path: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": absoluteUrl(`${path}#webpage`),
+    name,
+    description: fitDescription(description),
+    url: absoluteUrl(path),
+    inLanguage: "en",
+    isPartOf: { "@id": absoluteUrl("/#website") },
+    about: { "@id": absoluteUrl("/#organization") },
   };
 }
 

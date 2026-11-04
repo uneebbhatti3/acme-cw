@@ -1,4 +1,5 @@
 import type { FeatureItem } from "@/components/sections/feature-grid";
+import { siteConfig } from "@/config/site";
 import type { PageSeo } from "@/lib/seo";
 
 /**
@@ -79,8 +80,7 @@ export const documentTypes: FeatureItem[] = [
 
 export const qualitySeo: PageSeo = {
   title: "Quality Control and Documentation",
-  description:
-    "How Acme Commercial Ways inspects surgical and dental instruments at each production stage, the documents available for orders, and our certificate details.",
+  description: `How ${siteConfig.brandName} inspects surgical and dental instruments at every production stage, the documents supplied with orders, and our certificates.`,
   path: "/quality",
   keywords: ["surgical instruments quality control", "instrument inspection", "instrument traceability", "surgical instruments documentation"],
 };

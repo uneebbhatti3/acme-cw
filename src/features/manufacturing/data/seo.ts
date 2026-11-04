@@ -1,9 +1,11 @@
+import { siteConfig } from "@/config/site";
 import type { PageSeo } from "@/lib/seo";
 
+const { city } = siteConfig.location;
+
 export const manufacturingSeo: PageSeo = {
-  title: "Manufacturing, OEM and Private Label",
-  description:
-    "Surgical and dental instrument manufacturing in Sialkot: forging to finishing, made-to-drawing instruments, OEM and private label, laser marking and export packaging.",
+  title: ["Manufacturing, OEM and Private Label", "OEM and Private Label Manufacturing"],
+  description: `Instrument manufacturing in ${city}, from forging to finishing: made-to-drawing instruments, OEM and private label, laser marking and export packing.`,
   path: "/manufacturing",
   keywords: [
     "OEM surgical instruments",
@@ -11,6 +13,6 @@ export const manufacturingSeo: PageSeo = {
     "custom surgical instruments",
     "surgical instruments made to drawing",
     "laser marking surgical instruments",
-    "surgical instrument manufacturing Sialkot",
+    `surgical instrument manufacturing ${city}`,
   ],
 };

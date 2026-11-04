@@ -3,7 +3,10 @@ import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { themeColors } from "@/config/theme";
-import { baseKeywords } from "@/lib/seo";
+import { baseKeywords, fitDescription } from "@/lib/seo";
+
+/** Default for pages without their own description, kept within the 160 characters search results show. */
+const defaultDescription = fitDescription(siteConfig.description);
 import "./globals.css";
 
 /** One family for headings and body: an engineered, neutral sans suited to technical catalogues. */
@@ -25,7 +28,7 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: { default: `${siteConfig.legalName} | ${siteConfig.tagline}`, template: `%s | ${siteConfig.brandName}` },
-  description: siteConfig.description,
+  description: defaultDescription,
   keywords: [...baseKeywords],
   applicationName: siteConfig.brandName,
   authors: [{ name: siteConfig.legalName, url: siteConfig.url }],
@@ -39,9 +42,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: siteConfig.locale,
     title: `${siteConfig.legalName} | ${siteConfig.tagline}`,
-    description: siteConfig.description,
+    description: defaultDescription,
   },
-  twitter: { card: "summary_large_image", title: siteConfig.legalName, description: siteConfig.description },
+  twitter: { card: "summary_large_image", title: siteConfig.legalName, description: defaultDescription },
 };
 
 export const viewport: Viewport = {

@@ -1,6 +1,7 @@
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/layout/page-hero";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SectionIntro } from "@/components/layout/section-intro";
 import { CatalogSearchBar } from "@/features/products/components/catalog-search-bar";
 import { CategoryGrid } from "@/features/products/components/category-grid";
@@ -8,13 +9,14 @@ import { CustomRequest } from "@/features/products/components/custom-request";
 import { ProductsByCategory } from "@/features/products/components/products-by-category";
 import { productsCopy } from "@/features/products/data/copy";
 import { productsSeo } from "@/features/products/data/seo";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata = pageMetadata(productsSeo);
 
 export default function ProductsPage() {
   return (
     <>
+      <JsonLd data={webPageJsonLd("CollectionPage", { name: productsCopy.hero.title, description: productsSeo.description, path: productsSeo.path })} />
       <PageHero
         eyebrow={productsCopy.hero.eyebrow}
         title={productsCopy.hero.title}
