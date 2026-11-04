@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
 /**
@@ -25,7 +26,7 @@ export function SectionIntro({
   children?: ReactNode;
 }) {
   return (
-    <div className={cn(split ? "grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-8" : "max-w-3xl", className)}>
+    <Reveal className={cn(split ? "grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-8" : "max-w-3xl", className)}>
       <div className={cn(split && "lg:col-span-7")}>
         {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
         <h2 id={id} className="text-h2">
@@ -38,6 +39,6 @@ export function SectionIntro({
           {children}
         </div>
       )}
-    </div>
+    </Reveal>
   );
 }

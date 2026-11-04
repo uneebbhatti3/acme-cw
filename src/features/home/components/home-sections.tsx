@@ -4,9 +4,11 @@ import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
 import { SectionIntro } from "@/components/layout/section-intro";
 import { PhotoSlot } from "@/components/media/photo-slot";
+import { CountUp } from "@/components/motion/count-up";
 import { FeatureGrid } from "@/components/sections/feature-grid";
 import { StepList } from "@/components/sections/step-list";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/ui/reveal";
 import { siteConfig, verifiedFacts } from "@/config/site";
 import { verifiedCertifications } from "@/data/certifications";
 import { homeCopy } from "@/features/home/data/copy";
@@ -70,7 +72,7 @@ export function QualitySection() {
       <Container>
         <SectionIntro id="quality-title" eyebrow={c.eyebrow} title={c.title} text={c.text} split />
         <FeatureGrid items={checkpoints.slice(0, 4)} cols={4} className="mt-10" />
-        <div className="mt-6 flex flex-col gap-4 rounded-lg border bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+        <Reveal className="mt-6 flex flex-col gap-4 rounded-lg border bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
           {certs.length ? (
             <ul className="flex flex-wrap gap-2">
               {certs.map((cert) => (
@@ -86,7 +88,7 @@ export function QualitySection() {
             <TextLink href="/quality#certificates">{c.certificatesLink}</TextLink>
             <TextLink href="/quality">{c.link}</TextLink>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </Band>
   );
@@ -114,7 +116,9 @@ export function CompanySection() {
                 {facts.map((f) => (
                   <div key={f.key}>
                     <dt className="text-sm text-muted-foreground">{f.label}</dt>
-                    <dd className="mt-1 text-h2 font-semibold text-navy">{f.value}</dd>
+                    <dd className="mt-1 text-h2 font-semibold text-navy">
+                      <CountUp value={f.value} />
+                    </dd>
                   </div>
                 ))}
               </dl>
@@ -135,14 +139,14 @@ export function QuoteSection() {
     <section aria-labelledby="quote-title" className="surface-dark page-head defer-render sec [contain-intrinsic-size:auto_520px]">
       <Container>
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-7">
+          <Reveal className="lg:col-span-7">
             <p className="eyebrow mb-4">{c.eyebrow}</p>
             <h2 id="quote-title" className="text-h2">
               {c.title}
             </h2>
             <p className="text-lede mt-4 max-w-2xl text-muted-foreground">{c.text}</p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
+          </Reveal>
+          <Reveal delay={0.12} className="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
             <Button asChild variant="accent" size="lg">
               <Link href={siteConfig.quoteHref}>
                 {c.primary}
@@ -152,7 +156,7 @@ export function QuoteSection() {
             <Button asChild variant="outline" size="lg" className="text-white hover:bg-white/10">
               <Link href="/contact">{c.secondary}</Link>
             </Button>
-          </div>
+          </Reveal>
         </div>
         <StepList steps={c.steps} className="mt-12 border-t pt-10" />
       </Container>

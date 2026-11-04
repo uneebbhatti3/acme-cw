@@ -1,11 +1,13 @@
 "use client";
 
 import { Maximize2 } from "lucide-react";
+import { motion } from "motion/react";
 import dynamic from "next/dynamic";
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { ProductVisual } from "@/components/media/product-visual";
 import { productDetailCopy } from "@/features/products/data/copy";
 import { viewLabel } from "@/features/products/lib/view-label";
+import { EASE_OUT } from "@/lib/use-in-view";
 import type { ProductImage } from "@/features/products/types";
 import { cn } from "@/lib/utils";
 import type { InstrumentKind } from "@/types";
@@ -31,7 +33,14 @@ export function ProductGallery({
   seed: string;
   productName: string;
 }) {
-  const [index, setIndex] = useState(0);
+  // `dir` is the direction of the last change (1 forward, -1 back, 0 initial),
+  // so the new view slides in from the side it came from.
+  const [{ index, dir }, setView] = useState({ index: 0, dir: 0 });
+  const setIndex = (next: number | ((i: number) => number)) =>
+    setView((v) => {
+      const i = typeof next === "function" ? next(v.index) : next;
+      return i === v.index ? v : { index: i, dir: i > v.index ? 1 : -1 };
+    });
   const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
   const [lightbox, setLightbox] = useState(false);
   const [lightboxLoaded, setLightboxLoaded] = useState(false);
@@ -105,13 +114,19 @@ export function ProductGallery({
             if ((e.nativeEvent as globalThis.PointerEvent).pointerType !== "touch") open();
           }}
         >
-          <div
+          <motion.div
             key={index}
-            className="art-in transition-transform duration-200 ease-out will-change-transform"
-            style={zoom ? { transform: `scale(${ZOOM})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : { transform: "scale(1)" }}
+            initial={dir === 0 ? false : { opacity: 0, x: dir * 32 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.35, ease: EASE_OUT }}
           >
-            <ProductVisual image={current} kind={kind} seed={seed} priority={index === 0} sizes="(min-width: 1280px) 720px, (min-width: 1024px) 58vw, 100vw" />
-          </div>
+            <div
+              className="transition-transform duration-200 ease-out will-change-transform"
+              style={zoom ? { transform: `scale(${ZOOM})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : { transform: "scale(1)" }}
+            >
+              <ProductVisual image={current} kind={kind} seed={seed} priority={index === 0} sizes="(min-width: 1280px) 720px, (min-width: 1024px) 58vw, 100vw" />
+            </div>
+          </motion.div>
         </div>
 
         <span className="pointer-events-none absolute left-3 top-3 rounded-sm border bg-white/90 px-2 py-1 text-xs font-semibold">
@@ -138,7 +153,8 @@ export function ProductGallery({
       </div>
 
       {many && (
-        <div
+        <motion.div
+          layoutScroll
           role="tablist"
           aria-label={productDetailCopy.viewsLabel}
           onKeyDown={onThumbKey}
@@ -159,20 +175,25 @@ export function ProductGallery({
               onClick={() => setIndex(i)}
               className="group w-[23%] min-w-20 max-w-28 shrink-0 snap-start rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-24"
             >
-              <span
-                className={cn(
-                  "block overflow-hidden rounded-lg border-2 transition-colors",
-                  i === index ? "border-teal" : "border-border group-hover:border-grey-300",
+              <span className="relative block">
+                <span className="block overflow-hidden rounded-lg border-2 border-border transition-colors group-hover:border-grey-300">
+                  <ProductVisual image={img} kind={kind} seed={seed} sizes="120px" marked={false} />
+                </span>
+                {i === index && (
+                  <motion.span
+                    aria-hidden
+                    layoutId={`${seed}-thumb-ring`}
+                    className="pointer-events-none absolute inset-0 rounded-lg border-2 border-teal"
+                    transition={{ type: "spring", stiffness: 520, damping: 40 }}
+                  />
                 )}
-              >
-                <ProductVisual image={img} kind={kind} seed={seed} sizes="120px" marked={false} />
               </span>
               <span className={cn("mt-1.5 block text-center text-xs font-semibold", i === index ? "text-link" : "text-muted-foreground")}>
                 {viewLabel(img)}
               </span>
             </button>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {lightboxLoaded && (

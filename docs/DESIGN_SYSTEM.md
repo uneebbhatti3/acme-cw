@@ -118,6 +118,9 @@ Library: Motion (`motion/react`) for scroll-linked and gesture work; CSS for eve
 - **Count-up:** 1.4s, ease-out, once.
 - **Marquee:** about 40s per loop, pauses on hover and focus.
 - **Timeline:** line fills with scroll (`useScroll`). **Stacking cards:** CSS `position: sticky`.
+- **Stagger:** lists and grids (`Stagger` in `ui/reveal.tsx`) reveal their items in turn; `replayKey` replays a short stagger after filtering or paging; `select` animates cell content instead of cells in `gap-px` bordered grids.
+- **Gallery:** the new view slides 32px in from the side it came from (350ms); a teal ring glides between thumbnails (`layoutId`).
+- Motion primitives live in `src/components/motion/` (`HeroArt`, `CountUp`, `TimelineTrack`, `MotionProvider`). `MotionProvider` sets `reducedMotion="user"`. Never branch markup on `useReducedMotion()` during render (hydration mismatch); use `motion-reduce:` classes instead.
 - No page transitions; no smooth-scroll libraries.
 - **Always respect `prefers-reduced-motion`:** no sweep, parallax, count-up, marquee or scroll-linked fill. Show final states at once.
 

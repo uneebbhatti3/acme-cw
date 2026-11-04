@@ -1,6 +1,7 @@
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { PHOTO_RATIO } from "@/config/media";
+import { Reveal } from "@/components/ui/reveal";
 import { mediaCopy } from "@/data/copy";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +36,7 @@ export function PhotoSlot({
   className?: string;
 }) {
   return (
-    <figure className={cn("relative overflow-hidden rounded-lg", photo.fit === "contain" && "border", className)} style={{ aspectRatio: ratio }}>
+    <Reveal as="figure" className={cn("relative overflow-hidden rounded-lg", photo.fit === "contain" && "border", className)} style={{ aspectRatio: ratio }}>
       {photo.src ? (
         <Image src={photo.src} alt={photo.alt} fill sizes={sizes} priority={priority} className={photo.fit === "contain" ? "object-contain p-6 sm:p-8" : "object-cover"} />
       ) : (
@@ -52,6 +53,6 @@ export function PhotoSlot({
           <span className="max-w-xs text-sm leading-snug">{photo.brief}</span>
         </div>
       )}
-    </figure>
+    </Reveal>
   );
 }

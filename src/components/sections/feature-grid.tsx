@@ -1,4 +1,5 @@
 import { Icon } from "@/components/ui/icon";
+import { Stagger } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
 export interface FeatureItem {
@@ -24,7 +25,7 @@ export function FeatureGrid({
   className?: string;
 }) {
   return (
-    <ul
+    <Stagger
       className={cn(
         "grid gap-4 sm:grid-cols-2",
         cols === 3 && "lg:grid-cols-3",
@@ -44,6 +45,6 @@ export function FeatureGrid({
           <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted-foreground">{item.text}</p>
         </li>
       ))}
-    </ul>
+    </Stagger>
   );
 }

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Footer } from "@/components/layout/footer";
 import { Header, HeaderBar } from "@/components/layout/header";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
+import { MotionProvider } from "@/components/motion/motion-provider";
 import { layoutCopy } from "@/data/copy";
 import { getCategories } from "@/features/products/lib/content";
 import { jsonLdString, organizationJsonLd } from "@/lib/seo";
@@ -15,7 +16,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }));
 
   return (
-    <>
+    <MotionProvider>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd()) }}
@@ -34,6 +35,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </main>
       <Footer />
       <WhatsAppButton />
-    </>
+    </MotionProvider>
   );
 }

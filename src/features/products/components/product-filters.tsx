@@ -182,6 +182,7 @@ function FiltersView({ products, facets, search }: FiltersProps & { search: stri
 
       <ProductGrid
         products={shown}
+        replayKey={shown.map((p) => p.slug).join(",")}
         priorityCount={4}
         empty={
           <Empty className="rounded-lg border border-dashed bg-white py-16">

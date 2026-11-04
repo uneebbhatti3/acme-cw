@@ -1,9 +1,10 @@
+import { Stagger } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
 /** Numbered steps in a row (stacked on phones), joined by a rule. */
 export function StepList({ steps, className }: { steps: readonly { title: string; text: string }[]; className?: string }) {
   return (
-    <ol className={cn("grid gap-6 sm:grid-cols-2 lg:grid-flow-col lg:auto-cols-fr lg:grid-cols-none lg:gap-0", className)}>
+    <Stagger as="ol" className={cn("grid gap-6 sm:grid-cols-2 lg:grid-flow-col lg:auto-cols-fr lg:grid-cols-none lg:gap-0", className)}>
       {steps.map((s, i) => (
         <li key={s.title} className="relative lg:pr-8">
           <div className="flex items-center gap-3">
@@ -16,6 +17,6 @@ export function StepList({ steps, className }: { steps: readonly { title: string
           <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted-foreground">{s.text}</p>
         </li>
       ))}
-    </ol>
+    </Stagger>
   );
 }

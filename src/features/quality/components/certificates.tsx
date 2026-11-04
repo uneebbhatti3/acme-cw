@@ -1,5 +1,6 @@
 import { FileText, ShieldCheck } from "lucide-react";
 import { Pending } from "@/components/ui/pending";
+import { Stagger } from "@/components/ui/reveal";
 import { certifications, verifiedCertifications } from "@/data/certifications";
 import { qualityCopy } from "@/features/quality/data/content";
 import type { Certification } from "@/types";
@@ -59,13 +60,13 @@ export function Certificates({ className }: { className?: string }) {
           <p className="mt-1 text-[0.9375rem] text-muted-foreground">{c.pendingText}</p>
         </div>
       )}
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((cert) => (
           <li key={cert.name}>
             <CertificateCard cert={cert} pending={pending} />
           </li>
         ))}
-      </ul>
+      </Stagger>
     </div>
   );
 }

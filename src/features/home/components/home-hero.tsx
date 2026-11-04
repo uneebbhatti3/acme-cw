@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { Container } from "@/components/layout/container";
 import { PlaceholderImage } from "@/components/media/placeholder-image";
+import { HeroArt } from "@/components/motion/hero-art";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { mediaCopy } from "@/data/copy";
@@ -49,7 +50,7 @@ export function HomeHero() {
           </ul>
         </div>
         <div className="lg:col-span-6">
-          <figure className="relative overflow-hidden rounded-lg border border-white/20" style={{ aspectRatio: "4/3" }}>
+          <HeroArt className="rounded-lg border border-white/20" style={{ aspectRatio: "4/3" }}>
             {photo ? (
               <Image src={photo} alt={h.photo.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-contain p-8 sm:p-12" />
             ) : (
@@ -60,7 +61,7 @@ export function HomeHero() {
                 </figcaption>
               </>
             )}
-          </figure>
+          </HeroArt>
         </div>
       </Container>
     </section>

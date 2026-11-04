@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Band } from "@/components/layout/band";
 import { Container } from "@/components/layout/container";
+import { Stagger } from "@/components/ui/reveal";
 import { productsCopy } from "@/features/products/data/copy";
 import { categoryHref, getCategories } from "@/features/products/lib/content";
 
@@ -14,7 +15,7 @@ export function OtherCategories({ currentSlug }: { currentSlug: string }) {
         <h2 id="other-categories" className="text-h3">
           {productsCopy.otherCategories}
         </h2>
-        <ul className="mt-5 grid gap-px overflow-hidden rounded-lg border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger select="a" className="mt-5 grid gap-px overflow-hidden rounded-lg border bg-border sm:grid-cols-2 lg:grid-cols-3">
           {others.map((c) => (
             <li key={c.slug} className="bg-white">
               <Link
@@ -26,7 +27,7 @@ export function OtherCategories({ currentSlug }: { currentSlug: string }) {
               </Link>
             </li>
           ))}
-        </ul>
+        </Stagger>
       </Container>
     </Band>
   );

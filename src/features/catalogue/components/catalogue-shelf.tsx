@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
 import { coverUrl, type Catalogue } from "@/features/catalogue/data/catalogues";
+import { Stagger } from "@/components/ui/reveal";
 import { catalogueCopy } from "@/features/catalogue/data/copy";
 import { CatalogueRequestDialog } from "./catalogue-request-dialog";
 
@@ -18,7 +19,7 @@ export function CatalogueShelf({ catalogues }: { catalogues: Catalogue[] }) {
   return (
     // Marks the page as protected, which blanks it when printed. See globals.css.
     <div data-protected-content>
-      <ul className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8">
+      <Stagger className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8">
         {catalogues.map((catalogue) => (
           <li key={catalogue.slug}>
             <button
@@ -50,7 +51,7 @@ export function CatalogueShelf({ catalogues }: { catalogues: Catalogue[] }) {
             </button>
           </li>
         ))}
-      </ul>
+      </Stagger>
       {open && <Flipbook key={open.slug} catalogue={open} onClose={() => setOpen(null)} onRequest={() => setRequesting(open)} />}
       {requesting && <CatalogueRequestDialog key={requesting.slug} catalogue={requesting} onClose={() => setRequesting(null)} />}
     </div>
