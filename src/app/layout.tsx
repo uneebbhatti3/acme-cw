@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { themeColors } from "@/config/theme";
 import { baseKeywords, fitDescription } from "@/lib/seo";
@@ -56,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
-        <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
+        {children}
       </body>
     </html>
   );

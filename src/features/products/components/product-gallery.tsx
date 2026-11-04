@@ -1,10 +1,11 @@
 "use client";
 
 import { Maximize2 } from "lucide-react";
-import { motion } from "motion/react";
+import { MotionConfig, m } from "motion/react";
 import dynamic from "next/dynamic";
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { ProductVisual } from "@/components/media/product-visual";
+import { LazyLayoutAnimation } from "@/components/motion/lazy";
 import { productDetailCopy } from "@/features/products/data/copy";
 import { viewLabel } from "@/features/products/lib/view-label";
 import { EASE_OUT } from "@/lib/use-in-view";
@@ -95,119 +96,123 @@ export function ProductGallery({
   };
 
   return (
-    <div>
-      <div
-        id={`${seed}-stage`}
-        role="group"
-        aria-roledescription="carousel"
-        aria-label={`${productName} images`}
-        className="relative overflow-hidden rounded-lg border"
-      >
-        <div
-          className={cn("relative touch-pan-y overflow-hidden", zoom ? "cursor-zoom-in" : "cursor-pointer")}
-          onPointerDown={onDown}
-          onPointerMove={onMove}
-          onPointerUp={onUp}
-          onPointerLeave={() => setZoom(null)}
-          onClick={(e) => {
-            // Touch taps open the viewer from onUp; mouse clicks open it here.
-            if ((e.nativeEvent as globalThis.PointerEvent).pointerType !== "touch") open();
-          }}
-        >
-          <motion.div
-            key={index}
-            initial={dir === 0 ? false : { opacity: 0, x: dir * 32 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.35, ease: EASE_OUT }}
+    <LazyLayoutAnimation>
+      <MotionConfig reducedMotion="user">
+        <div>
+          <div
+            id={`${seed}-stage`}
+            role="group"
+            aria-roledescription="carousel"
+            aria-label={`${productName} images`}
+            className="relative overflow-hidden rounded-lg border"
           >
             <div
-              className="transition-transform duration-200 ease-out will-change-transform"
-              style={zoom ? { transform: `scale(${ZOOM})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : { transform: "scale(1)" }}
-            >
-              <ProductVisual image={current} kind={kind} seed={seed} priority={index === 0} sizes="(min-width: 1280px) 720px, (min-width: 1024px) 58vw, 100vw" />
-            </div>
-          </motion.div>
-        </div>
-
-        <span className="pointer-events-none absolute left-3 top-3 rounded-sm border bg-white/90 px-2 py-1 text-xs font-semibold">
-          {viewLabel(current)}
-        </span>
-        <button
-          type="button"
-          onClick={open}
-          aria-haspopup="dialog"
-          aria-label={productDetailCopy.enlarge}
-          className="absolute right-3 top-3 inline-flex h-11 items-center gap-2 rounded-md border bg-white px-3.5 text-sm font-semibold transition-colors hover:border-grey-300 hover:bg-grey-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        >
-          <Maximize2 aria-hidden className="size-4" strokeWidth={1.75} />
-          <span className="hidden sm:inline">{productDetailCopy.enlargeShort}</span>
-        </button>
-        {many && (
-          <span aria-hidden className="pointer-events-none absolute bottom-3 right-3 rounded-sm bg-navy/80 px-2 py-1 font-mono text-xs text-white">
-            {index + 1} / {images.length}
-          </span>
-        )}
-        <p aria-live="polite" className="sr-only">
-          {`${viewLabel(current)} view, ${index + 1} of ${images.length}`}
-        </p>
-      </div>
-
-      {many && (
-        <motion.div
-          layoutScroll
-          role="tablist"
-          aria-label={productDetailCopy.viewsLabel}
-          onKeyDown={onThumbKey}
-          className="scrollbar-none -mx-4 mt-3 flex snap-x gap-2.5 overflow-x-auto scroll-px-4 px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-        >
-          {images.map((img, i) => (
-            <button
-              key={`${img.view}-${i}`}
-              ref={(el) => {
-                thumbs.current[i] = el;
+              className={cn("relative touch-pan-y overflow-hidden", zoom ? "cursor-zoom-in" : "cursor-pointer")}
+              onPointerDown={onDown}
+              onPointerMove={onMove}
+              onPointerUp={onUp}
+              onPointerLeave={() => setZoom(null)}
+              onClick={(e) => {
+                // Touch taps open the viewer from onUp; mouse clicks open it here.
+                if ((e.nativeEvent as globalThis.PointerEvent).pointerType !== "touch") open();
               }}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-controls={`${seed}-stage`}
-              tabIndex={i === index ? 0 : -1}
-              aria-label={`${viewLabel(img)} view`}
-              onClick={() => setIndex(i)}
-              className="group w-[23%] min-w-20 max-w-28 shrink-0 snap-start rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-24"
             >
-              <span className="relative block">
-                <span className="block overflow-hidden rounded-lg border-2 border-border transition-colors group-hover:border-grey-300">
-                  <ProductVisual image={img} kind={kind} seed={seed} sizes="120px" marked={false} />
-                </span>
-                {i === index && (
-                  <motion.span
-                    aria-hidden
-                    layoutId={`${seed}-thumb-ring`}
-                    className="pointer-events-none absolute inset-0 rounded-lg border-2 border-teal"
-                    transition={{ type: "spring", stiffness: 520, damping: 40 }}
-                  />
-                )}
-              </span>
-              <span className={cn("mt-1.5 block text-center text-xs font-semibold", i === index ? "text-link" : "text-muted-foreground")}>
-                {viewLabel(img)}
-              </span>
-            </button>
-          ))}
-        </motion.div>
-      )}
+              <m.div
+                key={index}
+                initial={dir === 0 ? false : { opacity: 0, x: dir * 32 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.35, ease: EASE_OUT }}
+              >
+                <div
+                  className="transition-transform duration-200 ease-out will-change-transform"
+                  style={zoom ? { transform: `scale(${ZOOM})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : { transform: "scale(1)" }}
+                >
+                  <ProductVisual image={current} kind={kind} seed={seed} priority={index === 0} sizes="(min-width: 1280px) 720px, (min-width: 1024px) 58vw, 100vw" />
+                </div>
+              </m.div>
+            </div>
 
-      {lightboxLoaded && (
-        <Lightbox
-          open={lightbox}
-          images={images}
-          index={index}
-          onIndexChange={setIndex}
-          onClose={() => setLightbox(false)}
-          kind={kind}
-          seed={seed}
-          title={productName}
-        />
-      )}
-    </div>
+            <span className="pointer-events-none absolute left-3 top-3 rounded-sm border bg-white/90 px-2 py-1 text-xs font-semibold">
+              {viewLabel(current)}
+            </span>
+            <button
+              type="button"
+              onClick={open}
+              aria-haspopup="dialog"
+              aria-label={productDetailCopy.enlarge}
+              className="absolute right-3 top-3 inline-flex h-11 items-center gap-2 rounded-md border bg-white px-3.5 text-sm font-semibold transition-colors hover:border-grey-300 hover:bg-grey-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              <Maximize2 aria-hidden className="size-4" strokeWidth={1.75} />
+              <span className="hidden sm:inline">{productDetailCopy.enlargeShort}</span>
+            </button>
+            {many && (
+              <span aria-hidden className="pointer-events-none absolute bottom-3 right-3 rounded-sm bg-navy/80 px-2 py-1 font-mono text-xs text-white">
+                {index + 1} / {images.length}
+              </span>
+            )}
+            <p aria-live="polite" className="sr-only">
+              {`${viewLabel(current)} view, ${index + 1} of ${images.length}`}
+            </p>
+          </div>
+
+          {many && (
+            <m.div
+              layoutScroll
+              role="tablist"
+              aria-label={productDetailCopy.viewsLabel}
+              onKeyDown={onThumbKey}
+              className="scrollbar-none -mx-4 mt-3 flex snap-x gap-2.5 overflow-x-auto scroll-px-4 px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+            >
+              {images.map((img, i) => (
+                <button
+                  key={`${img.view}-${i}`}
+                  ref={(el) => {
+                    thumbs.current[i] = el;
+                  }}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === index}
+                  aria-controls={`${seed}-stage`}
+                  tabIndex={i === index ? 0 : -1}
+                  aria-label={`${viewLabel(img)} view`}
+                  onClick={() => setIndex(i)}
+                  className="group w-[23%] min-w-20 max-w-28 shrink-0 snap-start rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-24"
+                >
+                  <span className="relative block">
+                    <span className="block overflow-hidden rounded-lg border-2 border-border transition-colors group-hover:border-grey-300">
+                      <ProductVisual image={img} kind={kind} seed={seed} sizes="120px" marked={false} />
+                    </span>
+                    {i === index && (
+                      <m.span
+                        aria-hidden
+                        layoutId={`${seed}-thumb-ring`}
+                        className="pointer-events-none absolute inset-0 rounded-lg border-2 border-teal"
+                        transition={{ type: "spring", stiffness: 520, damping: 40 }}
+                      />
+                    )}
+                  </span>
+                  <span className={cn("mt-1.5 block text-center text-xs font-semibold", i === index ? "text-link" : "text-muted-foreground")}>
+                    {viewLabel(img)}
+                  </span>
+                </button>
+              ))}
+            </m.div>
+          )}
+
+          {lightboxLoaded && (
+            <Lightbox
+              open={lightbox}
+              images={images}
+              index={index}
+              onIndexChange={setIndex}
+              onClose={() => setLightbox(false)}
+              kind={kind}
+              seed={seed}
+              title={productName}
+            />
+          )}
+        </div>
+      </MotionConfig>
+    </LazyLayoutAnimation>
   );
 }

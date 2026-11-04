@@ -1,6 +1,5 @@
 "use client";
 
-import { animate } from "motion/react";
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/use-in-view";
 
@@ -10,7 +9,8 @@ const PATTERN = /^(\D*?)(\d[\d,]*(?:\.\d+)?)(.*)$/;
  * Counts a figure such as "40+" or "1,200" up from zero (1.4s, ease-out) the
  * first time it scrolls into view. The final value is server-rendered, so
  * search engines, no-JS and reduced-motion visitors see it as is; values that
- * start on screen, or contain no number, are left alone.
+ * start on screen, or contain no number, are left alone. Motion's `animate`
+ * is loaded only when a count actually starts.
  */
 export function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -29,17 +29,22 @@ export function CountUp({ value }: { value: string }) {
 
     el.textContent = format(0);
     let stop: (() => void) | undefined;
+    let cancelled = false;
     const io = new IntersectionObserver(
       (entries) => {
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
-        const controls = animate(0, target, { duration: 1.4, ease: "easeOut", onUpdate: (n) => (el.textContent = format(n)) });
-        stop = () => controls.stop();
+        void import("motion").then(({ animate }) => {
+          if (cancelled) return;
+          const controls = animate(0, target, { duration: 1.4, ease: "easeOut", onUpdate: (n) => (el.textContent = format(n)) });
+          stop = () => controls.stop();
+        });
       },
       { rootMargin: "0px 0px -10% 0px" },
     );
     io.observe(el);
     return () => {
+      cancelled = true;
       io.disconnect();
       stop?.();
       el.textContent = value;

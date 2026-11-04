@@ -43,7 +43,7 @@ export function Footer() {
   const { contact, footerNav } = siteConfig;
 
   return (
-    <footer className="surface-dark defer-render bg-navy-deep [contain-intrinsic-size:auto_640px]">
+    <footer className="surface-dark bg-navy-deep">
       <Container>
         <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:py-16">
           <div className="sm:col-span-2 lg:col-span-4">

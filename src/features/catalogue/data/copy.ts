@@ -10,7 +10,8 @@ export const catalogueCopy = {
   pages: (n: number) => (n === 1 ? "1 page" : `${n} pages`),
   open: (title: string) => `Open ${title}, as a book`,
   requestPdf: "Request PDF",
-  requestNamed: (title: string) => `Request ${title} as a PDF`,
+  // Starts with the visible label ("Request PDF") so voice control users can say what they see.
+  requestNamed: (title: string) => `Request PDF: ${title}`,
   viewer: {
     hint: "Use the arrow keys or the on-screen buttons to turn the pages, and plus and minus to zoom. You can also drag a page.",
     loading: "Opening catalogue…",

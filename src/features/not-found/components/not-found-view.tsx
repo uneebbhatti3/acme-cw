@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { notFoundCopy as nf } from "@/features/not-found/data/copy";
-import { ProductSearch } from "@/features/products/components/product-search";
+import { LazyProductSearch } from "@/features/products/components/lazy-product-search";
 
 /** 404 body: what happened, a product search that hands off to the catalog, and the main ways forward. */
 export function NotFoundView() {
@@ -13,7 +13,7 @@ export function NotFoundView() {
           <p className="font-mono text-sm font-medium text-teal-deep">{nf.code}</p>
           <h1 className="text-h2 mt-4">{nf.title}</h1>
           <p className="text-lede mt-5 max-w-xl text-muted-foreground">{nf.text}</p>
-          <ProductSearch className="mt-10 max-w-xl" allResultsLink />
+          <LazyProductSearch className="mt-10 max-w-xl" allResultsLink />
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
               <Link href="/products">{nf.products}</Link>

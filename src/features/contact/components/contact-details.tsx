@@ -22,54 +22,54 @@ export function ContactDetails() {
           {details.title}
         </h2>
         <dl className="mt-5 grid gap-5">
-          <div className="flex gap-3">
-            <MapPin aria-hidden className="mt-0.5 size-5 shrink-0 text-teal-deep" strokeWidth={1.5} />
-            <div>
-              <dt className="text-sm text-muted-foreground">{details.address}</dt>
-              <dd className="mt-0.5 font-medium text-navy">{fullAddress()}</dd>
-              <dd>
-                <a href={mapHref} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-link hover:underline">
-                  {details.map}
-                  <ExternalLink aria-hidden className="size-3.5" />
-                  <span className="sr-only">{details.newTab}</span>
+          <div className="relative pl-8">
+            <dt className="text-sm text-muted-foreground">
+              <MapPin aria-hidden className="absolute left-0 top-0.5 size-5 text-teal-deep" strokeWidth={1.5} />
+              {details.address}
+            </dt>
+            <dd className="mt-0.5 font-medium text-navy">{fullAddress()}</dd>
+            <dd>
+              <a href={mapHref} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-link hover:underline">
+                {details.map}
+                <ExternalLink aria-hidden className="size-3.5" />
+                <span className="sr-only">{details.newTab}</span>
+              </a>
+            </dd>
+          </div>
+          <div className="relative pl-8">
+            <dt className="text-sm text-muted-foreground">
+              <Phone aria-hidden className="absolute left-0 top-0.5 size-5 text-teal-deep" strokeWidth={1.5} />
+              {details.phone}
+            </dt>
+            {contact.phones.map((p) => (
+              <dd key={p.number}>
+                <a href={telHref(p.number)} className="inline-flex min-h-10 items-center font-medium text-navy hover:underline">
+                  {p.label && <span className="mr-2 font-normal text-muted-foreground">{p.label}</span>}
+                  {p.number}
                 </a>
               </dd>
-            </div>
+            ))}
           </div>
-          <div className="flex gap-3">
-            <Phone aria-hidden className="mt-0.5 size-5 shrink-0 text-teal-deep" strokeWidth={1.5} />
-            <div>
-              <dt className="text-sm text-muted-foreground">{details.phone}</dt>
-              {contact.phones.map((p) => (
-                <dd key={p.number}>
-                  <a href={telHref(p.number)} className="inline-flex min-h-10 items-center font-medium text-navy hover:underline">
-                    {p.label && <span className="mr-2 font-normal text-muted-foreground">{p.label}</span>}
-                    {p.number}
-                  </a>
-                </dd>
-              ))}
-            </div>
+          <div className="relative pl-8 min-w-0">
+            <dt className="text-sm text-muted-foreground">
+              <Mail aria-hidden className="absolute left-0 top-0.5 size-5 text-teal-deep" strokeWidth={1.5} />
+              {details.email}
+            </dt>
+            {contact.emails.map((e) => (
+              <dd key={e.address} className="mt-1">
+                <span className="block text-xs text-muted-foreground">{e.label}</span>
+                <a href={`mailto:${e.address}`} className="inline-flex min-h-9 items-center break-all font-medium text-navy hover:underline">
+                  {e.address}
+                </a>
+              </dd>
+            ))}
           </div>
-          <div className="flex gap-3">
-            <Mail aria-hidden className="mt-0.5 size-5 shrink-0 text-teal-deep" strokeWidth={1.5} />
-            <div className="min-w-0">
-              <dt className="text-sm text-muted-foreground">{details.email}</dt>
-              {contact.emails.map((e) => (
-                <dd key={e.address} className="mt-1">
-                  <span className="block text-xs text-muted-foreground">{e.label}</span>
-                  <a href={`mailto:${e.address}`} className="inline-flex min-h-9 items-center break-all font-medium text-navy hover:underline">
-                    {e.address}
-                  </a>
-                </dd>
-              ))}
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <Clock aria-hidden className="mt-0.5 size-5 shrink-0 text-teal-deep" strokeWidth={1.5} />
-            <div>
-              <dt className="text-sm text-muted-foreground">{details.hours}</dt>
-              <dd className="mt-0.5 font-medium text-navy">{contact.hours}</dd>
-            </div>
+          <div className="relative pl-8">
+            <dt className="text-sm text-muted-foreground">
+              <Clock aria-hidden className="absolute left-0 top-0.5 size-5 text-teal-deep" strokeWidth={1.5} />
+              {details.hours}
+            </dt>
+            <dd className="mt-0.5 font-medium text-navy">{contact.hours}</dd>
           </div>
         </dl>
         {contact.whatsapp && (

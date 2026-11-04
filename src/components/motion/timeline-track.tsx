@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useScroll, useSpring } from "motion/react";
+import { m, useScroll, useSpring } from "motion/react";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { LazyAnimation } from "./lazy";
 
 /**
  * Wraps a timeline with a rule that fills in the accent colour as the
@@ -16,7 +17,10 @@ export function TimelineTrack({ children, className }: { children: ReactNode; cl
   return (
     <div ref={ref} className={cn("relative", className)}>
       <div aria-hidden className="mb-6 h-0.5 overflow-hidden rounded-full bg-border">
-        <motion.div className="h-full origin-left bg-teal motion-reduce:!transform-none" style={{ scaleX: fill }} />
+        {/* A motion value in `style` needs no features, so the fill tracks scroll before they load. */}
+        <LazyAnimation>
+          <m.div className="h-full origin-left bg-teal motion-reduce:!transform-none" style={{ scaleX: fill }} />
+        </LazyAnimation>
       </div>
       {children}
     </div>

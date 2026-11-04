@@ -33,10 +33,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
-  // Tailwind output is small; inlining it removes the render-blocking stylesheet request.
-  experimental: {
-    inlineCss: true,
-  },
+  // CSS is NOT inlined (`experimental.inlineCss`): the stylesheet (~130 KB,
+  // shared with the admin panel) was then repeated in every page's HTML and
+  // again, several times, in the React payload, which made pages ~900 KB and
+  // slow to parse. As a file it is downloaded once and cached across pages.
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],

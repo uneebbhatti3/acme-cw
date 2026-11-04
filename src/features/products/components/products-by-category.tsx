@@ -45,7 +45,9 @@ async function CategorySections() {
 /** Products from the database, grouped by category. Categories with no products are left out. */
 export function ProductsByCategory() {
   return (
-    <Band labelledBy="all-products-title">
+    // Not deferred: this is the page's main content, and accessibility checkers misread colours inside
+    // sections that skip rendering (content-visibility).
+    <Band labelledBy="all-products-title" defer={false}>
       <Container>
         <SectionIntro id="all-products-title" title={c.title} text={c.intro} />
         <div className="mt-8">

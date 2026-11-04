@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ProductSearch, ProductSearchFromUrl } from "./product-search";
+import { LazyProductSearch, LazyProductSearchFromUrl } from "./lazy-product-search";
 
 /**
  * Product search above the range grid. It
@@ -8,8 +8,8 @@ import { ProductSearch, ProductSearchFromUrl } from "./product-search";
 export function CatalogSearchBar() {
   return (
     <div className="relative z-30 max-w-2xl">
-      <Suspense fallback={<ProductSearch />}>
-        <ProductSearchFromUrl />
+      <Suspense fallback={<LazyProductSearch />}>
+        <LazyProductSearchFromUrl />
       </Suspense>
     </div>
   );

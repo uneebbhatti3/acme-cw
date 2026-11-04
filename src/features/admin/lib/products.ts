@@ -1,7 +1,9 @@
 import "server-only";
+import { revalidateTag } from "next/cache";
 import { sampleEnquiryStats } from "@/features/admin/data/sample";
 import type { AdminProduct, DashboardStats, ProductRow } from "@/features/admin/types";
 import { getCategories, getCategory, productHref } from "@/features/products/lib/content";
+import { PRODUCTS_TAG } from "@/features/products/lib/store";
 import { db } from "@/lib/db";
 import { deleteProductImage, putProductImage } from "@/lib/storage";
 import { productImageKey, productImageUrl } from "./media";
@@ -96,6 +98,11 @@ async function storeImage(image: ImageUpload) {
   return key;
 }
 
+/** The public pages cache product reads; expire them now so an admin change shows on the next page load. */
+function expireProductCache() {
+  revalidateTag(PRODUCTS_TAG, { expire: 0 });
+}
+
 /** Best effort: a leftover file is harmless, and must not fail a save that already worked. */
 async function discardImage(key: string) {
   await deleteProductImage(key).catch((err) => console.error("[admin] Could not delete image", key, err));
@@ -110,6 +117,7 @@ export async function createAdminProduct(input: ProductInput, image: ImageUpload
        RETURNING *`,
       [await uniqueSlug(input.name), input.name, input.model, input.title, input.categorySlug, input.sizes, input.description, productImageUrl(key)],
     );
+    expireProductCache();
     return toProduct(rows[0]);
   } catch (err) {
     await discardImage(key);
@@ -137,6 +145,7 @@ export async function updateAdminProduct(current: AdminProduct, input: ProductIn
     if (key) await discardImage(key);
     return null;
   }
+  expireProductCache();
   if (key) await discardImage(productImageKey(current.image));
   return toProduct(rows[0]);
 }
@@ -146,6 +155,7 @@ export async function deleteAdminProduct(id: string) {
   if (!UUID.test(id)) return false;
   const { rows } = await db.query<Pick<DbProduct, "image_url">>("DELETE FROM products WHERE id = $1 RETURNING image_url", [id]);
   if (!rows[0]) return false;
+  expireProductCache();
   await discardImage(productImageKey(rows[0].image_url));
   return true;
 }
