@@ -74,6 +74,11 @@ export const adminCopy = {
     deleteConfirm: (name: string) => `Delete "${name}"? This cannot be undone.`,
     deleting: "Deleting…",
     count: (shown: number, total: number) => (shown === total ? `${total} products` : `${shown} of ${total} products`),
+    /** Shown when the list spans more than one page, e.g. "Showing 21–40 of 193 products". */
+    range: (from: number, to: number, matching: number, total: number) =>
+      `Showing ${from}–${to} of ${matching === total ? `${total} products` : `${matching} matching products (${total} in all)`}`,
+    pagination: "Product pages",
+    page: (n: number) => `Page ${n}`,
     empty: {
       title: "No products yet",
       description: "Add your first product with a photo, sizes and a description.",
